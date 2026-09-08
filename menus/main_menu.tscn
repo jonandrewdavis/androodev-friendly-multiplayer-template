@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://bw5mw614jt72i"]
+
+[ext_resource type="Script" uid="uid://f15f38wgtqwf" path="res://menus/scripts/main_menu.gd" id="1_8gy84"]
+
+[node name="MainMenu" type="Control" unique_id=1047832799]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8gy84")
+
+[node name="Buttons" type="VBoxContainer" parent="." unique_id=635490050]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="HostButton" type="Button" parent="Buttons" unique_id=1250109347]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="Buttons" unique_id=1415671397]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Join Game"
+
+[node name="QuitButton" type="Button" parent="Buttons" unique_id=1279837957]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Quit"
+
+[node name="PendingOverlay" type="ColorRect" parent="." unique_id=945041632]
+visible = false
+top_level = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 1
+color = Color(0.23921569, 0.23921569, 0.23921569, 0.4392157)
+
+[node name="PendingLabel" type="Label" parent="PendingOverlay" unique_id=280832995]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 128
+text = "Joining Game..."
+
+[node name="FailedLabel" type="Label" parent="PendingOverlay" unique_id=1842562292]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
+text = "Failed. Reason:"
+
+[node name="FailedButton" type="Button" parent="PendingOverlay" unique_id=1191714102]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.5
+offset_top = 236.42499
+offset_right = 45.5
+offset_bottom = 289.425
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Close"

@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dlw62wt82uk2p"]
+
+[ext_resource type="Script" uid="uid://dsjfvtn5loldi" path="res://menus/list_items/scripts/player_list_item.gd" id="1_f5kls"]
+
+[node name="PlayerListItem" type="HBoxContainer" unique_id=844278656]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_f5kls")
+
+[node name="UsernameLabel" type="Label" parent="." unique_id=1999865991]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "username"
+
+[node name="KickButton" type="Button" parent="." unique_id=401013277]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Kick"
+
+[node name="BanButton" type="Button" parent="." unique_id=1078836403]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Ban"

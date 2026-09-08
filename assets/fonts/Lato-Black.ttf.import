@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://da2t6lyf41wty"
-path="res://.godot/imported/open-sans-bold.ttf-57e3060dd99c5c2d620352989d7b033a.fontdata"
+uid="uid://drjq1ibfy34lb"
+path="res://.godot/imported/Lato-Black.ttf-63c3d33adc972f08c27e29b620ccf241.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/open-sans/open-sans-bold.ttf"
-dest_files=["res://.godot/imported/open-sans-bold.ttf-57e3060dd99c5c2d620352989d7b033a.fontdata"]
+source_file="res://assets/fonts/Lato-Black.ttf"
+dest_files=["res://.godot/imported/Lato-Black.ttf-63c3d33adc972f08c27e29b620ccf241.fontdata"]
 
 [params]
 
@@ -22,8 +22,8 @@ msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
 modulate_color_glyphs=false
-hinting=1
-subpixel_positioning=1
+hinting=3
+subpixel_positioning=4
 keep_rounding_remainders=true
 oversampling=0.0
 Fallbacks=null

@@ -4,26 +4,28 @@ extends CanvasLayer
 @export var margin_container: MarginContainer
 
 @onready var pause := self
-@onready var pause_button := $MarginContainer/Control/PauseButton
-@onready var resume_option := $MarginContainer/Control/VBoxOptions/Resume
-@onready var label = $MarginContainer/Control/Label
-@onready var pause_options = $MarginContainer/Control/VBoxOptions
+
+@onready var resume_button: Button = %ResumeButton
 @onready var color_rect = $ColorRect
 
-@onready var nodes_grp1 = [pause_button, label] # should be visible during gamemplay and hidden during pause
-@onready var nodes_grp2 = [pause_options, color_rect] # should be visible only in pause menu
+@onready var pause_root: Control = %PauseRoot
+@onready var nodes_grp1 = [] # should be visible during gamemplay and hidden during pause
+@onready var nodes_grp2 = [pause_root, color_rect] # should be visible only in pause menu
 
+# Inventory open
+# Hit ESC -> close inventory
+# Inventory closed, hit ESC -> Opens Menu (quit / disconnect)
+
+# They both show your cursor. 
 
 func _ready():
 	pause_hide()
-
 
 func pause_show():
 	for n in nodes_grp1:
 		n.hide()
 	for n in nodes_grp2:
 		n.show()
-
 
 func pause_hide():
 	for n in nodes_grp1:
@@ -38,8 +40,9 @@ func pause_hide():
 func _unhandled_input(event):
 	if event.is_action_pressed("pause"):
 		if settings_menu.visible:
+			# TODO: close settings.
 			return
-		if get_tree().paused:
+		if pause_root.visible:
 			resume()
 		else:
 			pause_game()
@@ -47,19 +50,15 @@ func _unhandled_input(event):
 
 
 func resume():
-	get_tree().paused = false
 	pause_hide()
 
-
 func pause_game():
-	resume_option.grab_focus()
-	get_tree().paused = true
+	resume_button.grab_focus()
 	pause_show()
 
 
 func _on_Resume_pressed():
 	resume()
-
 
 func _on_PauseButton_pressed():
 	pause_game()
@@ -76,7 +75,7 @@ func _on_settings_pressed() -> void:
 func _on_settings_menu_visibility_changed() -> void:
 	margin_container.visible = !settings_menu.visible
 	if !settings_menu.visible:
-		resume_option.grab_focus() # restore focus
+		resume_button.grab_focus() # restore focus
 
 
 func _on_settings_menu_confirm_button_clicked() -> void:

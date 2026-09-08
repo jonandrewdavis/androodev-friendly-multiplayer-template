@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c2gocuhw2o7py"]
 
+[ext_resource type="Theme" uid="uid://dp5p4tu7lotpj" path="res://resources/theme/theme_main.tres" id="1_e0arn"]
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="3_e0arn"]
-[ext_resource type="FontFile" uid="uid://da2t6lyf41wty" path="res://assets/fonts/open-sans/open-sans-bold.ttf" id="4"]
 [ext_resource type="Script" uid="uid://cvc42inud8fxx" path="res://scenes/menu/menu.gd" id="5"]
 
 [node name="Menu" type="Control" unique_id=1641158152 node_paths=PackedStringArray("play_button", "settings_button", "exit_button", "settings_menu", "margin_container")]
@@ -11,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_e0arn")
 script = ExtResource("5")
 play_button = NodePath("MarginContainer/Control/VBoxContainer/PlayButton")
 settings_button = NodePath("MarginContainer/Control/VBoxContainer/SettingsButton")
@@ -25,7 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.224, 0.2709333, 0.4, 1)
+color = Color(0.0956487, 0.21971804, 0.36288694, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=494167775]
 layout_mode = 1
@@ -51,7 +52,6 @@ grow_vertical = 2
 
 [node name="Title" type="Label" parent="MarginContainer/Control/CenterContainer" unique_id=1695717094]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4")
 theme_override_font_sizes/font_size = 60
 text = "Godot Game Template"
 uppercase = true
@@ -181,5 +181,4 @@ You can check the release type in the bottom left corner."
 [connection signal="pressed" from="MarginContainer/Control/VBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="MarginContainer/Control/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="MarginContainer/Control/VBoxContainer/ExitButton" to="." method="_on_ExitButton_pressed"]
-[connection signal="confirm_button_clicked" from="SettingsMenu" to="." method="_on_settings_menu_confirm_button_clicked"]
 [connection signal="visibility_changed" from="SettingsMenu" to="." method="_on_settings_menu_visibility_changed"]

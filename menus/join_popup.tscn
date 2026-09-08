@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bjugfndbiagm1"]
+
+[ext_resource type="Script" uid="uid://ch4t84askghae" path="res://menus/scripts/join_popup.gd" id="1_ykuld"]
+
+[node name="JoinPopup" type="ColorRect" unique_id=1248706963]
+anchors_preset = -1
+anchor_left = 0.3
+anchor_top = 0.1
+anchor_right = 0.7
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.403922, 0.0666667, 1)
+script = ExtResource("1_ykuld")
+
+[node name="Title" type="Label" parent="." unique_id=1891585832]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -43.0
+offset_right = 43.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 36
+text = "Join Game"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=2060118240]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.195
+anchor_right = 1.0
+anchor_bottom = 0.845
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemList" type="VBoxContainer" parent="ScrollContainer" unique_id=406902401]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="." unique_id=147625363]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.9
+anchor_right = 0.6
+anchor_bottom = 0.9
+offset_top = -42.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "Close"
+
+[node name="RefreshButton" type="Button" parent="." unique_id=970890373]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_top = 0.125
+anchor_right = 0.9
+anchor_bottom = 0.175
+grow_horizontal = 2
+grow_vertical = 2
+text = "Refresh List"

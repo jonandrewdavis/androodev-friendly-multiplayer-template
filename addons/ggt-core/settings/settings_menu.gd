@@ -1,5 +1,7 @@
 extends Control
 
+class_name SettingsMenu
+
 const CONFIG_FILE_PATH = GGT_GameConfig.CONFIG_FILE_PATH
 
 signal cancel_button_clicked

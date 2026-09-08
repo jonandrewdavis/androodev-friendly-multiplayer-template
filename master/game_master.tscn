@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cb2i8xids6lw2"]
+
+[ext_resource type="PackedScene" uid="uid://bw5mw614jt72i" path="res://menus/main_menu.tscn" id="1_3ef5b"]
+[ext_resource type="Script" uid="uid://d23hqg0hr1khb" path="res://master/scripts/game_master.gd" id="1_ehuk0"]
+[ext_resource type="Script" uid="uid://cd1b7rpxgj5d2" path="res://master/scripts/player_spawner.gd" id="5_uhlgs"]
+[ext_resource type="Script" uid="uid://bd240dbppqbi6" path="res://master/scripts/level_loader.gd" id="6_ktjxi"]
+
+[node name="GameMaster" type="Node" unique_id=187651526]
+script = ExtResource("1_ehuk0")
+
+[node name="MainMenu" parent="." unique_id=900784803 instance=ExtResource("1_3ef5b")]
+
+[node name="LevelLoader" type="Node" parent="." unique_id=949019231]
+script = ExtResource("6_ktjxi")
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1432114833]
+_spawnable_scenes = PackedStringArray("uid://fff2awjtd2uk")
+spawn_path = NodePath(".")
+script = ExtResource("5_uhlgs")

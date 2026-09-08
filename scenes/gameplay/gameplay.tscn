@@ -70,33 +70,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.914027)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3741119, 1.3649533, 1.100213)
 light_color = Color(0.9413759, 0.8180285, 0.88570255, 1)
 
-[node name="PauseLayer" parent="." unique_id=911028332 instance=ExtResource("2")]
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1696999818]
 
-[node name="Help" type="PanelContainer" parent="." unique_id=508147011]
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 40.0
-offset_top = -186.0
-offset_right = 504.0
-offset_bottom = 186.0
-grow_vertical = 2
-tooltip_auto_translate_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="Help" unique_id=1331729794]
-layout_mode = 2
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Help/MarginContainer" unique_id=541701147]
-custom_minimum_size = Vector2(400, 0)
-layout_mode = 2
-bbcode_enabled = true
-text = "All shortcuts (available only in debug mode):
-
-- [bgcolor=#333]F3[/bgcolor]: [color=gray]Cycle stats modes [/color]
-- [bgcolor=#333]F4[/bgcolor]: [color=gray]Increase stats size[/color]
-- [bgcolor=#333] . [/bgcolor]: [color=gray]Advance 1 frame (when paused)[/color]
-- [bgcolor=#333] SHIFT [/bgcolor]: [color=gray] Speed 2x[/color]
-- [bgcolor=#333]P[/bgcolor]: [color=gray]Pause at current frame[/color]
-- [bgcolor=#333]R[/bgcolor]: [color=gray]Restart current scene[/color]
-- [bgcolor=#333]Q[/bgcolor]: [color=gray]Quit[/color]"
-fit_content = true
+[node name="PauseLayer" parent="UILayer" unique_id=911028332 instance=ExtResource("2")]

@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://uleq8uyf6eq7"]
+
+[ext_resource type="Script" uid="uid://qomq3of8pdtw" path="res://menus/scripts/pause_menu.gd" id="1_i2531"]
+
+[node name="PauseMenu" type="ColorRect" unique_id=84711864]
+z_index = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.176471)
+script = ExtResource("1_i2531")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1426878213]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="ResumeButton" type="Button" parent="VBoxContainer" unique_id=1293727160]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Resume"
+
+[node name="ExitButton" type="Button" parent="VBoxContainer" unique_id=1191948847]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Main Menu"
+
+[node name="Label" type="Label" parent="." unique_id=1192898127]
+layout_mode = 0
+offset_left = 806.39996
+offset_top = 64.8
+offset_right = 1094.3999
+offset_bottom = 87.8
+text = "Players"
+horizontal_alignment = 1
+
+[node name="PlayersContainer" type="VBoxContainer" parent="." unique_id=1576799857]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7
+anchor_top = 0.15
+anchor_right = 0.95
+anchor_bottom = 0.5
+grow_horizontal = 0
+
+[node name="LevelsContainer" type="VBoxContainer" parent="." unique_id=15605983]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.3
+anchor_bottom = 0.4
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="LevelsLabel" type="Label" parent="LevelsContainer" unique_id=802797139]
+layout_mode = 2
+text = "Levels"
+horizontal_alignment = 1
+
+[node name="LevelsOption" type="OptionButton" parent="LevelsContainer" unique_id=753565947]
+layout_mode = 2
+
+[node name="LevelsButton" type="Button" parent="LevelsContainer" unique_id=678715895]
+layout_mode = 2
+text = "Load Level"
