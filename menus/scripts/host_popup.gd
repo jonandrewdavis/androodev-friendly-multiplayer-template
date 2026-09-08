@@ -1,5 +1,5 @@
 class_name HostOptionsPopup
-extends ColorRect
+extends Panel
 
 
 const MAX_NAME_LENGTH := 20

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cq2wjkr5rbohx" path="res://menus/scripts/host_popup.gd" id="1_5ld63"]
 
-[node name="HostPopup" type="ColorRect" unique_id=1553912510]
+[node name="HostPopup" type="Panel" unique_id=1553912510]
 anchors_preset = -1
 anchor_left = 0.3
 anchor_top = 0.1
@@ -10,7 +10,6 @@ anchor_right = 0.7
 anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 0.403922, 0.0666667, 1)
 script = ExtResource("1_5ld63")
 
 [node name="Title" type="Label" parent="." unique_id=27225847]
@@ -20,7 +19,8 @@ anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -43.0
 offset_right = 43.0
-offset_bottom = 23.0
+offset_top = 24.0
+offset_bottom = 67.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 36
 text = "Host Game"
@@ -31,9 +31,9 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 8.0
+offset_left = 24.0
 offset_top = -204.5
-offset_right = -4.0
+offset_right = -24.0
 offset_bottom = -14.5
 grow_horizontal = 2
 grow_vertical = 2
@@ -94,6 +94,7 @@ anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 24
+theme_type_variation = &"PrimaryButton"
 text = "Host"
 
 [node name="CloseButton" type="Button" parent="." unique_id=170630377]

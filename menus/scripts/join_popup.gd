@@ -1,5 +1,5 @@
 class_name JoinPopup
-extends ColorRect
+extends Panel
 
 
 @onready var close_button: Button = $CloseButton
