@@ -66,7 +66,19 @@ The godot project boilerplate provides:
   - or you can export manually from Godot as usual
 - A project structure that follows Godot best practices and naming conventions
 - Placeholder menu and gameplay scenes with support for keyboard, gamepad or touch inputs
-- A preconfigured a global theme for control nodes. Tweak `resources/theme/theme-main.tres` and every control nodes will inherit from it
+- A preconfigured global theme for control nodes. Tweak `resources/theme/theme_main.tres` and every control node will inherit from it.
+
+## Multiplayer
+
+Choose a Service in the main menu: LAN (ENet) uses your local network; Online (NodeTunnel) uses a relay without port forwarding. Host a game or open Join to discover rooms or enter an address directly. Hosting with one player starts offline.
+
+Press Escape in game to open the pause menu. Hosts can share the LAN address or NodeTunnel room code shown there, change levels, and kick or ban players. Leave Game returns to the main menu. NodeTunnel bans use temporary peer IDs and do not identify a player across reconnects.
+
+NodeTunnel v1.1.1_beta is bundled for macOS, Linux and Windows. Web exports are not supported by this native plugin. The relay is `us-east.nodetunnel.io:8080`, using App ID `0ahb6lkmhi5dtfi`. LAN gameplay uses UDP 3005 and discovery uses UDP 3006.
+
+Player departures and relay disconnections use NodeTunnel's native signals and timing; no custom presence tracking or in-game timeout is applied.
+
+To add a backend, implement `MultiplayerBackend` and register its enum value, script and display label in `globals/networking/multiplayer_service.gd`. The selected service is saved in the game's settings.
 
 # Get started
 

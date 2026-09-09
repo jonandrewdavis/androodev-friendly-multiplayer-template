@@ -1,82 +1,63 @@
 extends CanvasLayer
 
-@export var settings_menu: PanelContainer
-@export var margin_container: MarginContainer
+const PLAYER_ITEM := preload("res://scenes/gameplay/pause-layer/player_list_item.tscn")
+var players: Dictionary = {}
 
-@onready var pause := self
+func _ready() -> void:
+	hide()
+	%ResumeButton.pressed.connect(resume)
+	%SettingsButton.pressed.connect(func() -> void: %SettingsMenu.show())
+	%LeaveButton.pressed.connect(MultiplayerService.leave_game)
+	%LoadLevelButton.pressed.connect(_load_level)
+	%SettingsMenu.visibility_changed.connect(func() -> void:
+		%PauseRoot.visible = not %SettingsMenu.visible
+		if not %SettingsMenu.visible:
+			%ResumeButton.grab_focus())
+	%SettingsMenu.confirm_button_clicked.connect(func() -> void: %SettingsMenu.hide())
+	multiplayer.peer_connected.connect(_add_player)
+	multiplayer.peer_disconnected.connect(_remove_player)
+	_add_player(multiplayer.get_unique_id())
+	for peer_id in multiplayer.get_peers():
+		_add_player(peer_id)
+	%HostPanel.visible = MultiplayerService.is_host()
+	if MultiplayerService.is_host():
+		for key in LevelLoader.LEVEL_DICT:
+			%LevelOption.add_item(key)
+		%LobbyAddressLabel.text = "Address: " + MultiplayerService.get_lobby_address()
 
-@onready var resume_button: Button = %ResumeButton
-@onready var color_rect = $ColorRect
-
-@onready var pause_root: Control = %PauseRoot
-@onready var nodes_grp1 = [] # should be visible during gamemplay and hidden during pause
-@onready var nodes_grp2 = [pause_root, color_rect] # should be visible only in pause menu
-
-# Inventory open
-# Hit ESC -> close inventory
-# Inventory closed, hit ESC -> Opens Menu (quit / disconnect)
-
-# They both show your cursor. 
-
-func _ready():
-	pause_hide()
-
-func pause_show():
-	for n in nodes_grp1:
-		n.hide()
-	for n in nodes_grp2:
-		n.show()
-
-func pause_hide():
-	for n in nodes_grp1:
-		if n:
-			n.show()
-	for n in nodes_grp2:
-		if n:
-			n.hide()
-	settings_menu.hide()
-
-
-func _unhandled_input(event):
-	if event.is_action_pressed("pause"):
-		if settings_menu.visible:
-			# TODO: close settings.
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause") and not event.is_echo():
+		get_viewport().set_input_as_handled()
+		if GGT.is_changing_scene() or not MultiplayerService.in_lobby:
 			return
-		if pause_root.visible:
+		if %SettingsMenu.visible:
+			%SettingsMenu.hide()
+		elif visible:
 			resume()
 		else:
-			pause_game()
-		get_viewport().set_input_as_handled()
+			show()
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			%ResumeButton.grab_focus()
 
+func resume() -> void:
+	%SettingsMenu.hide()
+	hide()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-func resume():
-	pause_hide()
+func _add_player(peer_id: int) -> void:
+	if players.has(peer_id):
+		return
+	var item := PLAYER_ITEM.instantiate()
+	item.peer_id = peer_id
+	%PlayerList.add_child(item)
+	players[peer_id] = item
 
-func pause_game():
-	resume_button.grab_focus()
-	pause_show()
+func _remove_player(peer_id: int) -> void:
+	if players.has(peer_id):
+		var item: Node = players[peer_id]
+		%PlayerList.remove_child(item)
+		item.queue_free()
+		players.erase(peer_id)
 
-
-func _on_Resume_pressed():
-	resume()
-
-func _on_PauseButton_pressed():
-	pause_game()
-
-
-func _on_main_menu_pressed():
-	GGT.change_scene("res://scenes/menu/menu.tscn", {"show_progress_bar": false})
-
-
-func _on_settings_pressed() -> void:
-	settings_menu.show()
-
-
-func _on_settings_menu_visibility_changed() -> void:
-	margin_container.visible = !settings_menu.visible
-	if !settings_menu.visible:
-		resume_button.grab_focus() # restore focus
-
-
-func _on_settings_menu_confirm_button_clicked() -> void:
-	settings_menu.hide()
+func _load_level() -> void:
+	World.change_level(%LevelOption.get_item_text(%LevelOption.selected))

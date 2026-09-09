@@ -1,36 +1,21 @@
-# ProtoController v1.0 by Brackeys
-# CC0 License
-# Intended for rapid prototyping of first-person games.
-# Happy prototyping!
-# Modified by SwAAn :P
+# ProtoController by Brackeys (CC0), adapted by SwAAn.
 class_name Player
 extends CharacterBody3D
-
-## Can we move around?
 @export var can_move : bool = true
-## Are we affected by gravity?
 @export var has_gravity : bool = true
-## Can we press to jump?
 @export var can_jump : bool = true
 
 @export_group("Speeds")
-## Look around rotation speed.
 @export var look_speed : float = 0.002
-## Normal speed.
 @export var base_speed : float = 7.0
-## Speed of jump.
 @export var jump_velocity : float = 4.5
 
 var mouse_captured : bool = false
 var look_rotation : Vector2
 var move_speed : float = 0.0
-var pause_menu: PauseMenu
-
-## IMPORTANT REFERENCES
-@onready var head: Node3D = $Head
-@onready var collider: CollisionShape3D = $Collider
-@onready var camera: Camera3D = $Head/Camera3D
-@onready var pause_menu_packed: PackedScene = preload("uid://uleq8uyf6eq7")
+@onready var head: Node3D = %Head
+@onready var collider: CollisionShape3D = %Collider
+@onready var camera: Camera3D = %Camera3D
 
 
 func _enter_tree() -> void:
@@ -48,33 +33,19 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_multiplayer_authority():
-		# Pausing
-		if Input.is_key_pressed(KEY_ESCAPE):
-			if pause_menu == null:
-				_release_mouse()
-				pause_menu = pause_menu_packed.instantiate()
-				add_child(pause_menu)
-			else:
-				pause_menu.queue_free()
-				pause_menu = null
-				_capture_mouse()
-		# Look around
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:
 			_rotate_look(event.relative)
 
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority() and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-		# Apply gravity to velocity
 		if has_gravity:
 			if not is_on_floor():
 				velocity += get_gravity() * delta
-		# Apply jumping
 		if can_jump:
 			if Input.is_action_just_pressed('jump') and is_on_floor():
 				velocity.y = jump_velocity
 		move_speed = base_speed
-		# Apply desired movement to velocity
 		if can_move:
 			var input_dir := Input.get_vector('move_left', 'move_right', 'move_forward', 'move_backward')
 			var move_dir := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -87,13 +58,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = 0
 			velocity.y = 0
-		# Use velocity to actually move
 		move_and_slide()
-
-
-## Rotate us to look around.
-## Base of controller rotates around y (left/right). Head rotates around x (up/down).
-## Modifies look_rotation based on rot_input, then resets basis and rotates by look_rotation.
 func _rotate_look(rot_input: Vector2) -> void:
 	assert(is_multiplayer_authority())
 	look_rotation.x -= rot_input.y * look_speed
