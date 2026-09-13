@@ -3,7 +3,7 @@
 Run from the project root with Godot 4.7:
 
 ```sh
-GODOT=/Applications/Godot_v4.7-stable.app/Contents/MacOS/Godot
+GODOT=/Applications/Godot_v4.7.app/Contents/MacOS/Godot
 "$GODOT" --headless --path . res://tests/multiplayer_smoke.tscn -- offline
 ```
 
