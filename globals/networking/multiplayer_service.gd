@@ -8,9 +8,9 @@ const CONFIG_KEY_BACKEND := "backend"
 
 
 ## Add a new entry for each [MultiplayerBackend].
-enum BackendType {ENET, NODETUNNEL, STEAM}
-const BACKEND_LABELS := {BackendType.ENET: "LAN (ENet)", BackendType.NODETUNNEL: "Online (NodeTunnel)", BackendType.STEAM: "Steam"}
-const ADDRESS_HINTS := {BackendType.ENET: "IP address", BackendType.NODETUNNEL: "Room code", BackendType.STEAM: "Lobby ID"}
+enum BackendType {ENET, NODETUNNEL, STEAM, TUBE}
+const BACKEND_LABELS := {BackendType.ENET: "LAN (ENet)", BackendType.NODETUNNEL: "Online (NodeTunnel)", BackendType.STEAM: "Steam", BackendType.TUBE: "Online P2P (Tube)"}
+const ADDRESS_HINTS := {BackendType.ENET: "IP address", BackendType.NODETUNNEL: "Room code", BackendType.STEAM: "Lobby ID", BackendType.TUBE: "Session ID"}
 
 
 var backend: MultiplayerBackend
@@ -41,6 +41,9 @@ func _ready() -> void:
 	# Steam is optional: the backend script only parses when the GodotSteam extension is installed.
 	if ClassDB.class_exists("SteamMultiplayerPeer"):
 		backend_scripts[BackendType.STEAM] = load("res://globals/networking/steam_backend.gd")
+	# Tube needs WebRTC: built into web exports, provided by the webrtc_native extension elsewhere.
+	if ClassDB.class_exists("WebRTCPeerConnection"):
+		backend_scripts[BackendType.TUBE] = load("res://globals/networking/tube_backend.gd")
 	var saved: Variant = GGT_GameConfig.config.get_value(CONFIG_SECTION, CONFIG_KEY_BACKEND, BackendType.ENET)
 	set_backend(saved if saved is int and backend_scripts.has(saved) else BackendType.ENET, false)
 

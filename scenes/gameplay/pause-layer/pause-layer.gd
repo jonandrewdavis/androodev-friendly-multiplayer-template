@@ -24,9 +24,9 @@ func _ready() -> void:
 		for key in LevelLoader.LEVEL_DICT:
 			%LevelOption.add_item(key)
 	var backend := MultiplayerService.backend
-	%LobbyAddressLabel.visible = backend is NodeTunnelBackend and not multiplayer.multiplayer_peer is OfflineMultiplayerPeer
+	%LobbyAddressLabel.visible = backend.has_method("get_room_code") and not multiplayer.multiplayer_peer is OfflineMultiplayerPeer
 	if %LobbyAddressLabel.visible:
-		%LobbyAddressLabel.text = "Room code: " + (backend as NodeTunnelBackend).get_room_code()
+		%LobbyAddressLabel.text = MultiplayerService.ADDRESS_HINTS[MultiplayerService.backend_type] + ": " + backend.get_room_code()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and not event.is_echo():

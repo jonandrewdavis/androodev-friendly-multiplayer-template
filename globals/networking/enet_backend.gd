@@ -90,12 +90,12 @@ func fetch_lobby_list() -> void:
 	search_peer.put_packet(GREETING_MESSAGE.to_utf8_buffer())
 
 
-func set_joinable(joinable: bool) -> void:
-	print_debug("Setting ENet Lobby Joinable=" + str(joinable))
-	self.joinable = joinable
+func set_joinable(joinable_: bool) -> void:
+	print_debug("Setting ENet Lobby Joinable=" + str(joinable_))
+	self.joinable = joinable_
 	if multiplayer.multiplayer_peer is ENetMultiplayerPeer:
-		multiplayer.multiplayer_peer.refuse_new_connections = not joinable
-	if joinable:
+		multiplayer.multiplayer_peer.refuse_new_connections = not joinable_
+	if joinable_:
 		if search_server.listen(SEARCH_PORT) != OK: # for some reason setting the bind address to the broadcast address doesn't work here
 			status_changed.emit("LAN discovery unavailable; join by IP address.")
 	else:

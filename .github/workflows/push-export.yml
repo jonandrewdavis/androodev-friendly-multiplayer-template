@@ -1,17 +1,20 @@
-name: "Push Export"
+name: "Web Export"
 on:
   push:
     branches:
       - main
-      # - "feature/**"
+  workflow_dispatch:
+
 env:
+  ITCH_IO: true
   GODOT_VERSION: 4.7
-  EXPORT_NAME: godot-game-template
-  ITCH_IO: false #set to true if you want to enable automatic itch.io deploy
+  EXPORT_NAME: androodev-friendly-multiplayer-template
+  ITCH_USER: androodev
+  ITCH_GAME: androodev-friendly-multiplayer-template
 
 jobs:
   export-windows:
-    if: true
+    if: false
     name: Windows Export
     runs-on: ubuntu-24.04
     container:
@@ -43,12 +46,12 @@ jobs:
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: windows
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
+          ITCH_GAME: ${{ env.ITCH_GAME }}
+          ITCH_USER: ${{ env.ITCH_USER }}
           PACKAGE: itch.zip
 
   export-linux:
-    if: true
+    if: false
     name: Linux Export
     runs-on: ubuntu-24.04
     container:
@@ -80,8 +83,8 @@ jobs:
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: linux
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
+          ITCH_GAME: ${{ env.ITCH_GAME }}
+          ITCH_USER: ${{ env.ITCH_USER }}
           PACKAGE: itch.zip
 
   export-web:
@@ -109,15 +112,6 @@ jobs:
           name: web
           path: builds/web
           retention-days: 1
-      # Installing rsync is needed in order to deploy to GitHub Pages. Without it, the build will fail.
-      - name: Install rsync 📚
-        run: |
-          apt-get update && apt-get install -y rsync
-      - name: Deploy to GitHub Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v4
-        with:
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: builds/web # The folder the action should deploy.
       - name: Zip Folder
         run: zip -r itch.zip builds/web
       - name: Deploy to itch.io
@@ -126,8 +120,8 @@ jobs:
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: HTML
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
+          ITCH_GAME: ${{ env.ITCH_GAME }}
+          ITCH_USER: ${{ env.ITCH_USER }}
           PACKAGE: itch.zip
 
   export-mac:
@@ -163,6 +157,6 @@ jobs:
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: mac
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
+          ITCH_GAME: ${{ env.ITCH_GAME }}
+          ITCH_USER: ${{ env.ITCH_USER }}
           PACKAGE: itch.zip
