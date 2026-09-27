@@ -1,7 +1,5 @@
 @tool
 extends Theme
-## Palette-driven dark UI with dedicated control states and original SVG artwork.
-
 @export var accent_color: Color = Color("55c8f0"):
 	set(value):
 		accent_color = value
@@ -76,12 +74,9 @@ func _hex(color: Color) -> String:
 
 func _svg(body: String, width: int, height: int) -> DPITexture:
 	var source := '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">%s</svg>' % [width, height, width, height, body]
-	# Store SVG source rather than raw pixels. Godot rasterizes at the active UI
-	# scale while preserving logical dimensions, including on high-DPI displays.
 	return DPITexture.create_from_string(source)
 
 func _gradient_box(color: Color, end: Color, padding := Vector2(20, 11), pressed := false, radius := -1) -> StyleBoxTexture:
-	# Nine-slicing keeps corners crisp; a tiny lower edge replaces chunky extrusion.
 	var r := corner_radius if radius < 0 else radius
 	var edge := mini(elevation, 2) if not pressed else 0
 	var body := '<defs><linearGradient id="fill" x2="1" y2="0.4"><stop stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient><linearGradient id="light" x2="0" y2="1"><stop stop-color="white" stop-opacity="0.09"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient></defs>' % [_hex(color), _hex(end)]
@@ -316,7 +311,6 @@ func _ranges() -> void:
 	set_color("font_outline_color", &"ProgressBar", INK)
 	set_constant("outline_size", &"ProgressBar", 2)
 	set_font_size("font_size", &"ProgressBar", 14)
-	# Scrollbars also cover TextEdit and popup overflow.
 	for type in [&"HScrollBar", &"VScrollBar"]:
 		var padding := Vector2(0, 4) if type == &"HScrollBar" else Vector2(4, 0)
 		set_stylebox("scroll", type, _box(Color.TRANSPARENT, padding))

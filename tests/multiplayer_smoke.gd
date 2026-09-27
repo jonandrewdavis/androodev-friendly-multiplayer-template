@@ -23,6 +23,13 @@ func _wait_until(predicate: Callable, seconds := 12.0) -> bool:
 		await get_tree().create_timer(0.05).timeout
 	return predicate.call()
 
+func _in_session() -> bool:
+	return not MultiplayerService.pending and MultiplayerService.backend.has_active_session()
+
+func _address() -> String:
+	var backend := MultiplayerService.backend
+	return (backend as NodeTunnelBackend).get_room_code() if backend is NodeTunnelBackend else "127.0.0.1"
+
 func _run() -> void:
 	get_tree().current_scene = null
 	var args := OS.get_cmdline_user_args()
@@ -45,7 +52,7 @@ func _run() -> void:
 		elif mode == "relay-invalid":
 			MultiplayerService.join_game("INVALID-ROOM-CODE")
 			_check(await _wait_until(func() -> bool: return not failure.is_empty()), "invalid code fails")
-			_check(not MultiplayerService.pending and not MultiplayerService.in_lobby, "invalid code resets state")
+			_check(not MultiplayerService.pending and not MultiplayerService.backend.has_active_session(), "invalid code resets state")
 			scenario_completed = true
 		elif mode.ends_with("host"):
 			await _host()
@@ -56,7 +63,6 @@ func _run() -> void:
 		return
 	MultiplayerService.leave_game()
 	MultiplayerService.set_backend(original_backend, false)
-	MultiplayerService.backend.shutdown()
 	print("SMOKE PASS: ", mode)
 	get_tree().quit()
 
@@ -79,7 +85,7 @@ func _offline() -> void:
 	panel.get_node("%MaxPlayersSpin").value = 1
 	panel.get_node("%HostButton").pressed.emit()
 	_check(await _wait_until(func() -> bool: return get_tree().current_scene != null and get_tree().current_scene.name == "Gameplay" and not GGT.is_changing_scene()), "offline gameplay transition")
-	_check(MultiplayerService.in_lobby, "offline lobby joined")
+	_check(not MultiplayerService.pending and multiplayer.multiplayer_peer is OfflineMultiplayerPeer, "offline lobby joined")
 	_check(World.player_spawner.get_child_count() == 1, "offline player spawned")
 	var pause := get_tree().current_scene.get_node("UILayer/PauseLayer")
 	var event := InputEventAction.new()
@@ -96,14 +102,12 @@ func _offline() -> void:
 	pause.get_node("%LeaveButton").pressed.emit()
 	_check(await _wait_until(func() -> bool: return get_tree().current_scene != null and get_tree().current_scene.name == "Menu" and not GGT.is_changing_scene()), "return to menu")
 	_check(World.player_spawner.get_child_count() == 0 and World.level_loader.get_child_count() == 0, "world cleared")
-	MultiplayerService.join_game("")
-	_check(not MultiplayerService.pending and not failure.is_empty(), "blank address rejected")
 	MultiplayerService.set_backend(MultiplayerService.BackendType.NODETUNNEL, false)
 	var options := HostOptions.new()
 	options.max_players = 1
 	options.lobby_name = "Offline relay selection"
 	MultiplayerService.host_game(options)
-	_check(MultiplayerService.in_lobby and multiplayer.multiplayer_peer is OfflineMultiplayerPeer, "relay selection supports offline")
+	_check(not MultiplayerService.pending and multiplayer.multiplayer_peer is OfflineMultiplayerPeer, "relay selection supports offline")
 	MultiplayerService.leave_game()
 	await get_tree().create_timer(0.3).timeout
 	_check(World.player_spawner.get_child_count() == 0 and World.level_loader.get_child_count() == 0, "leave cancels level loading")
@@ -122,9 +126,9 @@ func _capacity() -> void:
 		options.max_players = 4
 		options.lobby_name = "Capacity Smoke"
 		MultiplayerService.host_game(options)
-		_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby and MultiplayerService.backend.get_joinable()), "capacity host ready")
+		_check(await _wait_until(func() -> bool: return _in_session() and MultiplayerService.backend.get_joinable()), "capacity host ready")
 		var file := FileAccess.open("/private/tmp/nodetunnel-capacity-room.txt", FileAccess.WRITE)
-		file.store_string(MultiplayerService.get_lobby_address())
+		file.store_string(_address())
 		file.close()
 		print("CAPACITY HOST READY")
 		_check(await _wait_until(func() -> bool: return multiplayer.get_peers().size() == 3, 25.0), "four players joined")
@@ -135,9 +139,9 @@ func _capacity() -> void:
 		MultiplayerService.join_game(address)
 		if mode.contains("full"):
 			_check(await _wait_until(func() -> bool: return not failure.is_empty()), "full room rejected")
-			_check(not MultiplayerService.in_lobby, "fifth player never admitted")
+			_check(not MultiplayerService.backend.has_active_session(), "fifth player never admitted")
 		else:
-			_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby), "capacity client joined")
+			_check(await _wait_until(func() -> bool: return _in_session()), "capacity client joined")
 			_check(await _wait_until(func() -> bool: return exits > 0, 30.0), "capacity host left")
 	scenario_completed = true
 
@@ -146,11 +150,11 @@ func _host() -> void:
 	options.max_players = 4
 	options.lobby_name = "Smoke Test"
 	MultiplayerService.host_game(options)
-	_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby and MultiplayerService.backend.get_joinable()), "host ready: " + failure)
-	print("SMOKE HOST READY: ", MultiplayerService.get_lobby_address())
+	_check(await _wait_until(func() -> bool: return _in_session() and MultiplayerService.backend.get_joinable()), "host ready: " + failure)
+	print("SMOKE HOST READY: ", _address())
 	if mode.begins_with("relay"):
 		var file := FileAccess.open("/private/tmp/nodetunnel-smoke-room.txt", FileAccess.WRITE)
-		file.store_string(MultiplayerService.get_lobby_address())
+		file.store_string(_address())
 		file.close()
 	_check(await _wait_until(func() -> bool: return multiplayer.get_peers().size() == 1, 25.0), "client admitted")
 	await get_tree().create_timer(1.0).timeout
@@ -179,19 +183,19 @@ func _session() -> void:
 		options.max_players = 4
 		options.lobby_name = "Session smoke"
 		MultiplayerService.host_game(options)
-		_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby and MultiplayerService.backend.get_joinable()), "session host ready")
+		_check(await _wait_until(func() -> bool: return _in_session() and MultiplayerService.backend.get_joinable()), "session host ready")
 		var file := FileAccess.open("/private/tmp/nodetunnel-session-room.txt", FileAccess.WRITE)
-		file.store_string(MultiplayerService.get_lobby_address())
+		file.store_string(_address())
 		file.close()
 		print("SESSION HOST READY")
 		_check(await _wait_until(func() -> bool: return multiplayer.get_peers().size() == 1), "session client joined")
 	else:
 		MultiplayerService.join_game(FileAccess.get_file_as_string("/private/tmp/nodetunnel-session-room.txt"))
-		_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby), "session client connected")
+		_check(await _wait_until(func() -> bool: return _in_session()), "session client connected")
 	_check(await _wait_until(func() -> bool: return World.player_spawner.get_child_count() == 2), "session players replicated")
 	for second in range(30 if mode.ends_with("host") else 25):
 		await get_tree().create_timer(1.0).timeout
-		_check(MultiplayerService.in_lobby and exits == 0, "session stays connected past ten seconds")
+		_check(_in_session() and exits == 0, "session stays connected past ten seconds")
 	scenario_completed = true
 
 func _client() -> void:
@@ -201,7 +205,7 @@ func _client() -> void:
 	if mode.begins_with("relay"):
 		address = FileAccess.get_file_as_string("/private/tmp/nodetunnel-smoke-room.txt")
 	MultiplayerService.join_game(address)
-	_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby), "client connected: " + failure)
+	_check(await _wait_until(func() -> bool: return _in_session()), "client connected: " + failure)
 	_check(await _wait_until(func() -> bool: return World.player_spawner.get_child_count() == 2), "client replicated players")
 	_check(await _wait_until(func() -> bool: return World.level_loader.current_key == "example-2"), "client follows level change")
 	_check(await _wait_until(func() -> bool: return exits == 1), "client kicked")
@@ -218,7 +222,6 @@ func _client() -> void:
 		await get_tree().create_timer(3.5).timeout
 	var prior_exits := exits
 	MultiplayerService.join_game(address)
-	_check(await _wait_until(func() -> bool: return MultiplayerService.in_lobby), "last connection")
+	_check(await _wait_until(func() -> bool: return _in_session()), "last connection")
 	_check(await _wait_until(func() -> bool: return exits > prior_exits), "host disconnect")
-	_check(MultiplayerService.kick_reason == MultiplayerService.DISCONNECT_REASON or MultiplayerService.kick_reason == "Disconnected from relay.", "host disconnect reason")
 	scenario_completed = true

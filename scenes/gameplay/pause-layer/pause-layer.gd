@@ -19,16 +19,19 @@ func _ready() -> void:
 	_add_player(multiplayer.get_unique_id())
 	for peer_id in multiplayer.get_peers():
 		_add_player(peer_id)
-	%HostPanel.visible = MultiplayerService.is_host()
-	if MultiplayerService.is_host():
+	%HostPanel.visible = multiplayer.is_server()
+	if multiplayer.is_server():
 		for key in LevelLoader.LEVEL_DICT:
 			%LevelOption.add_item(key)
-		%LobbyAddressLabel.text = "Address: " + MultiplayerService.get_lobby_address()
+	var backend := MultiplayerService.backend
+	%LobbyAddressLabel.visible = backend is NodeTunnelBackend and not multiplayer.multiplayer_peer is OfflineMultiplayerPeer
+	if %LobbyAddressLabel.visible:
+		%LobbyAddressLabel.text = "Room code: " + (backend as NodeTunnelBackend).get_room_code()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause") and not event.is_echo():
 		get_viewport().set_input_as_handled()
-		if GGT.is_changing_scene() or not MultiplayerService.in_lobby:
+		if GGT.is_changing_scene():
 			return
 		if %SettingsMenu.visible:
 			%SettingsMenu.hide()

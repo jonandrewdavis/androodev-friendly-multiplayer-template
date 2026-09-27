@@ -40,6 +40,8 @@ func _connect_to_relay() -> void:
 		_fail("Relay connection timed out.")
 
 func _ensure_relay(action: Callable) -> void:
+	if phase != Phase.DISCONNECTED and multiplayer.multiplayer_peer != peer:
+		_reset_peer()
 	match phase:
 		Phase.READY:
 			action.call()
@@ -66,6 +68,7 @@ func host_game(options: HostOptions) -> void:
 
 func _host_room() -> void:
 	phase = Phase.HOSTING
+	peer.refuse_new_connections = true
 	var err := peer.host_room(true, _encode_metadata())
 	if err != OK:
 		_fail(error_string(err))
@@ -92,7 +95,7 @@ func fetch_lobby_list() -> void:
 func _request_rooms() -> void:
 	var err := peer.get_rooms()
 	if err != OK:
-		status_changed.emit("Could not fetch rooms: " + error_string(err))
+		push_warning("Could not fetch rooms: " + error_string(err))
 
 func _on_rooms_received(rooms: Array, token: int) -> void:
 	if token != generation:
@@ -119,13 +122,15 @@ func _validate_join(_metadata: String) -> bool:
 	var now := Time.get_ticks_msec()
 	while not pending_admissions.is_empty() and now - pending_admissions[0] > 10000:
 		pending_admissions.pop_front()
-	if not joinable or multiplayer.get_peers().size() + pending_admissions.size() + 1 >= max_players:
+	if not joinable or peer.refuse_new_connections or multiplayer.get_peers().size() + pending_admissions.size() + 1 >= max_players:
 		return false
 	pending_admissions.append(now)
 	return true
 
 func set_joinable(value: bool) -> void:
 	joinable = value
+	if peer != null:
+		peer.refuse_new_connections = not value
 
 func get_joinable() -> bool:
 	return joinable
@@ -136,10 +141,11 @@ func get_uid(peer_id: int) -> String:
 func get_username(peer_id: int) -> String:
 	return str(peer_id)
 
-func get_address_hint() -> String:
-	return "Room code"
+func has_active_session() -> bool:
+	return phase == Phase.IN_ROOM
 
-func get_lobby_address() -> String:
+## The code other players enter to join this room. Empty when not in a room.
+func get_room_code() -> String:
 	return peer.room_id if peer != null and phase == Phase.IN_ROOM else ""
 
 func _on_error(message: String, token: int) -> void:
@@ -156,9 +162,13 @@ func _on_forced_disconnect(token: int) -> void:
 	if token != generation:
 		return
 	var was_in_room := phase == Phase.IN_ROOM
+	var was_server := multiplayer.is_server()
 	_reset_peer()
 	if was_in_room:
-		lobby_lost.emit("Disconnected from relay.")
+		if was_server:
+			MultiplayerService.leave_game()
+		else:
+			multiplayer.server_disconnected.emit()
 	else:
 		join_lobby_failed.emit("Relay connection lost.")
 
@@ -179,6 +189,8 @@ func _reset_peer() -> void:
 		peer.room_connected.disconnect(_on_room_connected.bind(generation - 1))
 		peer.forced_disconnect.disconnect(_on_forced_disconnect.bind(generation - 1))
 		peer.rooms_received.disconnect(_on_rooms_received.bind(generation - 1))
+		if multiplayer.multiplayer_peer != peer: # replaced by something else, e.g. an offline game
+			peer.close()
 	_close_peer()
 	peer = null
 	status_changed.emit("Relay disconnected")
@@ -187,5 +199,5 @@ func leave_game() -> void:
 	_reset_peer()
 	_connect_to_relay()
 
-func shutdown() -> void:
+func _exit_tree() -> void:
 	_reset_peer()

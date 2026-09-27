@@ -59,6 +59,8 @@ func _physics_process(delta: float) -> void:
 			velocity.x = 0
 			velocity.y = 0
 		move_and_slide()
+
+
 func _rotate_look(rot_input: Vector2) -> void:
 	assert(is_multiplayer_authority())
 	look_rotation.x -= rot_input.y * look_speed

@@ -6,7 +6,7 @@ var timeout_token := 0
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	for type in MultiplayerService.BACKEND_LABELS:
+	for type in MultiplayerService.backend_scripts:
 		%ServiceOption.add_item(MultiplayerService.BACKEND_LABELS[type], type)
 	%ServiceOption.select(%ServiceOption.get_item_index(MultiplayerService.backend_type))
 	%ServiceOption.item_selected.connect(func(index: int) -> void: MultiplayerService.set_backend(%ServiceOption.get_item_id(index)))

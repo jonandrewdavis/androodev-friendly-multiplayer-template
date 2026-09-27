@@ -13,7 +13,7 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 
 func _on_peer_connected(peer_id: int) -> void:
-	if MultiplayerService.is_host() and not current_key.is_empty():
+	if multiplayer.is_server() and not current_key.is_empty():
 		spawn_level.rpc_id(peer_id, current_key)
 
 func clear_level() -> void:
@@ -33,7 +33,8 @@ func spawn_level(key: String) -> void:
 	var path := LEVEL_DICT[key]
 	var err := ResourceLoader.load_threaded_request(path, "PackedScene")
 	if err != OK:
-		MultiplayerService._end_game("Could not load level.")
+		push_error("Could not load level: ", key)
+		MultiplayerService.leave_game()
 		return
 	while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		await get_tree().create_timer(WAIT_INTERVAL).timeout
@@ -42,7 +43,8 @@ func spawn_level(key: String) -> void:
 	if token != generation:
 		return
 	if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_LOADED:
-		MultiplayerService._end_game("Could not load level.")
+		push_error("Could not load level: ", key)
+		MultiplayerService.leave_game()
 		return
 	var packed: PackedScene = ResourceLoader.load_threaded_get(path)
 	add_child(packed.instantiate())

@@ -25,4 +25,6 @@ Additional modes:
 
 Each process must exit successfully and print SMOKE PASS. Also inspect its output for script/native errors. The plugin itself logs an expected relay error for invalid-code and full-room rejection tests.
 
+There is no Steam mode: SteamBackend needs a running Steam client and the GodotSteam extension, so test it manually with two accounts.
+
 Service choices made by these checks are not persisted. Relay modes create temporary public test rooms using the configured App ID. Room-code coordination paths currently target macOS.

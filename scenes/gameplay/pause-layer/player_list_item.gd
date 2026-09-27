@@ -5,7 +5,7 @@ var peer_id: int
 
 func _ready() -> void:
 	%UsernameLabel.text = MultiplayerService.get_username(peer_id)
-	var can_moderate := MultiplayerService.is_host() and peer_id != multiplayer.get_unique_id()
+	var can_moderate := multiplayer.is_server() and peer_id != multiplayer.get_unique_id()
 	%KickButton.visible = can_moderate
 	%BanButton.visible = can_moderate
 	%KickButton.pressed.connect(func() -> void: MultiplayerService.kick_player(peer_id))

@@ -8,11 +8,11 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _on_peer_connected(peer_id: int) -> void:
-	if MultiplayerService.is_host() and MultiplayerService.backend.get_joinable() and not MultiplayerService.banlist.has(MultiplayerService.backend.get_uid(peer_id)):
+	if multiplayer.is_server() and MultiplayerService.backend.get_joinable() and not MultiplayerService.banlist.has(MultiplayerService.backend.get_uid(peer_id)):
 		spawn_player(peer_id)
 
 func _on_peer_disconnected(peer_id: int) -> void:
-	if MultiplayerService.is_host():
+	if multiplayer.is_server():
 		remove_player(peer_id)
 
 func spawn_player(id: int) -> void:

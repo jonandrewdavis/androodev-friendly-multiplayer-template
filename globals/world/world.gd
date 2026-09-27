@@ -8,17 +8,20 @@ var session := 0
 func _ready() -> void:
 	MultiplayerService.lobby_joined.connect(_on_lobby_joined)
 	MultiplayerService.game_exited.connect(clear)
+	multiplayer.server_disconnected.connect(MultiplayerService.leave_game)
+	multiplayer.connection_failed.connect(MultiplayerService.leave_game)
 
 func _on_lobby_joined() -> void:
-	if not MultiplayerService.is_host():
+	if not multiplayer.is_server():
 		return
 	session += 1
 	var token := session
 	await level_loader.spawn_level(DEFAULT_LEVEL)
-	if token != session or not MultiplayerService.is_host():
+	if token != session or not multiplayer.is_server():
 		return
 	player_spawner.spawn_player(1)
-	MultiplayerService.set_joinable(true)
+	if MultiplayerService.backend.has_active_session(): # offline games aren't advertised
+		MultiplayerService.set_joinable(true)
 
 func clear() -> void:
 	session += 1
@@ -26,5 +29,5 @@ func clear() -> void:
 	level_loader.clear_level()
 
 func change_level(key: String) -> void:
-	if MultiplayerService.is_host() and LevelLoader.LEVEL_DICT.has(key):
+	if multiplayer.is_server() and LevelLoader.LEVEL_DICT.has(key):
 		level_loader.spawn_level.rpc(key)
