@@ -1,18 +1,18 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://qk86ojublqog"]
 
-[ext_resource type="Script" path="res://globals/world/world.gd" id="1"]
-[ext_resource type="Script" path="res://globals/world/level_loader.gd" id="2"]
-[ext_resource type="Script" path="res://globals/world/player_spawner.gd" id="3"]
+[ext_resource type="Script" uid="uid://dra4sweci742n" path="res://globals/world/world.gd" id="1"]
+[ext_resource type="Script" uid="uid://bd240dbppqbi6" path="res://globals/world/level_loader.gd" id="2"]
+[ext_resource type="Script" uid="uid://cd1b7rpxgj5d2" path="res://globals/world/player_spawner.gd" id="3"]
 
-[node name="World" type="Node"]
+[node name="World" type="Node" unique_id=261978935]
 script = ExtResource("1")
 
-[node name="LevelLoader" type="Node" parent="."]
+[node name="LevelLoader" type="Node" parent="." unique_id=1689111058]
 unique_name_in_owner = true
 script = ExtResource("2")
 
-[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=641074201]
 unique_name_in_owner = true
-_spawnable_scenes = PackedStringArray("res://player/proto_controller.tscn")
+_spawnable_scenes = PackedStringArray("uid://fff2awjtd2uk")
 spawn_path = NodePath(".")
 script = ExtResource("3")

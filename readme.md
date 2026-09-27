@@ -1,38 +1,19 @@
-![game-template-overview](https://github.com/user-attachments/assets/a89a031c-f880-45f6-ac84-4450c8bb4a22)
+# AndrooDev "Friendly" Multiplayer Template
 
-> 🌟 You make games, the template handles the boring stuff.
+A Godot game template with many ways to connect. Designed to make starting your co-op or friendly game easy.
 
-<p>
-  <a href="https://godotengine.org/download">
-    <img alt="Godot Download badge" src="https://img.shields.io/badge/godot-4.7-blue">
-  </a>
+### Overview
 
-  <a href="https://github.com/crystal-bit/godot-game-template/releases">
-    <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/crystal-bit/godot-game-template">
-  </a>
-</p>
+This template is based on two other great templates. Check them out here:
 
-**Godot Game Template**, also GGT in short, is a simple generic starter project for Godot games.
-
-Provides a solid base for quick iterations.
-
-It worked well when used by small teams in game jams, but it should be generic
-enough to work for mid sized teams as well.
-
-Online demo available on → https://crystalbit.itch.io/godot-game-template
-
-https://github.com/user-attachments/assets/1f647a5d-5047-40eb-b3c2-7142312459c3
+- [Godot Game Template, also GGT for short](https://github.com/crystal-bit/godot-game-template/tree/main)
+- [swAAn01's Godot Multiplayer Platform](https://github.com/swAAn01/Godot-Multiplayer-Platform)
 
 
-## Used by
 
-| Logo                                                                                                                                        | Godot | Title                      | Platforms                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | ----- | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| ![YouAreUto icon](https://play-lh.googleusercontent.com/lL54YNps-UPuDONDHfy3pmn8_aVUZGMorHJcDArimJWCQKjjNax0QMxpiAWCc5PUPbU=s100-rw)        | 3.4   | **YouAreUto** (2019)       | Android, iOS, [GitHub](https://github.com/YouAreUto/YouAreUto)                                                    |
-| ![Defending Todot icon](https://imgur.com/Bn10XAf.png)                                                                                      | 3.2.3 | **Defending Todot** (2020) | [HTML5](https://crystal-bit.github.io/defending-todot/), [GitHub](https://github.com/crystal-bit/defending-todot) |
-| ![Karooto No Gase icon](https://play-lh.googleusercontent.com/sWgjV9dJxa1jKina0mNbU3fGmqA4zuqtRWXfhn_dfEK6reW90GH1uz0wsai1SG898bOZ=s100-rw) | 3.x   | **Karooto No Gase** (2021) | Android, HTML5 [Itch.io](https://calalinta.itch.io/)                                                              |
-| ![Pizza Poison Logo](https://github.com/user-attachments/assets/8f794de0-dcf8-4f8f-b29c-f1c619ba51d2)                                       | 4.3   | **Pizza Poison** (2025)    | [Itch.io](https://spesknight.itch.io/pizza-poison)                                                                |
-| <img src="https://github.com/user-attachments/assets/80bc19b6-8911-40ad-9214-90f84f9d7dc9" alt="Pangolick Quest icon" width=100 />          | 4.4.1 | **Pangolick Quest** (2025) | HTML5, Windows, Linux, OSX [Itch.io](https://havbit.itch.io/pangolick-quest)                                                           |
+
+
+              |
 # Features Overview
 
 GGT is composed of multiple parts:
