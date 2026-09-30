@@ -48,7 +48,7 @@ extends CharacterBody3D
 #Speed multiplier used internally for things like sprinting, if you want to give the player boosts use the exported multiplier instead.
 @onready var base_speed_multiplier : float = 1.0
 #Speed modifier to be used externally, for things such as gear and items
-@export var speed_multiplier : float = 1.0
+@export var speed_multiplier : float = 2.0
 @export var friction : float = 20
 @export var acceleration : float = 20
 @export var air_acceleration : float = 35

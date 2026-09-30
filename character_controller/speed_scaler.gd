@@ -9,4 +9,4 @@ func _process(_delta: float) -> void:
 	var increase : float = ((1 * player_controller.velocity.length()) / 6)
 	animation_tree.set("parameters/Walk/Character_Speed_Scale/scale", increase)
 	animation_tree.set("parameters/Sprint/Character_Speed_Scale/scale", increase)
-	animation_tree.set("parameters/Crouch_Walk/Character_Speed_Scale/scale", increase)
+	animation_tree.set("parameters/Crouch Walk/Character_Speed_Scale/scale", increase)
