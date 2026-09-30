@@ -1,22 +1,20 @@
 extends AnimationTree
 ## Replicates the state machine's current state from the authority to puppets.
-
-## Written by the authority, replicated to peers (on change).
 @export var anim_state : StringName = &""
-## Horizontal speed, written by the authority, replicated to peers.
-## Puppets feed it to the Speed_Scaler so each animation gets its own scale.
-@export var ground_speed : float = 0.0
 
+## Ground speed, written by the authority, replicated to peers by MultiplayerSynchronizer.
+## Feeds into the Speed_Scaler so each animation gets its own scale.
+@export var ground_speed : float = 0.0
 @onready var speed_scaler : Node = $Speed_Scaler
 @onready var playback : AnimationNodeStateMachinePlayback = get("parameters/playback")
-var _applied_state : StringName = &""
+
 ## Puppet-side smoothed copy of ground_speed, so playback speed doesn't flicker between packets.
 var _smoothed_speed : float = 0.0
+var _applied_state : StringName = &""
 
 func _ready() -> void:
 	if not is_multiplayer_authority():
 		_make_puppet_tree()
-		speed_scaler.set_process(false)
 
 func _process(delta: float) -> void:
 	if is_multiplayer_authority():
@@ -30,6 +28,7 @@ func _apply_remote_state(delta: float) -> void:
 	speed_scaler.apply(_smoothed_speed)
 	if anim_state == &"" or anim_state == _applied_state:
 		return
+
 	# First sync (spawn / late join) snaps; afterwards travel so crossfades play.
 	if _applied_state == &"":
 		playback.start(anim_state)
@@ -37,13 +36,13 @@ func _apply_remote_state(delta: float) -> void:
 		playback.travel(anim_state)
 	_applied_state = anim_state
 
-## Puppets get their own copy of the state machine with auto-advance disabled,
-## so stale local variables can't drive transitions.
+## Because the AnimationTree has local variables that can run or be stale on remote peers (puppets),
+## we duplicate the tree and disabled auto-advance, so stale local variables can't drive transitions.
 func _make_puppet_tree() -> void:
-	var sm : AnimationNodeStateMachine = tree_root.duplicate(true)
-	for i in sm.get_transition_count():
-		var t := sm.get_transition(i)
-		t.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
-		t.advance_expression = ""
-	tree_root = sm
+	var tree : AnimationNodeStateMachine = tree_root.duplicate(true)
+	for i in tree.get_transition_count():
+		var transition := tree.get_transition(i)
+		transition.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
+		transition.advance_expression = ""
+	tree_root = tree
 	playback = get("parameters/playback")

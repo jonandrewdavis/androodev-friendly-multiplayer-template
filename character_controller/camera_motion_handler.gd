@@ -13,7 +13,8 @@ extends Node
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-
+	if not is_multiplayer_authority():
+		return
 
 	if bobbing_enabled == false:
 		return

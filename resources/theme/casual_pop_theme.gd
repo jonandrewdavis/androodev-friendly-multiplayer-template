@@ -39,9 +39,9 @@ extends Theme
 
 const INK = Color("142032")
 const PAPER = Color("f1f5fc")
-const REGULAR = preload("res://assets/fonts/Lato-Regular.ttf")
-const BOLD = preload("res://assets/fonts/Lato-Bold.ttf")
-const BLACK = preload("res://assets/fonts/Lato-Black.ttf")
+const REGULAR = preload("res://assets/fonts/Inconsolata-Medium.ttf")
+const BOLD = preload("res://assets/fonts/Inconsolata-Bold.ttf")
+const BLACK = preload("res://assets/fonts/Inconsolata-Black.ttf")
 
 func _init() -> void:
 	rebuild()

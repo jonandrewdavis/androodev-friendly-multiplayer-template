@@ -31,6 +31,10 @@ func _ready() -> void:
 	
 	look_rotation.y = player_main.rotation.y
 	look_rotation.x = head.rotation.x
+	
+	if not is_multiplayer_authority():
+		set_process_input(false)
+		set_process(false)
 
 func _input(event: InputEvent) -> void:
 	
@@ -45,7 +49,6 @@ func _input(event: InputEvent) -> void:
 		rotate_look(event.relative, player_main.look_sensitivity, 0.01)
 
 func _process(delta: float) -> void:
-
 	head.position = (player_main.position + head_offset)
 	
 	

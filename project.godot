@@ -28,7 +28,7 @@ GGT="*uid://cg0wu8g5j7s4w"
 GGT_GameConfig="*uid://16licpbm1tux"
 DebugMenu="*uid://cggqb75a8w8r"
 MultiplayerService="*uid://dsr7i0lu8bo4r"
-World="*res://globals/world/world.tscn"
+World="*res://world/world.tscn"
 
 [display]
 
@@ -40,6 +40,10 @@ window/stretch/aspect="expand"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/ggt-core/plugin.cfg", "res://addons/ggt-debug-shortcuts/plugin.cfg", "res://addons/godotsteam/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/tube/plugin.cfg")
+
+[gui]
+
+theme/custom_font="uid://r73nxiw0jeo7"
 
 [input]
 

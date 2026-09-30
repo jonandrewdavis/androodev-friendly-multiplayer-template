@@ -35,7 +35,7 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 
 	if ClassDB.class_exists("WebRTCPeerConnection"):
-		backend_scripts[BackendType.TUBE] = load("res://globals/networking/tube_backend.gd")
+		backend_scripts[BackendType.TUBE] = load("res://networking/tube_backend.gd")
 
 	if not OS.get_name() == "Web":
 		_ready_desktop_backends()
@@ -44,13 +44,13 @@ func _ready() -> void:
 	set_backend(saved if saved is int and backend_scripts.has(saved) else BackendType.ENET, false)
 
 func _ready_desktop_backends():
-	backend_scripts[BackendType.ENET] = load("res://globals/networking/enet_backend.gd")
+	backend_scripts[BackendType.ENET] = load("res://networking/enet_backend.gd")
 
 	if ClassDB.class_exists('NodeTunnelPeer'):
-		backend_scripts[BackendType.NODETUNNEL] = load("res://globals/networking/nodetunnel_backend.gd")
+		backend_scripts[BackendType.NODETUNNEL] = load("res://networking/nodetunnel_backend.gd")
 
 	if ClassDB.class_exists("SteamMultiplayerPeer"):
-		backend_scripts[BackendType.STEAM] = load("res://globals/networking/steam_backend.gd")
+		backend_scripts[BackendType.STEAM] = load("res://networking/steam_backend.gd")
 
 
 ## Modify [constant BackendType] and [method _ready] for each backend you want to support.

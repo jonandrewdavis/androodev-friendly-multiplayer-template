@@ -11,7 +11,7 @@ func _ready() -> void:
 		await GGT.scene_transition_finished
 		await get_tree().process_frame
 	# game_exited may have fired while this scene was loading (hosts always have a level key; clients a live session).
-	if not MultiplayerService.backend.has_active_session() and World.level_loader.current_key.is_empty():
+	if not MultiplayerService.backend.has_active_session():
 		_on_game_exited()
 	elif not exiting:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

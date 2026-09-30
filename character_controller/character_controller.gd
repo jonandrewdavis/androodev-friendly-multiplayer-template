@@ -289,8 +289,9 @@ func _physics_process(delta: float) -> void:
 	raw_desired_velocity = velocity
 	velocity += added_velocity
 	desired_velocity = velocity
-	#print(velocity)
+
 	added_velocity = Vector3.ZERO
+
 	#Stick to slopes/stairs while grounded, but don't snap back down mid-jump
 	floor_snap_length = 0.0 if jumping else 1.0
 	move_and_slide()
