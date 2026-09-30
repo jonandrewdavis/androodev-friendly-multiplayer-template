@@ -17,7 +17,7 @@ extends CharacterBody3D
 ##Determines if the player can enter noclip mode
 @export var noclip_allowed : bool = true
 ##Determines if a player can stop their momentum by letting go of movement while midair 
-@export var midair_deceleration : bool = true
+@export var midair_deceleration : bool = false
 ##If the player can strafe
 @export var strafing_allowed : bool = true
 ##If the player can strafe midair, strafing_allowed being disabled will override this
@@ -40,24 +40,32 @@ extends CharacterBody3D
 @onready var crouching : bool = false
 
 @export_group("Attributes")
-@export var base_speed : float = 7.0
-@export var sprint_increase : float = 0.25
+@export var base_speed : float = 5.0
+@export var sprint_increase : float = 0.8
 @export var crouch_speed_decrease : float = 0.15
 @export var crouch_animation_time : float = 0.075
 @export var water_speed_decrease : float = 0.25
 #Speed multiplier used internally for things like sprinting, if you want to give the player boosts use the exported multiplier instead.
 @onready var base_speed_multiplier : float = 1.0
 #Speed modifier to be used externally, for things such as gear and items
-@export var speed_multiplier : float = 2.0
-@export var friction : float = 20
-@export var acceleration : float = 20
-@export var air_acceleration : float = 35
+@export var speed_multiplier : float = 1.0
+## Lerp rates (per second): roughly 1 / time to reach 63% of target speed
+@export var friction : float = 7.5
+@export var sprint_friction : float = 6.5
+@export var acceleration : float = 8.0
+@export var sprint_acceleration : float = 3.5
+@export var air_acceleration : float = 10.0
+## Max horizontal speed the player can steer to while midair
+@export var air_speed : float = 6.6
 @export var jump_power : float = 7.0
+## Upward gravity is divided by this when jump is released early (lower = shorter hops)
+@export var jump_cut_multiplier : float = 0.5
+@export var model_rotation_speed : float = 6.5
 #Amount of times a player can jump
 @export var max_jumps : int = 1
 @onready var jumps_remaining : int
 ##Time where the player is still allowed to jump after leaving a platform
-@export var coyote_time : float = 0.1
+@export var coyote_time : float = 0.2
 @onready var coyote_time_timer : float
 
 ## Soft clamp for velocity, can be exceeded but counterfources will be applied.
@@ -142,7 +150,7 @@ func _physics_process(delta: float) -> void:
 		#Apply jump velocity
 		if jump_allowed and (is_on_floor() or (coyote_time_timer > 0 and jumps_remaining > 0) and not swimming and not floating):
 			if (Input.is_action_just_pressed(mapped_inputs["Jump"]) or (Input.is_action_pressed(mapped_inputs["Jump"]) and hold_jump == true)):
-				velocity.y += jump_power
+				velocity.y = jump_power
 				jumps_remaining -= 1
 				jumped.emit()
 				jumping = true
@@ -166,8 +174,11 @@ func _physics_process(delta: float) -> void:
 				#print((get_gravity() * 0.1) * delta)
 				velocity += (get_gravity() * 0.1) * delta
 			elif not is_on_floor() and not floating:
-				#print(get_gravity() * delta)
-				velocity += get_gravity() * delta
+				#Rising gravity is increased when jump is released early, for variable jump height
+				var gravity : Vector3 = get_gravity()
+				if velocity.y > 0 and jumping and not Input.is_action_pressed(mapped_inputs["Jump"]):
+					gravity /= jump_cut_multiplier
+				velocity += gravity * delta
 				
 		
 		var input_direction : Vector2 = Input.get_vector(mapped_inputs["Left"], mapped_inputs["Right"], mapped_inputs["Forward"], mapped_inputs["Backward"])
@@ -181,6 +192,11 @@ func _physics_process(delta: float) -> void:
 		
 		
 		var current_acceleration : float = acceleration
+		var current_friction : float = friction
+		var target_speed : float = base_speed
+		if sprinting:
+			current_acceleration = sprint_acceleration
+			current_friction = sprint_friction
 		var crouch_slow : float = (crouch_speed_decrease * int(crouching))
 		var water_slow : float = (water_speed_decrease * int(swimming))
 		var base_slow : float = crouch_slow + water_slow
@@ -188,11 +204,15 @@ func _physics_process(delta: float) -> void:
 		# Changes acceleration and crouch slow based on being in the air and crouch state
 		if not is_on_floor() and not swimming:
 			current_acceleration = air_acceleration
+			target_speed = air_speed
 			crouch_slow = 0
 		elif noclipping:
 			current_acceleration = 1000
 			crouch_slow = 0
-			friction = 5000
+			current_friction = 5000
+		#Lerp weights, clamped so high rates don't overshoot
+		var accel_weight : float = minf(current_acceleration * delta, 1.0)
+		var friction_weight : float = minf(current_friction * delta, 1.0)
 
 		
 		var movement_vector : Vector3
@@ -205,7 +225,7 @@ func _physics_process(delta: float) -> void:
 				new_basis.x = new_basis.x.normalized() #Scrubs some axis off the basis that cause the player to move slower when the camera looks down
 				movement_vector = (new_basis * Vector3(input_direction.x, 0, input_direction.y))
 				var target_rotation : float = Vector3.FORWARD.signed_angle_to(movement_vector, up_direction)
-				rotation.y = lerp_angle(rotation.y, target_rotation, 15 * delta)
+				rotation.y = rotate_toward(rotation.y, target_rotation, model_rotation_speed * delta)
 		else:
 			movement_vector = (transform.basis * Vector3(input_direction.x, 0, input_direction.y))
 
@@ -214,14 +234,19 @@ func _physics_process(delta: float) -> void:
 			movement_vector = (head.global_basis * Vector3(input_direction.x, 0, input_direction.y))
 			#Workaround for moving cancelling y velocity, there is probably a better way to do this.
 			var stored_vel_y : float = velocity.y
-			velocity = velocity.move_toward(movement_vector * base_speed * (base_speed_multiplier - base_slow) * speed_multiplier, current_acceleration * friction * delta)
+			velocity = velocity.lerp(movement_vector * base_speed * (base_speed_multiplier - base_slow) * speed_multiplier, accel_weight)
 			velocity.y = stored_vel_y
 		elif movement_vector:
-			velocity.x = move_toward(velocity.x, movement_vector.x * base_speed * (base_speed_multiplier - base_slow) * speed_multiplier, current_acceleration * friction * delta)
-			velocity.z = move_toward(velocity.z, movement_vector.z * base_speed * (base_speed_multiplier - base_slow) * speed_multiplier, current_acceleration * friction * delta)
+			var target_velocity : Vector3 = movement_vector * target_speed * (base_speed_multiplier - base_slow) * speed_multiplier
+			velocity.x = lerp(velocity.x, target_velocity.x, accel_weight)
+			velocity.z = lerp(velocity.z, target_velocity.z, accel_weight)
 		elif is_on_floor() or midair_deceleration == true:
-			velocity.x = move_toward(velocity.x, 0, friction * delta)
-			velocity.z = move_toward(velocity.z, 0, friction * delta)
+			velocity.x = lerp(velocity.x, 0.0, friction_weight)
+			velocity.z = lerp(velocity.z, 0.0, friction_weight)
+			#Snap tiny residual velocity to zero since lerp never fully reaches it
+			if Vector2(velocity.x, velocity.z).length() < 0.05:
+				velocity.x = 0
+				velocity.z = 0
 		
 		#Vertical friction to prevent sliding in noclip
 		#velocity.y = move_toward(velocity.y, 0, (friction * 0.01) * delta)
@@ -250,6 +275,8 @@ func _physics_process(delta: float) -> void:
 	desired_velocity = velocity
 	#print(velocity)
 	added_velocity = Vector3.ZERO
+	#Stick to slopes/stairs while grounded, but don't snap back down mid-jump
+	floor_snap_length = 0.0 if jumping else 1.0
 	move_and_slide()
 	
 	#Sets previous state variables

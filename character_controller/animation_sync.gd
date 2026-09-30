@@ -3,33 +3,28 @@ extends AnimationTree
 
 ## Written by the authority, replicated to peers (on change).
 @export var anim_state : StringName = &""
-## Written by the authority, replicated to peers.
-@export var speed_scale : float = 1.0
+## Horizontal speed, written by the authority, replicated to peers.
+## Puppets feed it to the Speed_Scaler so each animation gets its own scale.
+@export var ground_speed : float = 0.0
 
-const SPEED_SCALE_PARAMS : Array[String] = [
-	"parameters/Walk/Character_Speed_Scale/scale",
-	"parameters/Sprint/Character_Speed_Scale/scale",
-	"parameters/Crouch Walk/Character_Speed_Scale/scale",
-]
-
+@onready var speed_scaler : Node = $Speed_Scaler
 @onready var playback : AnimationNodeStateMachinePlayback = get("parameters/playback")
 var _applied_state : StringName = &""
 
 func _ready() -> void:
 	if not is_multiplayer_authority():
 		_make_puppet_tree()
-		$Speed_Scaler.set_process(false)
+		speed_scaler.set_process(false)
 
 func _process(_delta: float) -> void:
 	if is_multiplayer_authority():
 		anim_state = playback.get_current_node()
-		speed_scale = get(SPEED_SCALE_PARAMS[0])
+		ground_speed = speed_scaler.get_ground_speed()
 	else:
 		_apply_remote_state()
 
 func _apply_remote_state() -> void:
-	for param in SPEED_SCALE_PARAMS:
-		set(param, speed_scale)
+	speed_scaler.apply(ground_speed)
 	if anim_state == &"" or anim_state == _applied_state:
 		return
 	# First sync (spawn / late join) snaps; afterwards travel so crossfades play.
