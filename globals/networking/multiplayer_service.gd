@@ -6,23 +6,21 @@ const KICK_REASON_BANNED := "You are banned from this lobby."
 const CONFIG_SECTION := "multiplayer"
 const CONFIG_KEY_BACKEND := "backend"
 
-
-## Add a new entry for each [MultiplayerBackend].
-enum BackendType {ENET, NODETUNNEL, STEAM, TUBE}
-const BACKEND_LABELS := {BackendType.ENET: "LAN (ENet)", BackendType.NODETUNNEL: "Online (NodeTunnel)", BackendType.STEAM: "Steam", BackendType.TUBE: "Online P2P (Tube)"}
+enum BackendType {OFFLINE, ENET, NODETUNNEL, STEAM, TUBE}
+const BACKEND_LABELS := {BackendType.OFFLINE: "Offline (Single Player)", BackendType.ENET: "LAN (ENet)", BackendType.NODETUNNEL: "NodeTunnel (P2P relay)", BackendType.STEAM: "Steam (P2P relay)", BackendType.TUBE: "Tube (P2P direct)"}
 const ADDRESS_HINTS := {BackendType.ENET: "IP address", BackendType.NODETUNNEL: "Room code", BackendType.STEAM: "Lobby ID", BackendType.TUBE: "Session ID"}
-
 
 var backend: MultiplayerBackend
 var backend_type: BackendType
+
 ## Backends whose dependencies are present, mapped to their script.
 var backend_scripts: Dictionary = {}
 var banlist: Array
 var kick_reason: String
 var status_text: String
+
 ## True while a host or join request is in flight.
 var pending := false
-
 
 signal lobby_found(address: Variant, cur_players: int, max_players: int)
 signal joining_lobby
@@ -33,19 +31,26 @@ signal game_exited
 signal backend_changed(type: BackendType)
 signal status_changed(text: String)
 
-
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
-	backend_scripts[BackendType.ENET] = load("res://globals/networking/enet_backend.gd")
-	backend_scripts[BackendType.NODETUNNEL] = load("res://globals/networking/nodetunnel_backend.gd")
-	# Steam is optional: the backend script only parses when the GodotSteam extension is installed.
-	if ClassDB.class_exists("SteamMultiplayerPeer"):
-		backend_scripts[BackendType.STEAM] = load("res://globals/networking/steam_backend.gd")
-	# Tube needs WebRTC: built into web exports, provided by the webrtc_native extension elsewhere.
+
 	if ClassDB.class_exists("WebRTCPeerConnection"):
 		backend_scripts[BackendType.TUBE] = load("res://globals/networking/tube_backend.gd")
+
+	if not OS.get_name() == "Web":
+		_ready_desktop_backends()
+
 	var saved: Variant = GGT_GameConfig.config.get_value(CONFIG_SECTION, CONFIG_KEY_BACKEND, BackendType.ENET)
 	set_backend(saved if saved is int and backend_scripts.has(saved) else BackendType.ENET, false)
+
+func _ready_desktop_backends():
+	backend_scripts[BackendType.ENET] = load("res://globals/networking/enet_backend.gd")
+
+	if ClassDB.class_exists('NodeTunnelPeer'):
+		backend_scripts[BackendType.NODETUNNEL] = load("res://globals/networking/nodetunnel_backend.gd")
+
+	if ClassDB.class_exists("SteamMultiplayerPeer"):
+		backend_scripts[BackendType.STEAM] = load("res://globals/networking/steam_backend.gd")
 
 
 ## Modify [constant BackendType] and [method _ready] for each backend you want to support.

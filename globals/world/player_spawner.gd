@@ -1,9 +1,12 @@
 class_name PlayerSpawner
 extends MultiplayerSpawner
 
-const PLAYER_SCENE: PackedScene = preload("res://player/proto_controller.tscn")
+#const PLAYER_SCENE: PackedScene = preload("res://player/proto_controller.tscn")
+#const PLAYER_SCENE: PackedScene = preload("res://player/PlayerCharacter/player_character_scene.tscn")
+const PLAYER_CHARACTER = preload("uid://p8nowy1cujv1")
 
 func _ready() -> void:
+	self.add_spawnable_scene(PLAYER_CHARACTER.resource_path)
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
@@ -18,7 +21,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 func spawn_player(id: int) -> void:
 	if has_node(str(id)):
 		return
-	var player: Player = PLAYER_SCENE.instantiate()
+	var player = PLAYER_CHARACTER.instantiate()
 	player.name = str(id)
 	add_child(player)
 

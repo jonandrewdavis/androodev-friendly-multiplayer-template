@@ -101,10 +101,10 @@ func set_joinable(joinable_: bool) -> void:
 	else:
 		search_server.stop()
 
-
 func get_joinable() -> bool:
 	assert(multiplayer.is_server())
 	return joinable
+
 
 
 ## UID is IP or MAC address.
@@ -115,7 +115,6 @@ func get_uid(peer_id: int) -> String:
 		return peer.get_remote_address()
 	else:
 		return str(peer_id)
-
 
 func get_username(peer_id: int) -> String:
 	return str(peer_id)

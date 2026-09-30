@@ -20,6 +20,7 @@ tonemap_mode = 2
 glow_enabled = true
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" unique_id=169104357]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8866099, 0)
 material_overlay = SubResource("StandardMaterial3D_n51mc")
 use_collision = true
 
