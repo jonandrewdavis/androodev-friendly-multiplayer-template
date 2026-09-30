@@ -81,6 +81,15 @@ extends CharacterBody3D
 signal jumped
 signal landed
 
+@export_group("Network")
+## Written by the authority, replicated to peers. Puppets interpolate toward these.
+@export var sync_position : Vector3
+@export var sync_rotation_y : float
+## Interpolation rate (per second) for puppets. Higher = snappier, lower = smoother but laggier.
+@export var interp_speed : float = 15.0
+## Puppets snap instead of lerping when further than this from the synced position (teleports, respawns).
+@export var snap_distance : float = 3.0
+
 #Used to connect to the input system, uses ui inputs as a fallback
 @export_group("Inputs")
 @export var mapped_inputs : Dictionary [String, String] = {
@@ -120,10 +129,13 @@ func _ready() -> void:
 
 	if not is_multiplayer_authority():
 		set_process(false)
-		set_physics_process(false)
 		set_process_input(false)
+		position = sync_position
+		rotation.y = sync_rotation_y
 	else:
 		camera.current = true
+		sync_position = position
+		sync_rotation_y = rotation.y
 
 func _unhandled_input(_event: InputEvent) -> void:
 	#Toggle noclip mode
@@ -134,6 +146,10 @@ func _unhandled_input(_event: InputEvent) -> void:
 			disable_noclip()
 
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		_interpolate_remote(delta)
+		return
+
 	coyote_time_timer -= delta
 		
 	if is_on_floor():
@@ -282,6 +298,19 @@ func _physics_process(delta: float) -> void:
 	#Sets previous state variables
 	#print("Setting previous variable states")
 	previous_swimming_state = swimming
+
+	sync_position = position
+	sync_rotation_y = rotation.y
+
+## Puppets ease toward the last replicated transform instead of jumping to each packet.
+func _interpolate_remote(delta: float) -> void:
+	#Frame-rate independent lerp weight
+	var weight : float = 1.0 - exp(-interp_speed * delta)
+	if position.distance_to(sync_position) > snap_distance:
+		position = sync_position
+	else:
+		position = position.lerp(sync_position, weight)
+	rotation.y = lerp_angle(rotation.y, sync_rotation_y, weight)
 
 func enable_noclip() -> void:
 	if noclip_allowed:

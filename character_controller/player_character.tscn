@@ -591,10 +591,10 @@ _data = {
 }
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_v31l3"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath(".:sync_position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
+properties/1/path = NodePath(".:sync_rotation_y")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 properties/2/path = NodePath("AnimationTree:anim_state")

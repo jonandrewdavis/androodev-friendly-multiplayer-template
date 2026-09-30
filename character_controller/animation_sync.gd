@@ -10,21 +10,24 @@ extends AnimationTree
 @onready var speed_scaler : Node = $Speed_Scaler
 @onready var playback : AnimationNodeStateMachinePlayback = get("parameters/playback")
 var _applied_state : StringName = &""
+## Puppet-side smoothed copy of ground_speed, so playback speed doesn't flicker between packets.
+var _smoothed_speed : float = 0.0
 
 func _ready() -> void:
 	if not is_multiplayer_authority():
 		_make_puppet_tree()
 		speed_scaler.set_process(false)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if is_multiplayer_authority():
 		anim_state = playback.get_current_node()
 		ground_speed = speed_scaler.get_ground_speed()
 	else:
-		_apply_remote_state()
+		_apply_remote_state(delta)
 
-func _apply_remote_state() -> void:
-	speed_scaler.apply(ground_speed)
+func _apply_remote_state(delta: float) -> void:
+	_smoothed_speed = lerpf(_smoothed_speed, ground_speed, 1.0 - exp(-owner.interp_speed * delta))
+	speed_scaler.apply(_smoothed_speed)
 	if anim_state == &"" or anim_state == _applied_state:
 		return
 	# First sync (spawn / late join) snaps; afterwards travel so crossfades play.
