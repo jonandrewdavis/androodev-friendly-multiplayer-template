@@ -86,14 +86,15 @@ custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
 focus_neighbor_bottom = NodePath("../JoinButton")
 focus_next = NodePath("../JoinButton")
-text = "HOST"
+theme_type_variation = &"PrimaryButton"
+text = "Host"
 
 [node name="JoinButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=1561050476]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
 focus_next = NodePath("../ServiceRow/ServiceOption")
-text = "JOIN"
+text = "Join"
 
 [node name="StatusLabel" type="Label" parent="MainContainer/Control/VBoxContainer" unique_id=1864743545]
 unique_name_in_owner = true
@@ -109,7 +110,7 @@ layout_mode = 2
 focus_neighbor_top = NodePath("../ServiceRow/ServiceOption")
 focus_neighbor_bottom = NodePath("../ExitButton")
 focus_next = NodePath("../ExitButton")
-text = "SETTINGS"
+text = "Settings"
 
 [node name="ExitButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=1212985906]
 unique_name_in_owner = true
@@ -117,7 +118,7 @@ custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
 focus_neighbor_top = NodePath("../SettingsButton")
 focus_previous = NodePath("../HostButton")
-text = "EXIT"
+text = "Exit"
 
 [node name="Credits" type="VBoxContainer" parent="MainContainer/Control" unique_id=1729305012]
 visible = false
