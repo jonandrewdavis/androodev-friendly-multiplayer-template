@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://qk86ojublqog"]
 
-[ext_resource type="Script" uid="uid://dra4sweci742n" path="res://world/world.gd" id="1"]
-[ext_resource type="Script" uid="uid://bd240dbppqbi6" path="res://world/level_loader.gd" id="2"]
-[ext_resource type="Script" uid="uid://cd1b7rpxgj5d2" path="res://world/player_spawner.gd" id="3"]
+[ext_resource type="Script" uid="uid://dra4sweci742n" path="res://globals/world.gd" id="1"]
+[ext_resource type="Script" uid="uid://bd240dbppqbi6" path="res://scenes/gameplay/level_loader.gd" id="2"]
+[ext_resource type="Script" uid="uid://cd1b7rpxgj5d2" path="res://scenes/gameplay/player_spawner.gd" id="3"]
 
 [node name="World" type="Node" unique_id=261978935]
 script = ExtResource("1")

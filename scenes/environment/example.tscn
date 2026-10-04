@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://dltcmsd3purl0"]
+
+[ext_resource type="Texture2D" uid="uid://dlefk7rtyu8jb" path="res://assets/01_PrototypeCheckerBig_2048.png" id="1_2jas5"]
+[ext_resource type="Shader" uid="uid://cjpig6pptg3jv" path="res://resources/shaders/sky_test_1.gdshader" id="2_3tivf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n51mc"]
+albedo_texture = ExtResource("1_2jas5")
+uv1_triplanar = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2rfjx"]
+shader = ExtResource("2_3tivf")
+shader_parameter/day_top_color = Color(0.1, 0.6, 1, 1)
+shader_parameter/day_bottom_color = Color(0.4, 0.8, 1, 1)
+shader_parameter/sunset_top_color = Color(0.7, 0.75, 1, 1)
+shader_parameter/sunset_bottom_color = Color(1, 0.5, 0.7, 1)
+shader_parameter/night_top_color = Color(0.02, 0, 0.04, 1)
+shader_parameter/night_bottom_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/horizon_color = Color(0, 0.7, 0.8, 1)
+shader_parameter/horizon_blur = 0.05
+shader_parameter/sun_color = Color(10, 8, 1, 1)
+shader_parameter/sun_sunset_color = Color(10, 0, 0, 1)
+shader_parameter/sun_size = 0.2
+shader_parameter/sun_blur = 10.0
+shader_parameter/moon_color = Color(1, 0.95, 0.7, 1)
+shader_parameter/moon_size = 0.06
+shader_parameter/moon_blur = 0.1
+shader_parameter/clouds_edge_color = Color(0.8, 0.8, 0.98, 1)
+shader_parameter/clouds_top_color = Color(1, 1, 1, 1)
+shader_parameter/clouds_middle_color = Color(0.92, 0.92, 0.98, 1)
+shader_parameter/clouds_bottom_color = Color(0.83, 0.83, 0.94, 1)
+shader_parameter/clouds_speed = 2.0
+shader_parameter/clouds_direction = 0.2
+shader_parameter/clouds_scale = 1.0
+shader_parameter/clouds_cutoff = 0.3
+shader_parameter/clouds_fuzziness = 0.5
+shader_parameter/clouds_weight = 0.0
+shader_parameter/clouds_blur = 0.25
+shader_parameter/stars_speed = 1.0
+shader_parameter/overwritten_time = 0.0
+
+[sub_resource type="Sky" id="Sky_2jas5"]
+sky_material = SubResource("ShaderMaterial_2rfjx")
+
+[sub_resource type="Environment" id="Environment_n51mc"]
+background_mode = 2
+sky = SubResource("Sky_2jas5")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" unique_id=169104357]
+material_overlay = SubResource("StandardMaterial3D_n51mc")
+use_collision = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1292072398]
+environment = SubResource("Environment_n51mc")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1450785161]
+transform = Transform3D(-0.8660254, -0.43301278, 0.24999999, 0.49389318, -0.8187474, 0.29278362, 0.07790781, 0.3770314, 0.9229181, 0, 0, 0)
+shadow_enabled = true
+
+[node name="AddBox" type="CSGBox3D" parent="." unique_id=39434125]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+size = Vector3(32, 9, 32)
+
+[node name="SubBox" type="CSGBox3D" parent="." unique_id=1228845272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+operation = 2
+size = Vector3(31, 8, 31)

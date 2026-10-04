@@ -38,14 +38,14 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	
-	if Input.is_key_pressed(KEY_ESCAPE):
-		#print("Unlocking mouse")
-		player_main.mouse_lock = false
-	elif player_main.mouse_lock == false and event is InputEventMouseButton:
-		#print("Locking mouse")
-		player_main.mouse_lock = true
-		
-	if player_main.mouse_lock and event is InputEventMouseMotion and player_main.camera_control_allowed: # event is InputEventMouseMotion:
+	#if Input.is_key_pressed(KEY_ESCAPE):
+		##print("Unlocking mouse")
+		#player_main.mouse_lock = false
+	#elif player_main.mouse_lock == false and event is InputEventMouseButton:
+		##print("Locking mouse")
+		#player_main.mouse_lock = true
+
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion and player_main.camera_control_allowed: # event is InputEventMouseMotion:
 		rotate_look(event.relative, player_main.look_sensitivity, 0.01)
 
 func _process(delta: float) -> void:
@@ -94,12 +94,11 @@ func _process(delta: float) -> void:
 	#region Mouse look and window focus
 
 
-		
-	if player_main.mouse_lock == true:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	else:
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	
+	# TODO: Remove
+	#if player_main.mouse_lock == true:
+		#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#else:
+		#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	# Look around
 
 		

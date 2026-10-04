@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://5f8u55hvqq4w"]
+[gd_scene format=3 uid="uid://5f8u55hvqq4w"]
 
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_gfvfe"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_gfvfe"]
 [ext_resource type="Script" uid="uid://c77pnnu05pblc" path="res://addons/tube/inspector/local_signaling_control.gd" id="2_gfvfe"]
 
 [node name="LocalSignalingControl" type="MarginContainer"]

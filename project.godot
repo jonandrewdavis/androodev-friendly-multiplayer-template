@@ -28,7 +28,7 @@ GGT="*uid://cg0wu8g5j7s4w"
 GGT_GameConfig="*uid://16licpbm1tux"
 DebugMenu="*uid://cggqb75a8w8r"
 MultiplayerService="*uid://dsr7i0lu8bo4r"
-World="*res://world/world.tscn"
+World="*uid://qk86ojublqog"
 
 [display]
 
@@ -41,9 +41,20 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/ggt-core/plugin.cfg", "res://addons/ggt-debug-shortcuts/plugin.cfg", "res://addons/godotsteam/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/tube/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://addons/": "gray",
+"res://assets/": "green",
+"res://globals/": "purple",
+"res://networking/": "yellow",
+"res://resources/": "pink",
+"res://scenes/": "red"
+}
+
 [gui]
 
-theme/custom_font="uid://r73nxiw0jeo7"
+theme/custom="uid://brfyamk8dn0ef"
 
 [input]
 
@@ -156,7 +167,7 @@ crouch={
 [internationalization]
 
 locale/translations=PackedStringArray("res://resources/localization/it.po")
-locale/translations_pot_files=PackedStringArray("res://scenes/menu/host_panel.tscn", "res://scenes/menu/join_panel.tscn", "res://scenes/menu/menu.tscn", "res://addons/ggt-core/settings/settings_menu.tscn", "res://scenes/gameplay/pause-layer/pause-layer.tscn")
+locale/translations_pot_files=PackedStringArray("res://addons/ggt-core/settings/settings_menu.tscn", "res://scenes/menu/host_panel.tscn", "res://scenes/menu/join_panel.tscn", "res://scenes/menu/menu.tscn", "res://scenes/ui/pause-layer/pause-layer.tscn")
 
 [physics]
 

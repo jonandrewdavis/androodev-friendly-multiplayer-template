@@ -1,15 +1,28 @@
+@tool
 extends Control
 
-const GAMEPLAY_SCENE := "res://scenes/gameplay/gameplay.tscn"
+const UI_LAYER = "res://scenes/ui/ui_layer.tscn"
 const TIMEOUT_DUR := 10.0
 var timeout_token := 0
 
+## Multiplayer backend used by this game. Web exports always use Tube (WebRTC).
+@export var backend_type := MultiplayerBackend.Type.NONE:
+	set(value):
+		backend_type = value
+		update_configuration_warnings()
+
+func _get_configuration_warnings() -> PackedStringArray:
+	if backend_type == MultiplayerBackend.Type.NONE:
+		return ["Select a Backend Type. (Web exports always use Tube.)"]
+	return []
+
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	for type in MultiplayerService.backend_scripts:
-		%ServiceOption.add_item(MultiplayerService.BACKEND_LABELS[type], type)
-	%ServiceOption.select(%ServiceOption.get_item_index(MultiplayerService.backend_type))
-	%ServiceOption.item_selected.connect(func(index: int) -> void: MultiplayerService.set_backend(%ServiceOption.get_item_id(index)))
+	if MultiplayerService.backend == null: # keeps a debug-selected backend when returning from a game
+		MultiplayerService.set_backend(backend_type)
+	_setup_debug_backend_option()
 	%StatusLabel.text = MultiplayerService.status_text
 	MultiplayerService.status_changed.connect(func(text: String) -> void: %StatusLabel.text = text)
 	MultiplayerService.creating_lobby.connect(_show_pending.bind("Hosting game..."))
@@ -43,6 +56,16 @@ func _ready() -> void:
 	if not MultiplayerService.kick_reason.is_empty():
 		_show_failure(MultiplayerService.kick_reason)
 		MultiplayerService.kick_reason = ""
+
+## Developer-only backend switcher; removed from release builds.
+func _setup_debug_backend_option() -> void:
+	if not OS.is_debug_build():
+		%DebugBackendOption.queue_free()
+		return
+	for type in MultiplayerService.backend_scripts:
+		%DebugBackendOption.add_item(MultiplayerBackend.Type.find_key(type).capitalize(), type)
+	%DebugBackendOption.select(%DebugBackendOption.get_item_index(MultiplayerService.backend_type))
+	%DebugBackendOption.item_selected.connect(func(index: int) -> void: MultiplayerService.set_backend(%DebugBackendOption.get_item_id(index)))
 
 func _restore_main() -> void:
 	%MainContainer.show()
@@ -80,7 +103,7 @@ func _show_failure(reason: String) -> void:
 func _on_lobby_joined() -> void:
 	timeout_token += 1
 	%PendingOverlay.hide()
-	GGT.change_scene(GAMEPLAY_SCENE, {"show_progress_bar": false})
+	GGT.change_scene(UI_LAYER, {"show_progress_bar": false})
 
 func _exit() -> void:
 	var transitions := get_node_or_null("/root/GGT_Transitions")

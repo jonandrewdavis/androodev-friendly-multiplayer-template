@@ -1,8 +1,6 @@
 class_name PlayerSpawner
 extends MultiplayerSpawner
 
-#const PLAYER_SCENE: PackedScene = preload("res://player/proto_controller.tscn")
-#const PLAYER_SCENE: PackedScene = preload("res://player/PlayerCharacter/player_character_scene.tscn")
 const PLAYER_CHARACTER = preload("uid://p8nowy1cujv1")
 
 func _ready() -> void:

@@ -3,8 +3,8 @@
 [ext_resource type="Theme" uid="uid://brfyamk8dn0ef" path="res://resources/theme/theme_casual_pop.tres" id="1_y1o0p"]
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="3_e0arn"]
 [ext_resource type="Script" uid="uid://cvc42inud8fxx" path="res://scenes/menu/menu.gd" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/menu/host_panel.tscn" id="host"]
-[ext_resource type="PackedScene" path="res://scenes/menu/join_panel.tscn" id="join"]
+[ext_resource type="PackedScene" uid="uid://cgcnducd51he7" path="res://scenes/menu/host_panel.tscn" id="host"]
+[ext_resource type="PackedScene" uid="uid://cuh12k38iu367" path="res://scenes/menu/join_panel.tscn" id="join"]
 
 [node name="Menu" type="Control" unique_id=1641158152]
 layout_mode = 3
@@ -15,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_y1o0p")
 script = ExtResource("5")
+backend_type = 1
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1540281165]
 layout_mode = 1
@@ -67,18 +68,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16
 
-[node name="ServiceRow" type="HBoxContainer" parent="MainContainer/Control/VBoxContainer" unique_id=165007286]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MainContainer/Control/VBoxContainer/ServiceRow" unique_id=793341576]
-layout_mode = 2
-text = "Service"
-
-[node name="ServiceOption" type="OptionButton" parent="MainContainer/Control/VBoxContainer/ServiceRow" unique_id=280607766]
+[node name="DebugBackendOption" type="OptionButton" parent="MainContainer/Control/VBoxContainer" unique_id=1938274615]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-focus_next = NodePath("../../SettingsButton")
+tooltip_text = "Debug builds only"
+
+[node name="StatusLabel" type="Label" parent="MainContainer/Control/VBoxContainer" unique_id=1864743545]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+autowrap_mode = 2
 
 [node name="HostButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=282119598]
 unique_name_in_owner = true
@@ -93,21 +93,15 @@ text = "Host"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
-focus_next = NodePath("../ServiceRow/ServiceOption")
+focus_next = NodePath("../SettingsButton")
+theme_type_variation = &"SuccessButton"
 text = "Join"
-
-[node name="StatusLabel" type="Label" parent="MainContainer/Control/VBoxContainer" unique_id=1864743545]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-theme_type_variation = &"LabelSmall"
-autowrap_mode = 2
 
 [node name="SettingsButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=879990348]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
-focus_neighbor_top = NodePath("../ServiceRow/ServiceOption")
+focus_neighbor_top = NodePath("../JoinButton")
 focus_neighbor_bottom = NodePath("../ExitButton")
 focus_next = NodePath("../ExitButton")
 text = "Settings"
@@ -208,10 +202,34 @@ F4: change stats size"
 [node name="HostPanel" parent="." unique_id=1177072293 instance=ExtResource("host")]
 unique_name_in_owner = true
 visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -260.0
+offset_right = 340.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="JoinPanel" parent="." unique_id=464962462 instance=ExtResource("join")]
 unique_name_in_owner = true
 visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -260.0
+offset_right = 340.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PendingOverlay" type="ColorRect" parent="." unique_id=627776654]
 unique_name_in_owner = true
@@ -246,6 +264,7 @@ horizontal_alignment = 1
 [node name="FailedLabel" type="Label" parent="PendingOverlay/CenterContainer/VBoxContainer" unique_id=1355574199]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 2

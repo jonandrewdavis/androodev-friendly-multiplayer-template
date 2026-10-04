@@ -27,6 +27,10 @@ extends CharacterBody3D
 @export var toggle_sprint : bool = false
 @export var toggle_crouch : bool = false
 @export var invert_mouse : bool = false
+
+
+# CRITICAL: Think about how we want to stop accepting inputs and resume them
+# TODO: is it this, or another mechanism, and then does the UI change instead?
 @export var mouse_lock : bool = true
 
 
@@ -40,9 +44,9 @@ extends CharacterBody3D
 @onready var crouching : bool = false
 
 @export_group("Attributes")
-@export var base_speed : float = 5.0
-@export var sprint_increase : float = 0.8
-@export var crouch_speed_decrease : float = 0.15
+@export var base_speed : float = 3.5
+@export var sprint_increase : float = 0.6
+@export var crouch_speed_decrease : float = 0.5
 @export var crouch_animation_time : float = 0.075
 @export var water_speed_decrease : float = 0.25
 #Speed multiplier used internally for things like sprinting, if you want to give the player boosts use the exported multiplier instead.
@@ -54,10 +58,10 @@ extends CharacterBody3D
 @export var sprint_friction : float = 6.5
 @export var acceleration : float = 8.0
 @export var sprint_acceleration : float = 3.5
-@export var air_acceleration : float = 10.0
+@export var air_acceleration : float = 6.0
 ## Max horizontal speed the player can steer to while midair
-@export var air_speed : float = 6.6
-@export var jump_power : float = 7.0
+@export var air_speed : float = 3.2
+@export var jump_power : float = 6.5
 ## Upward gravity is divided by this when jump is released early (lower = shorter hops)
 @export var jump_cut_multiplier : float = 0.5
 @export var model_rotation_speed : float = 6.5
@@ -133,6 +137,7 @@ func _ready() -> void:
 		position = sync_position
 		rotation.y = sync_rotation_y
 	else:
+		# Client processing
 		camera.current = true
 		sync_position = position
 		sync_rotation_y = rotation.y

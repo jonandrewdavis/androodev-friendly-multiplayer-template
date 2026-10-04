@@ -23,6 +23,7 @@ func clear_level() -> void:
 		remove_child(child)
 		child.queue_free()
 
+
 @rpc("authority", "call_local", "reliable")
 func spawn_level(key: String) -> void:
 	if not LEVEL_DICT.has(key):

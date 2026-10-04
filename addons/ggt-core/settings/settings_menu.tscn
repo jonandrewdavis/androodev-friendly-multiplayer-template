@@ -239,7 +239,7 @@ text = "Reset default"
 layout_mode = 2
 translation_context = &"menu"
 focus_neighbor_left = NodePath("../SettingsResetButton")
-text = "Confirm"
+text = "Apply"
 
 [node name="ResetConfirmationDialog" parent="MarginContainer/VBox" unique_id=2067842247 instance=ExtResource("3_modal")]
 visible = false

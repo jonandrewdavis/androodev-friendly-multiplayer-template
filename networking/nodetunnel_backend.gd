@@ -3,10 +3,10 @@ extends MultiplayerBackend
 
 const RELAY_ADDRESS := "us-east.nodetunnel.io:8080"
 const APP_ID := "0ahb6lkmhi5dtfi"
-enum Phase {DISCONNECTED, AUTHENTICATING, READY, HOSTING, JOINING, IN_ROOM}
+enum State {DISCONNECTED, AUTHENTICATING, READY, HOSTING, JOINING, IN_ROOM}
 
 var peer: NodeTunnelPeer
-var phase := Phase.DISCONNECTED
+var state := State.DISCONNECTED
 var pending_action: Callable
 var joinable := false
 var max_players := 0
@@ -27,7 +27,7 @@ func _connect_to_relay() -> void:
 	peer.forced_disconnect.connect(_on_forced_disconnect.bind(generation), CONNECT_DEFERRED)
 	peer.rooms_received.connect(_on_rooms_received.bind(generation), CONNECT_DEFERRED)
 	peer.join_validation = _validate_join
-	phase = Phase.AUTHENTICATING
+	state = State.AUTHENTICATING
 	var err := peer.connect_to_relay(RELAY_ADDRESS, APP_ID)
 	if err != OK:
 		_fail(error_string(err))
@@ -36,25 +36,25 @@ func _connect_to_relay() -> void:
 	status_changed.emit("Connecting to relay...")
 	var token := generation
 	await get_tree().create_timer(10.0).timeout
-	if token == generation and phase == Phase.AUTHENTICATING:
+	if token == generation and state == State.AUTHENTICATING:
 		_fail("Relay connection timed out.")
 
 func _ensure_relay(action: Callable) -> void:
-	if phase != Phase.DISCONNECTED and multiplayer.multiplayer_peer != peer:
+	if state != State.DISCONNECTED and multiplayer.multiplayer_peer != peer:
 		_reset_peer()
-	match phase:
-		Phase.READY:
+	match state:
+		State.READY:
 			action.call()
-		Phase.AUTHENTICATING:
+		State.AUTHENTICATING:
 			pending_action = action
-		Phase.DISCONNECTED:
+		State.DISCONNECTED:
 			pending_action = action
 			_connect_to_relay()
 
 func _on_authenticated(token: int) -> void:
 	if token != generation:
 		return
-	phase = Phase.READY
+	state = State.READY
 	status_changed.emit("Relay ready")
 	var action := pending_action
 	pending_action = Callable()
@@ -67,7 +67,7 @@ func host_game(options: HostOptions) -> void:
 	_ensure_relay(_host_room)
 
 func _host_room() -> void:
-	phase = Phase.HOSTING
+	state = State.HOSTING
 	peer.refuse_new_connections = true
 	var err := peer.host_room(true, _encode_metadata())
 	if err != OK:
@@ -77,7 +77,7 @@ func join_game(address: Variant) -> void:
 	_ensure_relay(_join_room.bind(str(address).strip_edges()))
 
 func _join_room(code: String) -> void:
-	phase = Phase.JOINING
+	state = State.JOINING
 	var err := peer.join_room(code)
 	if err != OK:
 		_fail(error_string(err))
@@ -85,7 +85,7 @@ func _join_room(code: String) -> void:
 func _on_room_connected(token: int) -> void:
 	if token != generation:
 		return
-	phase = Phase.IN_ROOM
+	state = State.IN_ROOM
 	status_changed.emit("Room connected")
 	lobby_joined.emit()
 
@@ -100,7 +100,7 @@ func _request_rooms() -> void:
 func _on_rooms_received(rooms: Array, token: int) -> void:
 	if token != generation:
 		return
-	if phase == Phase.IN_ROOM:
+	if state == State.IN_ROOM:
 		return
 	for room in rooms:
 		if not room is Dictionary or not room.get("metadata") is String or not room.get("id") is String:
@@ -113,7 +113,7 @@ func _encode_metadata() -> String:
 	return JSON.stringify({"name": lobby_name, "cur": multiplayer.get_peers().size() + 1, "max": max_players})
 
 func _on_peer_changed(_id: int) -> void:
-	if phase == Phase.IN_ROOM and multiplayer.is_server():
+	if state == State.IN_ROOM and multiplayer.is_server():
 		if _id in multiplayer.get_peers() and not pending_admissions.is_empty():
 			pending_admissions.pop_front()
 		peer.update_room(_encode_metadata())
@@ -142,18 +142,18 @@ func get_username(peer_id: int) -> String:
 	return str(peer_id)
 
 func has_active_session() -> bool:
-	return phase == Phase.IN_ROOM
+	return state == State.IN_ROOM
 
 ## The code other players enter to join this room. Empty when not in a room.
 func get_room_code() -> String:
-	return peer.room_id if peer != null and phase == Phase.IN_ROOM else ""
+	return peer.room_id if peer != null and state == State.IN_ROOM else ""
 
 func _on_error(message: String, token: int) -> void:
 	if token != generation:
 		return
-	if phase == Phase.IN_ROOM:
+	if state == State.IN_ROOM:
 		push_warning(message)
-	elif phase in [Phase.AUTHENTICATING, Phase.HOSTING, Phase.JOINING]:
+	elif state in [State.AUTHENTICATING, State.HOSTING, State.JOINING]:
 		_fail(message)
 	else:
 		_reset_peer()
@@ -161,7 +161,7 @@ func _on_error(message: String, token: int) -> void:
 func _on_forced_disconnect(token: int) -> void:
 	if token != generation:
 		return
-	var was_in_room := phase == Phase.IN_ROOM
+	var was_in_room := state == State.IN_ROOM
 	var was_server := multiplayer.is_server()
 	_reset_peer()
 	if was_in_room:
@@ -181,7 +181,7 @@ func _reset_peer() -> void:
 	pending_action = Callable()
 	pending_admissions.clear()
 	joinable = false
-	phase = Phase.DISCONNECTED
+	state = State.DISCONNECTED
 	if peer != null:
 		peer.join_validation = Callable()
 		peer.authenticated.disconnect(_on_authenticated.bind(generation - 1))

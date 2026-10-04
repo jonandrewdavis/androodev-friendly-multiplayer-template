@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckrifxh4o768d"]
+[gd_scene format=3 uid="uid://ckrifxh4o768d"]
 
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_6pmfw"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_6pmfw"]
 [ext_resource type="Script" uid="uid://qcomcx6e48wn" path="res://addons/tube/inspector/peer_control.gd" id="1_kiw0h"]
 
 [node name="PeerControl" type="MarginContainer"]

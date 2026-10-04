@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3p410vwblsb3"]
+[gd_scene format=3 uid="uid://c3p410vwblsb3"]
 
 [ext_resource type="Script" uid="uid://dadtx2xi0157" path="res://addons/tube/inspector/client_control.gd" id="1_xtewr"]
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_y7bgu"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_y7bgu"]
 
 [node name="ClientControl" type="MarginContainer"]
 offset_right = 245.0

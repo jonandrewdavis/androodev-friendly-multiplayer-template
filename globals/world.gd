@@ -10,7 +10,6 @@ func _ready() -> void:
 	MultiplayerService.game_exited.connect(clear)
 	multiplayer.server_disconnected.connect(MultiplayerService.leave_game)
 	multiplayer.connection_failed.connect(MultiplayerService.leave_game)
-	
 
 func _on_lobby_joined() -> void:
 	if not multiplayer.is_server():

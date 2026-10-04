@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-const PLAYER_ITEM := preload("res://scenes/gameplay/pause-layer/player_list_item.tscn")
+const PLAYER_LIST_ITEM = preload("res://scenes/ui/pause-layer/player_list_item.tscn")
 var players: Dictionary = {}
 
 func _ready() -> void:
@@ -50,7 +50,7 @@ func resume() -> void:
 func _add_player(peer_id: int) -> void:
 	if players.has(peer_id):
 		return
-	var item := PLAYER_ITEM.instantiate()
+	var item = PLAYER_LIST_ITEM.instantiate()
 	item.peer_id = peer_id
 	%PlayerList.add_child(item)
 	players[peer_id] = item

@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dc3ssinymllca"]
+[gd_scene format=3 uid="uid://dc3ssinymllca"]
 
 [ext_resource type="Script" uid="uid://b1h5h73j26j8v" path="res://addons/tube/inspector/channel_item_control.gd" id="1_ep4vf"]
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_gkg3v"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_gkg3v"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_ep4vf"]
 resource_local_to_scene = false

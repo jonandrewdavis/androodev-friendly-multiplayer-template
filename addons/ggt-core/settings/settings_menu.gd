@@ -166,9 +166,8 @@ func _on_cancel_confirmed() -> void:
 		initialize(previous_config)
 	else:
 		initialize()
-	if _focus_before_modal:
-		_focus_before_modal.grab_focus()
-
+	cancel_button.disabled = true
+	get_viewport().gui_release_focus()
 
 func _on_modal_canceled() -> void:
 	if _focus_before_modal:

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ben84c18oyfkv"]
+
+[ext_resource type="Script" uid="uid://b83omkj4aqsph" path="res://scenes/ui/ui_layer.gd" id="1_0d208"]
+[ext_resource type="PackedScene" uid="uid://barl4q1kugrmm" path="res://scenes/ui/pause-layer/pause-layer.tscn" id="1_3eqaf"]
+
+[node name="UILayer" type="CanvasLayer" unique_id=1221399142]
+script = ExtResource("1_0d208")
+
+[node name="PauseLayer" parent="." unique_id=48116928 instance=ExtResource("1_3eqaf")]

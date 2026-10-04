@@ -3,6 +3,8 @@ class_name MultiplayerBackend
 extends Node
 ## [b]Custom logic for hosting and joining multiplayer lobbies.[/b]
 
+## Every supported backend. [constant NONE] means none was chosen.
+enum Type {NONE, ENET, NODETUNNEL, STEAM, TUBE}
 
 @warning_ignore_start('unused_signal')
 signal lobby_found(address: Variant, cur_players: int, max_players: int)

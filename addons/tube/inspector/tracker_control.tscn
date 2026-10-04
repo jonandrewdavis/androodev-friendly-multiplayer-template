@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://ja0u2vuivo8b"]
+[gd_scene format=3 uid="uid://ja0u2vuivo8b"]
 
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_noh0l"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_noh0l"]
 [ext_resource type="Script" uid="uid://cygcobx75tkey" path="res://addons/tube/inspector/tracker_control.gd" id="1_pu2xr"]
 
 [node name="TrackerControl" type="MarginContainer"]

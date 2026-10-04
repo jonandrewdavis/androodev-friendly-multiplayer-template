@@ -13,6 +13,9 @@ var _smoothed_speed : float = 0.0
 var _applied_state : StringName = &""
 
 func _ready() -> void:
+	var current_animation_player: AnimationPlayer = get_node(anim_player)
+	current_animation_player.playback_default_blend_time = 0.2
+
 	if not is_multiplayer_authority():
 		_make_puppet_tree()
 

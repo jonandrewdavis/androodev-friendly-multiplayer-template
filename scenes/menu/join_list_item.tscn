@@ -1,23 +1,22 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://pimw0qfox4w0"]
 
-[ext_resource type="Script" path="res://scenes/menu/join_list_item.gd" id="1"]
+[ext_resource type="Script" uid="uid://c8e1lrpocds7s" path="res://scenes/menu/join_list_item.gd" id="1"]
 
-[node name="JoinListItem" type="HBoxContainer"]
-layout_mode = 2
+[node name="JoinListItem" type="HBoxContainer" unique_id=1652764466]
 script = ExtResource("1")
 
-[node name="NameLabel" type="Label" parent="."]
+[node name="NameLabel" type="Label" parent="." unique_id=1861276726]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "NAME"
+text = "Name"
 
-[node name="PlayerCountLabel" type="Label" parent="."]
+[node name="PlayerCountLabel" type="Label" parent="." unique_id=2095918857]
 unique_name_in_owner = true
 layout_mode = 2
-text = "PLAYERCOUNT"
+text = "Player count"
 
-[node name="JoinButton" type="Button" parent="."]
+[node name="JoinButton" type="Button" parent="." unique_id=981975141]
 unique_name_in_owner = true
 layout_mode = 2
-text = "JOIN"
+text = "Join"

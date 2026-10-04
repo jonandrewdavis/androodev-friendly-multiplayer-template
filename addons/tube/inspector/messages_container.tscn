@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://btfc8o5xfs14w"]
+[gd_scene format=3 uid="uid://btfc8o5xfs14w"]
 
 [ext_resource type="Script" uid="uid://bh6v4r3cb8nfa" path="res://addons/tube/inspector/messages_container.gd" id="1_cbqc8"]
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_kof4f"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_kof4f"]
 [ext_resource type="Texture2D" uid="uid://pxj3b3e28fg3" path="res://addons/tube/inspector/icons/clipboard_icon.tres" id="2_kj7ih"]
 
 [node name="MessagesContainer" type="MarginContainer"]

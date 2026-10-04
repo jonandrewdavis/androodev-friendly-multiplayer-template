@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://cfsei3airwx4s"]
+[gd_scene format=3 uid="uid://cfsei3airwx4s"]
 
-[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_5a58g"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme_tube.tres" id="1_5a58g"]
 [ext_resource type="Script" uid="uid://pbxxonhemirk" path="res://addons/tube/inspector/message_item_control.gd" id="1_eynp4"]
 [ext_resource type="Texture2D" uid="uid://bw1nalj6ph1ul" path="res://addons/tube/inspector/icons/info_icon.tres" id="2_83orp"]
 [ext_resource type="Texture2D" uid="uid://wcdvmyl01v1p" path="res://addons/tube/inspector/icons/error_icon.tres" id="3_hv8fo"]
