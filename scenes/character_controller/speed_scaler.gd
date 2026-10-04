@@ -7,7 +7,7 @@ extends Node
 ## Adjust these to help make each animation's feet match the ground (prevents sliding)
 @export var walk_anim_speed : float = 3.0
 @export var sprint_anim_speed : float = 9.0
-@export var crouch_walk_anim_speed : float = 6.0
+@export var crouch_walk_anim_speed : float = 1.5
 
 func _ready():
 	if not is_multiplayer_authority():

@@ -46,6 +46,13 @@ func _ready() -> void:
 		if not %SettingsMenu.visible:
 			%SettingsButton.grab_focus())
 	%SettingsMenu.confirm_button_clicked.connect(func() -> void: %SettingsMenu.hide())
+	%CharacterButton.pressed.connect(func() -> void: %CharacterSettingsMenu.show())
+	%CharacterSettingsMenu.visibility_changed.connect(func() -> void:
+		%MainContainer.visible = not %CharacterSettingsMenu.visible
+		%Help.visible = not %CharacterSettingsMenu.visible
+		if not %CharacterSettingsMenu.visible:
+			%CharacterButton.grab_focus())
+	%CharacterSettingsMenu.confirm_button_clicked.connect(func() -> void: %CharacterSettingsMenu.hide())
 	%FailedButton.pressed.connect(func() -> void:
 		%PendingOverlay.hide()
 		_restore_main())

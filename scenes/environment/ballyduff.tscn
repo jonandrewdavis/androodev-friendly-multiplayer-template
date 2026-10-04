@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://og2igafn871m"]
+
+[ext_resource type="PackedScene" uid="uid://ceyk8i7l0ej5u" path="res://assets/models/environment/beach_in_ballyduff.glb" id="1_1u7pq"]
+[ext_resource type="Shader" uid="uid://cjpig6pptg3jv" path="res://resources/shaders/sky_test_1.gdshader" id="2_db4jy"]
+[ext_resource type="Shader" uid="uid://cfktlsroqfaof" path="res://resources/shaders/water_shader_cheap.gdshader" id="3_06hwb"]
+[ext_resource type="Texture2D" uid="uid://cje0uotqddck8" path="res://assets/img/bwr_caustic.png" id="4_swavh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_06hwb"]
+shader = ExtResource("2_db4jy")
+shader_parameter/day_top_color = Color(0.1, 0.6, 1, 1)
+shader_parameter/day_bottom_color = Color(0.4, 0.8, 1, 1)
+shader_parameter/sunset_top_color = Color(0.7, 0.75, 1, 1)
+shader_parameter/sunset_bottom_color = Color(1, 0.5, 0.7, 1)
+shader_parameter/night_top_color = Color(0.02, 0, 0.04, 1)
+shader_parameter/night_bottom_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/horizon_color = Color(0, 0.7, 0.8, 1)
+shader_parameter/horizon_blur = 0.05
+shader_parameter/sun_color = Color(10, 8, 1, 1)
+shader_parameter/sun_sunset_color = Color(10, 0, 0, 1)
+shader_parameter/sun_size = 0.2
+shader_parameter/sun_blur = 10.0
+shader_parameter/moon_color = Color(1, 0.95, 0.7, 1)
+shader_parameter/moon_size = 0.06
+shader_parameter/moon_blur = 0.1
+shader_parameter/clouds_edge_color = Color(0.8, 0.8, 0.98, 1)
+shader_parameter/clouds_top_color = Color(1, 1, 1, 1)
+shader_parameter/clouds_middle_color = Color(0.92, 0.92, 0.98, 1)
+shader_parameter/clouds_bottom_color = Color(0.83, 0.83, 0.94, 1)
+shader_parameter/clouds_speed = 2.0
+shader_parameter/clouds_direction = 0.2
+shader_parameter/clouds_scale = 1.0
+shader_parameter/clouds_cutoff = 0.3
+shader_parameter/clouds_fuzziness = 0.5
+shader_parameter/clouds_weight = 0.0
+shader_parameter/clouds_blur = 0.25
+shader_parameter/stars_speed = 1.0
+shader_parameter/overwritten_time = 0.0
+
+[sub_resource type="Sky" id="Sky_2jas5"]
+sky_material = SubResource("ShaderMaterial_06hwb")
+
+[sub_resource type="Environment" id="Environment_swavh"]
+background_mode = 2
+sky = SubResource("Sky_2jas5")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_db4jy"]
+render_priority = 0
+shader = ExtResource("3_06hwb")
+shader_parameter/tint_color = Vector4(0.31, 0.9, 0.8, 0.7)
+shader_parameter/caustics = ExtResource("4_swavh")
+shader_parameter/slowdown = 8.400000125170079
+shader_parameter/time_caust = 0.13
+shader_parameter/caust_form = 0.15
+shader_parameter/tile = 15.30000022798836
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yruvy"]
+material = SubResource("ShaderMaterial_db4jy")
+size = Vector2(800, 880)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_swavh"]
+albedo_color = Color(0.68235296, 0.64705884, 0.59607846, 1)
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pr2nu"]
+material = SubResource("StandardMaterial3D_swavh")
+size = Vector2(800, 300)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4i8qy"]
+albedo_color = Color(0.22490484, 0.22490484, 0.22490484, 1)
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_swavh"]
+material = SubResource("StandardMaterial3D_4i8qy")
+size = Vector2(800, 700)
+
+[node name="Ballyduff" type="Node3D" unique_id=730498104]
+
+[node name="Sketchfab_Scene" parent="." unique_id=458309664 instance=ExtResource("1_1u7pq")]
+transform = Transform3D(0.9998477, 0.017452406, 0, -0.017452406, 0.9998477, 0, 0, 0, 1, -88.08611, -52.291466, 23.843025)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1348047996]
+environment = SubResource("Environment_swavh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=452919367]
+transform = Transform3D(-0.61594903, -0.5670994, -0.54681355, 0.49389315, -0.81874734, 0.29278362, -0.61373955, -0.089727715, 0.7843931, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Water" type="MeshInstance3D" parent="." unique_id=389477655]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.7528114, -370.41586)
+mesh = SubResource("PlaneMesh_yruvy")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=740523230]
+transform = Transform3D(1, 0, 0, 0, 0.9741359, 0.22596343, 0, -0.22596343, 0.9741359, 0, -41.84935, -158.94888)
+mesh = SubResource("PlaneMesh_pr2nu")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=1700109699]
+transform = Transform3D(1, 0, 0, 0, 0.99942666, -0.033860996, 0, 0.033860996, 0.99942666, 0, -70.56318, -442.30524)
+mesh = SubResource("PlaneMesh_swavh")

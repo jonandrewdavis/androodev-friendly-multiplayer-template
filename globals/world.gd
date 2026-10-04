@@ -1,6 +1,5 @@
 extends Node
 
-const DEFAULT_LEVEL := "example"
 var session := 0
 @onready var level_loader: LevelLoader = %LevelLoader
 @onready var player_spawner: PlayerSpawner = %PlayerSpawner
@@ -16,7 +15,7 @@ func _on_lobby_joined() -> void:
 		return
 	session += 1
 	var token := session
-	await level_loader.spawn_level(DEFAULT_LEVEL)
+	await level_loader.spawn_level(LevelLoader.LEVEL_DICT.keys()[0])
 	if token != session or not multiplayer.is_server():
 		return
 	player_spawner.spawn_player(1)

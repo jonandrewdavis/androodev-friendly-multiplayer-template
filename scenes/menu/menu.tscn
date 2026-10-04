@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://brfyamk8dn0ef" path="res://resources/theme/theme_casual_pop.tres" id="1_y1o0p"]
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="3_e0arn"]
+[ext_resource type="PackedScene" uid="uid://ce0wxs3oxi5p6" path="res://addons/ggt-core/settings/character_settings_menu.tscn" id="4_charset"]
 [ext_resource type="Script" uid="uid://cvc42inud8fxx" path="res://scenes/menu/menu.gd" id="5"]
 [ext_resource type="PackedScene" uid="uid://cgcnducd51he7" path="res://scenes/menu/host_panel.tscn" id="host"]
 [ext_resource type="PackedScene" uid="uid://cuh12k38iu367" path="res://scenes/menu/join_panel.tscn" id="join"]
@@ -24,7 +25,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0956487, 0.21971804, 0.36288694, 1)
+color = Color(0.081, 0.0886, 0.1, 1)
 
 [node name="MainContainer" type="MarginContainer" parent="." unique_id=494167775]
 unique_name_in_owner = true
@@ -97,6 +98,14 @@ focus_next = NodePath("../SettingsButton")
 theme_type_variation = &"SuccessButton"
 text = "Join"
 
+[node name="CharacterButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=1159395239]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 70)
+layout_mode = 2
+focus_next = NodePath("../SettingsButton")
+theme_type_variation = &"DangerButton"
+text = "Create Character"
+
 [node name="SettingsButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=879990348]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 70)
@@ -168,6 +177,22 @@ offset_left = -294.0
 offset_top = -385.5
 offset_right = 294.0
 offset_bottom = 385.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CharacterSettingsMenu" parent="." unique_id=955781026 instance=ExtResource("4_charset")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -294.0
+offset_top = -238.0
+offset_right = 294.0
+offset_bottom = 238.0
 grow_horizontal = 2
 grow_vertical = 2
 

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cr0rjm7booup1"]
+
+[ext_resource type="Script" uid="uid://v8buaf4wtgx1" path="res://scenes/menu/color_picker/color_picker_grid.gd" id="1_p1dxd"]
+
+[node name="ColorPickerGrid" type="VBoxContainer" unique_id=1233574238]
+offset_right = 42.0
+offset_bottom = 42.0
+script = ExtResource("1_p1dxd")
+
+[node name="ColorGrid" type="GridContainer" parent="." unique_id=356296030]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 3

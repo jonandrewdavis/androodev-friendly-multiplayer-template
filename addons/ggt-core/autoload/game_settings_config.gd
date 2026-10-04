@@ -24,6 +24,9 @@ enum AudioBus {
 
 const FPS_MAX_HARD_CAP = 400
 
+const DEFAULT_USERNAME = "Player"
+const DEFAULT_PLAYER_COLOR = Color.WHITE
+
 func _ready() -> void:
 	if FileAccess.file_exists(CONFIG_FILE_PATH):
 		var err = config.load(CONFIG_FILE_PATH)
@@ -135,6 +138,19 @@ func set_fullscreen(v: bool) -> void:
 func set_locale(locale: String) -> void:
 	config.set_value("game", "locale", locale)
 	TranslationServer.set_locale(locale)
+
+
+func set_username(new_username: String) -> void:
+	config.set_value("character", "username", new_username.strip_edges())
+
+
+func set_player_color(new_color: Color) -> void:
+	config.set_value("character", "color", new_color)
+
+
+func reset_character() -> void:
+	set_username(DEFAULT_USERNAME)
+	set_player_color(DEFAULT_PLAYER_COLOR)
 #endregion
 
 
@@ -145,4 +161,13 @@ func get_resolution_scale() -> float:
 
 func get_locale() -> String:
 	return config.get_value("game", "locale", "en")
+
+
+func get_username() -> String:
+	var username: String = config.get_value("character", "username", DEFAULT_USERNAME)
+	return username if not username.is_empty() else DEFAULT_USERNAME
+
+
+func get_player_color() -> Color:
+	return config.get_value("character", "color", DEFAULT_PLAYER_COLOR)
 #endregion

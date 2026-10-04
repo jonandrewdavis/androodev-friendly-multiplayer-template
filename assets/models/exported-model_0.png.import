@@ -2,24 +2,26 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlefk7rtyu8jb"
-path.s3tc="res://.godot/imported/01_PrototypeCheckerBig_2048.png-98fb19b01b3f3e961dc455eaf2a8caee.s3tc.ctex"
-path.etc2="res://.godot/imported/01_PrototypeCheckerBig_2048.png-98fb19b01b3f3e961dc455eaf2a8caee.etc2.ctex"
+uid="uid://cr2uf5s3esppe"
+path.s3tc="res://.godot/imported/exported-model_0.png-97d1140f03f9d71f7ea342618e5e423f.s3tc.ctex"
+path.etc2="res://.godot/imported/exported-model_0.png-97d1140f03f9d71f7ea342618e5e423f.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "43542c3ab498c4b3531ed8599f16bc97"
+}
 
 [deps]
 
-source_file="res://assets/01_PrototypeCheckerBig_2048.png"
-dest_files=["res://.godot/imported/01_PrototypeCheckerBig_2048.png-98fb19b01b3f3e961dc455eaf2a8caee.s3tc.ctex", "res://.godot/imported/01_PrototypeCheckerBig_2048.png-98fb19b01b3f3e961dc455eaf2a8caee.etc2.ctex"]
+source_file="res://assets/models/exported-model_0.png"
+dest_files=["res://.godot/imported/exported-model_0.png-97d1140f03f9d71f7ea342618e5e423f.s3tc.ctex", "res://.godot/imported/exported-model_0.png-97d1140f03f9d71f7ea342618e5e423f.etc2.ctex"]
 
 [params]
 
 compress/mode=2
 compress/high_quality=false
-compress/high_quality_mode=0
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

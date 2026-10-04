@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://ce0wxs3oxi5p6"]
+
+[ext_resource type="Script" uid="uid://cldrj0r64lqwm" path="res://addons/ggt-core/settings/character_settings_menu.gd" id="1_8chh3"]
+[ext_resource type="PackedScene" uid="uid://b8y8u6k8j8p8" path="res://addons/ggt-core/settings/confirmation_modal.tscn" id="2_akvs8"]
+[ext_resource type="PackedScene" uid="uid://cr0rjm7booup1" path="res://scenes/menu/color_picker/color_picker_grid.tscn" id="2_yxgmj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_r8yej"]
+font_size = 64
+
+[node name="CharacterSettingsMenu" type="PanelContainer" unique_id=1203948571 node_paths=PackedStringArray("username_line_edit", "reset_confirmation_dialog", "cancel_confirmation_dialog", "cancel_button")]
+offset_right = 353.0
+offset_bottom = 400.0
+script = ExtResource("1_8chh3")
+username_line_edit = NodePath("MarginContainer/VBox/CharacterSettings/Username/UsernameLineEdit")
+reset_confirmation_dialog = NodePath("MarginContainer/VBox/ResetConfirmationDialog")
+cancel_confirmation_dialog = NodePath("MarginContainer/VBox/CancelConfirmationDialog")
+cancel_button = NodePath("MarginContainer/VBox/HBoxContainer/HBoxContainer/SettingsCancelButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1590284716]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer" unique_id=884120397]
+layout_mode = 2
+
+[node name="LabelCharacter" type="Label" parent="MarginContainer/VBox" unique_id=1478821063]
+layout_mode = 2
+translation_context = &"menu"
+text = "Character"
+label_settings = SubResource("LabelSettings_r8yej")
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBox" unique_id=520673918]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="CharacterSettings" type="VBoxContainer" parent="MarginContainer/VBox" unique_id=348011632]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Username" type="HBoxContainer" parent="MarginContainer/VBox/CharacterSettings" unique_id=402771938]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBox/CharacterSettings/Username" unique_id=1726305184]
+layout_mode = 2
+size_flags_horizontal = 3
+translation_context = &"menu"
+text = "Username"
+
+[node name="UsernameLineEdit" type="LineEdit" parent="MarginContainer/VBox/CharacterSettings/Username" unique_id=1158390672]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+placeholder_text = "Player"
+max_length = 16
+
+[node name="Color" type="HBoxContainer" parent="MarginContainer/VBox/CharacterSettings" unique_id=1092838564]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBox/CharacterSettings/Color" unique_id=605581932]
+layout_mode = 2
+size_flags_horizontal = 3
+translation_context = &"menu"
+text = "Color"
+
+[node name="ColorPickerGrid" parent="MarginContainer/VBox/CharacterSettings/Color" unique_id=1233574238 instance=ExtResource("2_yxgmj")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=1254007193]
+layout_mode = 2
+alignment = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBox/HBoxContainer" unique_id=470215638]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBox/HBoxContainer" unique_id=1820577409]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="SettingsCancelButton" type="Button" parent="MarginContainer/VBox/HBoxContainer/HBoxContainer" unique_id=278930164]
+layout_mode = 2
+translation_context = &"menu"
+focus_next = NodePath("../SettingsResetButton")
+text = "Cancel"
+
+[node name="SettingsResetButton" type="Button" parent="MarginContainer/VBox/HBoxContainer/HBoxContainer" unique_id=1648203715]
+layout_mode = 2
+translation_context = &"menu"
+focus_neighbor_left = NodePath("../SettingsCancelButton")
+focus_neighbor_right = NodePath("../SettingsConfirmButton")
+text = "Reset default"
+
+[node name="SettingsConfirmButton" type="Button" parent="MarginContainer/VBox/HBoxContainer/HBoxContainer" unique_id=963517420]
+layout_mode = 2
+translation_context = &"menu"
+focus_neighbor_left = NodePath("../SettingsResetButton")
+text = "Apply"
+
+[node name="ResetConfirmationDialog" parent="MarginContainer/VBox" unique_id=1487302659 instance=ExtResource("2_akvs8")]
+visible = false
+layout_mode = 2
+
+[node name="CancelConfirmationDialog" parent="MarginContainer/VBox" unique_id=338650127 instance=ExtResource("2_akvs8")]
+visible = false
+layout_mode = 2
+
+[connection signal="pressed" from="MarginContainer/VBox/HBoxContainer/HBoxContainer/SettingsCancelButton" to="." method="_on_settings_cancel_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/HBoxContainer/HBoxContainer/SettingsResetButton" to="." method="_on_settings_reset_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/HBoxContainer/HBoxContainer/SettingsConfirmButton" to="." method="_on_settings_confirm_button_pressed"]

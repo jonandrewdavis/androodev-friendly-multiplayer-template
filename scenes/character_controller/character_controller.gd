@@ -31,6 +31,7 @@ extends CharacterBody3D
 
 # CRITICAL: Think about how we want to stop accepting inputs and resume them
 # TODO: is it this, or another mechanism, and then does the UI change instead?
+# What is movement_allowed ?
 @export var mouse_lock : bool = true
 
 
@@ -82,17 +83,6 @@ extends CharacterBody3D
 ## Similar to desired_velocity but ignores added velocity.
 @onready var raw_desired_velocity : Vector3
 
-signal jumped
-signal landed
-
-@export_group("Network")
-## Written by the authority, replicated to peers. Puppets interpolate toward these.
-@export var sync_position : Vector3
-@export var sync_rotation_y : float
-## Interpolation rate (per second) for puppets. Higher = snappier, lower = smoother but laggier.
-@export var interp_speed : float = 15.0
-## Puppets snap instead of lerping when further than this from the synced position (teleports, respawns).
-@export var snap_distance : float = 3.0
 
 #Used to connect to the input system, uses ui inputs as a fallback
 @export_group("Inputs")
@@ -113,15 +103,45 @@ signal landed
 	"Zoom_In": "Zoom_In"
 	
 }
+
+@export_group("Network")
+## Written by the authority, replicated to peers. Puppets interpolate toward these.
+@export var sync_position : Vector3
+@export var sync_rotation_y : float
+## Interpolation rate (per second) for puppets. Higher = snappier, lower = smoother but laggier.
+@export var interp_speed : float = 15.0
+## Multiplier on interp_speed for the vertical axis. Higher keeps jump landings crisp on puppets.
+@export var vertical_interp_multiplier : float = 4.0
+## Puppets snap instead of lerping when further than this from the synced position (teleports, respawns).
+@export var snap_distance : float = 3.0
+## Written by the authority from the character settings, replicated on change.
+## NOTE: requires `resource_local_to_scene` on the material to be TRUE, or it'll effect all instances!!
+@export var player_color : Color = Color.WHITE:
+	set(value):
+		player_color = value
+		if is_node_ready():
+			_apply_player_color()
+
+@export var username : String = "":
+	set(value):
+		username = value
+		if is_node_ready():
+			_apply_username()
+
 ## Object references
 @onready var head : SpringArm3D = $Head
 @onready var perspective_handler : Node = $Head/Camera/Perspective_Handler
 @onready var collider : CollisionShape3D = $Collider 
-
+@onready var player_mesh : MeshInstance3D = $"Skeleton3D/Skinned Mesh 0"
+@onready var nameplate : Label3D = %Nameplate
 
 ## Debounce vars
 @onready var stored_sprint_state : bool = false
 @onready var stored_crouch_state : bool = false
+
+## Signals. NOTE: Keep gameplay specific signals in sub-systems or components!
+signal jumped
+signal landed
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(int(name))
@@ -132,6 +152,7 @@ func _ready() -> void:
 	check_mappings()
 
 	if not is_multiplayer_authority():
+		# "Puppets"  
 		set_process(false)
 		set_process_input(false)
 		position = sync_position
@@ -141,6 +162,12 @@ func _ready() -> void:
 		camera.current = true
 		sync_position = position
 		sync_rotation_y = rotation.y
+		player_color = GGT_GameConfig.get_player_color()
+		username = GGT_GameConfig.get_username()
+		nameplate.hide()
+
+	_apply_player_color()
+	_apply_username()
 
 func _unhandled_input(_event: InputEvent) -> void:
 	#Toggle noclip mode
@@ -231,6 +258,7 @@ func _physics_process(delta: float) -> void:
 			current_acceleration = 1000
 			crouch_slow = 0
 			current_friction = 5000
+
 		#Lerp weights, clamped so high rates don't overshoot
 		var accel_weight : float = minf(current_acceleration * delta, 1.0)
 		var friction_weight : float = minf(current_friction * delta, 1.0)
@@ -310,13 +338,25 @@ func _physics_process(delta: float) -> void:
 
 ## Puppets ease toward the last replicated transform instead of jumping to each packet.
 func _interpolate_remote(delta: float) -> void:
+
 	#Frame-rate independent lerp weight
 	var weight : float = 1.0 - exp(-interp_speed * delta)
 	if position.distance_to(sync_position) > snap_distance:
 		position = sync_position
 	else:
-		position = position.lerp(sync_position, weight)
+		#Vertical uses a faster rate so landings aren't so "floaty"
+		var vertical_weight : float = 1.0 - exp(-interp_speed * vertical_interp_multiplier * delta)
+		position.x = lerpf(position.x, sync_position.x, weight)
+		position.z = lerpf(position.z, sync_position.z, weight)
+		position.y = lerpf(position.y, sync_position.y, vertical_weight)
 	rotation.y = lerp_angle(rotation.y, sync_rotation_y, weight)
+
+func _apply_player_color() -> void:
+	var material : StandardMaterial3D = player_mesh.get_surface_override_material(0)
+	material.albedo_color = player_color
+
+func _apply_username() -> void:
+	nameplate.text = username
 
 func enable_noclip() -> void:
 	if noclip_allowed:

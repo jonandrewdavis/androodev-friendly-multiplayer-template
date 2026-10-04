@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://do7kkb4ijqk5p" path="res://scenes/ui/pause-layer/pause-layer.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://ce0wxs3oxi5p6" path="res://addons/ggt-core/settings/character_settings_menu.tscn" id="3_v8s8m"]
 
 [node name="PauseLayer" type="CanvasLayer" unique_id=896552845]
 script = ExtResource("1")
@@ -40,17 +41,17 @@ grow_vertical = 2
 [node name="ResumeButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=834396206]
 unique_name_in_owner = true
 layout_mode = 2
-text = "RESUME"
+text = "Resume"
 
 [node name="SettingsButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=1268453022]
 unique_name_in_owner = true
 layout_mode = 2
-text = "SETTINGS"
+text = "Settings"
 
 [node name="LeaveButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=1378301109]
 unique_name_in_owner = true
 layout_mode = 2
-text = "LEAVE GAME"
+text = "Leave Game"
 
 [node name="HostPanel" type="VBoxContainer" parent="PauseRoot" unique_id=288046486]
 unique_name_in_owner = true
@@ -119,3 +120,6 @@ offset_right = 426.0
 offset_bottom = 385.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="CharacterSettingsMenu" parent="." unique_id=1203948571 instance=ExtResource("3_v8s8m")]
+visible = false

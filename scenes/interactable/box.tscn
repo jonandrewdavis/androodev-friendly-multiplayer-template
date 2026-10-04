@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c38er141mkjb"]
+
+[ext_resource type="Script" uid="uid://dn88rwued77nh" path="res://scenes/interactable/box.gd" id="1_3tijx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pr2nu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yruvy"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4fym3"]
+
+[node name="Box" type="RigidBody3D" unique_id=90710318]
+script = ExtResource("1_3tijx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=421960559]
+mesh = SubResource("BoxMesh_pr2nu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=481654668]
+shape = SubResource("BoxShape3D_yruvy")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=372839351]
+replication_config = SubResource("SceneReplicationConfig_4fym3")

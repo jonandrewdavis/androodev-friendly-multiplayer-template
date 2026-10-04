@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dltcmsd3purl0"]
 
-[ext_resource type="Texture2D" uid="uid://dlefk7rtyu8jb" path="res://assets/01_PrototypeCheckerBig_2048.png" id="1_2jas5"]
+[ext_resource type="Texture2D" uid="uid://dlefk7rtyu8jb" path="res://assets/img/01_PrototypeCheckerBig_2048.png" id="1_2jas5"]
 [ext_resource type="Shader" uid="uid://cjpig6pptg3jv" path="res://resources/shaders/sky_test_1.gdshader" id="2_3tivf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n51mc"]
