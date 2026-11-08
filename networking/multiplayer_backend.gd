@@ -3,14 +3,12 @@ class_name MultiplayerBackend
 extends Node
 ## [b]Custom logic for hosting and joining multiplayer lobbies.[/b]
 
-## Every supported backend. [constant NONE] means none was chosen.
-enum Type {NONE, ENET, NODETUNNEL, STEAM, TUBE}
+enum Type {OFFLINE, ENET, NODETUNNEL, STEAM, TUBE, EOS}
 
 @warning_ignore_start('unused_signal')
-signal lobby_found(address: Variant, cur_players: int, max_players: int)
+signal lobby_found(address: Variant, lobby_name: String, cur_players: int, max_players: int)
 signal lobby_joined
 signal join_lobby_failed(reason: String)
-## Short, human-readable backend status (e.g. "Relay ready") for display in menus.
 signal status_changed(text: String)
 @warning_ignore_restore('unused_signal')
 
@@ -34,13 +32,7 @@ func leave_game() -> void
 
 
 @abstract
-func fetch_lobby_list() -> void
-
-
-## Returns true while connected to a lobby (hosting or joined).
-## Override when a backend keeps its peer assigned while idle (e.g. a relay connection).
-func has_active_session() -> bool:
-	return multiplayer.has_multiplayer_peer() and not multiplayer.multiplayer_peer is OfflineMultiplayerPeer
+func fetch_lobby_list() -> bool
 
 
 func _close_peer() -> void:
@@ -53,7 +45,7 @@ func _close_peer() -> void:
 ## At a bare minimum, we should set a flag that we can return to for [method get_joinable].
 @abstract
 func set_joinable(joinable: bool) -> void
-
+	
 
 ## Called by the server when a peer connects to validate that we are expecting joins.
 ## If we aren't, then we can kick that peer.

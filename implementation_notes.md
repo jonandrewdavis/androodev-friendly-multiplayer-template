@@ -7,7 +7,7 @@ The Desktop plan remains the implementation baseline. Preserve the restored Mini
 - Keep backend status in the service so newly created menus can display it.
 - Suspend the relay before offline play and ignore obsolete callbacks during cleanup.
 - Cancel unfinished level loads when leaving, and gate world replication on an active lobby.
-- Validate discovery packets, room metadata, saved backend values, and blank join addresses.
+- Validate discovery packets, room metadata, and blank join addresses.
 - Verify imports, startup, offline and two-peer networking with bounded automated checks; report any external relay or GUI checks that cannot be completed.
 
 ## Beta-plugin findings addressed

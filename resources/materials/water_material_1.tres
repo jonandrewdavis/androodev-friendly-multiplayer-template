@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dxfxq8bqwxf15"]
+
+[ext_resource type="Shader" uid="uid://cfktlsroqfaof" path="res://resources/shaders/water_shader_cheap.gdshader" id="1_pq0yr"]
+[ext_resource type="Texture2D" uid="uid://cje0uotqddck8" path="res://assets/img/bwr_caustic.png" id="2_pdold"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_pq0yr")
+shader_parameter/tint_color = Vector4(0.3, 0.9, 1, 0.6)
+shader_parameter/caustics = ExtResource("2_pdold")
+shader_parameter/slowdown = 5.0
+shader_parameter/time_caust = 0.13
+shader_parameter/caust_form = 0.15
+shader_parameter/tile = 15.000000223518

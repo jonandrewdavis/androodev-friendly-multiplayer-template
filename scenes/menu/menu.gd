@@ -1,116 +1,116 @@
-@tool
 extends Control
 
-const UI_LAYER = "res://scenes/ui/ui_layer.tscn"
 const TIMEOUT_DUR := 10.0
-var timeout_token := 0
+var pending_attempt_id := 0
 
-## Multiplayer backend used by this game. Web exports always use Tube (WebRTC).
-@export var backend_type := MultiplayerBackend.Type.NONE:
-	set(value):
-		backend_type = value
-		update_configuration_warnings()
+@onready var main_container: MarginContainer = %MainContainer
+@onready var status_label: Label = %StatusLabel
 
-func _get_configuration_warnings() -> PackedStringArray:
-	if backend_type == MultiplayerBackend.Type.NONE:
-		return ["Select a Backend Type. (Web exports always use Tube.)"]
-	return []
+@onready var host_button: Button = %HostButton
+@onready var join_button: Button = %JoinButton
+
+@onready var character_settings_button: Button = %CharacterSettingsButton
+@onready var settings_button: Button = %SettingsButton
+@onready var exit_button: Button = %ExitButton
+
+@onready var settings_menu: SettingsMenu = %SettingsMenu
+@onready var character_settings_menu: CharacterSettingsMenu = %CharacterSettingsMenu
+@onready var pending_overlay: ColorRect = %PendingOverlay
+@onready var host_panel: HostPanel = %HostPanel
+@onready var join_panel: JoinPanel = %JoinPanel
+@onready var help_panel: PanelContainer = %HelpPanel
+
+@onready var pending_label: Label = %PendingLabel
+@onready var failed_label: Label = %FailedLabel
+@onready var failed_button: Button = %FailedButton
 
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	if MultiplayerService.backend == null: # keeps a debug-selected backend when returning from a game
-		MultiplayerService.set_backend(backend_type)
-	_setup_debug_backend_option()
-	%StatusLabel.text = MultiplayerService.status_text
-	MultiplayerService.status_changed.connect(func(text: String) -> void: %StatusLabel.text = text)
+	status_label.text = MultiplayerService.status_text
+	MultiplayerService.status_changed.connect(func(text: String) -> void: status_label.text = text)
+	_update_session_buttons()
+	MultiplayerService.backend_changed.connect(func(_type: MultiplayerBackend.Type) -> void: _update_session_buttons())
+	MultiplayerService.backend_failed.connect(_show_failure)
 	MultiplayerService.creating_lobby.connect(_show_pending.bind("Hosting game..."))
 	MultiplayerService.joining_lobby.connect(_show_pending.bind("Joining game..."))
 	MultiplayerService.join_lobby_failed.connect(_show_failure)
 	MultiplayerService.lobby_joined.connect(_on_lobby_joined)
-	%HostButton.pressed.connect(func() -> void:
-		%MainContainer.hide()
-		%Help.hide()
-		%HostPanel.open())
-	%JoinButton.pressed.connect(func() -> void:
-		%MainContainer.hide()
-		%Help.hide()
-		%JoinPanel.open())
-	%HostPanel.closed.connect(_restore_main)
-	%JoinPanel.closed.connect(_restore_main)
-	%SettingsButton.pressed.connect(func() -> void: %SettingsMenu.show())
-	%SettingsMenu.visibility_changed.connect(func() -> void:
-		%MainContainer.visible = not %SettingsMenu.visible
-		%Help.visible = not %SettingsMenu.visible
-		if not %SettingsMenu.visible:
-			%SettingsButton.grab_focus())
-	%SettingsMenu.confirm_button_clicked.connect(func() -> void: %SettingsMenu.hide())
-	%CharacterButton.pressed.connect(func() -> void: %CharacterSettingsMenu.show())
-	%CharacterSettingsMenu.visibility_changed.connect(func() -> void:
-		%MainContainer.visible = not %CharacterSettingsMenu.visible
-		%Help.visible = not %CharacterSettingsMenu.visible
-		if not %CharacterSettingsMenu.visible:
-			%CharacterButton.grab_focus())
-	%CharacterSettingsMenu.confirm_button_clicked.connect(func() -> void: %CharacterSettingsMenu.hide())
-	%FailedButton.pressed.connect(func() -> void:
-		%PendingOverlay.hide()
+	host_button.pressed.connect(func() -> void:
+		main_container.hide()
+		help_panel.hide()
+		host_panel.open())
+	join_button.pressed.connect(func() -> void:
+		main_container.hide()
+		help_panel.hide()
+		join_panel.open())
+	host_panel.closed.connect(_restore_main)
+	join_panel.closed.connect(_restore_main)
+
+
+	_setup_sub_menu(settings_button, settings_menu)
+	_setup_sub_menu(character_settings_button, character_settings_menu)
+
+	failed_button.pressed.connect(func() -> void:
+		pending_overlay.hide()
 		_restore_main())
-	%ExitButton.pressed.connect(_exit)
+	exit_button.pressed.connect(_exit)
 	if OS.has_feature("web"):
-		%ExitButton.hide()
-	%HostButton.grab_focus()
+		exit_button.hide()
+	host_button.grab_focus()
 	if not MultiplayerService.kick_reason.is_empty():
 		_show_failure(MultiplayerService.kick_reason)
 		MultiplayerService.kick_reason = ""
+	elif not MultiplayerService.backend_error.is_empty():
+		_show_failure(MultiplayerService.backend_error)
 
-## Developer-only backend switcher; removed from release builds.
-func _setup_debug_backend_option() -> void:
-	if not OS.is_debug_build():
-		%DebugBackendOption.queue_free()
-		return
-	for type in MultiplayerService.backend_scripts:
-		%DebugBackendOption.add_item(MultiplayerBackend.Type.find_key(type).capitalize(), type)
-	%DebugBackendOption.select(%DebugBackendOption.get_item_index(MultiplayerService.backend_type))
-	%DebugBackendOption.item_selected.connect(func(index: int) -> void: MultiplayerService.set_backend(%DebugBackendOption.get_item_id(index)))
+
+func _setup_sub_menu(button:Button, sub_menu: Control):
+	button.pressed.connect(func(): sub_menu.show())
+	sub_menu.visibility_changed.connect(func() -> void:
+		main_container.visible = not sub_menu.visible
+		if not button.visible:
+			settings_button.grab_focus())
+	sub_menu.confirm_button_clicked.connect(func() -> void: sub_menu.hide())
 
 func _restore_main() -> void:
-	%MainContainer.show()
-	%Help.show()
-	%HostButton.grab_focus()
+	main_container.show()
+	help_panel.show()
+	host_button.grab_focus()
 
 func _show_pending(text: String) -> void:
-	timeout_token += 1
-	var token := timeout_token
-	%MainContainer.hide()
-	%Help.hide()
-	%PendingLabel.text = text
-	%FailedLabel.hide()
-	%FailedButton.hide()
-	%PendingOverlay.show()
-	%PendingOverlay.grab_focus()
+	pending_attempt_id += 1
+	var attempt_id := pending_attempt_id
+	main_container.hide()
+	help_panel.hide()
+	pending_label.text = text
+	failed_label.hide()
+	failed_button.hide()
+	pending_overlay.show()
+	pending_overlay.grab_focus()
 	await get_tree().create_timer(TIMEOUT_DUR).timeout
-	if token == timeout_token and MultiplayerService.pending:
+	if attempt_id == pending_attempt_id and MultiplayerService.state == MultiplayerService.State.CONNECTING:
 		MultiplayerService.leave_game()
 		_show_failure("Timed out.")
 
 func _show_failure(reason: String) -> void:
-	timeout_token += 1
-	%HostPanel.hide()
-	%JoinPanel.hide()
-	%MainContainer.hide()
-	%Help.hide()
-	%PendingLabel.text = "Unable to continue"
-	%FailedLabel.text = reason
-	%FailedLabel.show()
-	%FailedButton.show()
-	%PendingOverlay.show()
-	%FailedButton.grab_focus()
+	pending_attempt_id += 1
+	help_panel.hide()
+	join_panel.hide()
+	main_container.hide()
+	help_panel.hide()
+	pending_label.text = "Unable to continue"
+	failed_label.text = reason
+	failed_label.show()
+	failed_button.show()
+	pending_overlay.show()
+	failed_button.grab_focus()
 
 func _on_lobby_joined() -> void:
-	timeout_token += 1
-	%PendingOverlay.hide()
-	GGT.change_scene(UI_LAYER, {"show_progress_bar": false})
+	pending_attempt_id += 1
+	pending_overlay.hide()
+
+func _update_session_buttons() -> void:
+	join_button.disabled = MultiplayerService.backend_type == MultiplayerBackend.Type.OFFLINE
 
 func _exit() -> void:
 	var transitions := get_node_or_null("/root/GGT_Transitions")

@@ -4,7 +4,6 @@ extends PanelContainer
 signal closed
 const ITEM_SCENE := preload("res://scenes/menu/join_list_item.tscn")
 var addresses: Dictionary = {}
-var search_token := 0
 
 func _ready() -> void:
 	%CloseButton.pressed.connect(_close)
@@ -26,17 +25,16 @@ func _refresh_hint(_type: int) -> void:
 	%AddressEdit.clear()
 
 func _refresh() -> void:
-	search_token += 1
-	var token := search_token
 	addresses.clear()
 	for child in %LobbyList.get_children():
 		%LobbyList.remove_child(child)
 		child.queue_free()
 	%SearchLabel.text = "Searching..."
-	MultiplayerService.fetch_lobby_list()
-	await get_tree().create_timer(3.0).timeout
-	if token == search_token:
-		%SearchLabel.text = "No rooms found. Try an address or refresh." if addresses.is_empty() else "%d room(s)" % addresses.size()
+	await MultiplayerService.fetch_lobby_list()
+	if addresses.is_empty():
+		%SearchLabel.text = "No rooms found. Try an address or refresh."
+	else:
+		%SearchLabel.text = ""
 
 func _add_lobby(address: Variant, lobby_name: String, cur: int, maximum: int) -> void:
 	if not visible:
@@ -49,7 +47,6 @@ func _add_lobby(address: Variant, lobby_name: String, cur: int, maximum: int) ->
 	%LobbyList.add_child(item)
 	item.update_lobby(lobby_name, cur, maximum)
 	addresses[address] = item
-	%SearchLabel.text = "%d room(s)" % addresses.size()
 
 func _join_address() -> void:
 	MultiplayerService.join_game(%AddressEdit.text.strip_edges())

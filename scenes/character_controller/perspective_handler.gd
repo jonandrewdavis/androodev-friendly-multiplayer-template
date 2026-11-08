@@ -37,14 +37,6 @@ func _ready() -> void:
 		set_process(false)
 
 func _input(event: InputEvent) -> void:
-	
-	#if Input.is_key_pressed(KEY_ESCAPE):
-		##print("Unlocking mouse")
-		#player_main.mouse_lock = false
-	#elif player_main.mouse_lock == false and event is InputEventMouseButton:
-		##print("Locking mouse")
-		#player_main.mouse_lock = true
-
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion and player_main.camera_control_allowed: # event is InputEventMouseMotion:
 		rotate_look(event.relative, player_main.look_sensitivity, 0.01)
 
@@ -93,15 +85,6 @@ func _process(delta: float) -> void:
 	
 	#region Mouse look and window focus
 
-
-	# TODO: Remove
-	#if player_main.mouse_lock == true:
-		#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	#else:
-		#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	# Look around
-
-		
 	if Input.is_action_pressed(mapped_inputs["Look_Left"]) or Input.is_action_pressed(mapped_inputs["Look_Right"]) or Input.is_action_pressed(mapped_inputs["Look_Up"]) or Input.is_action_pressed(mapped_inputs["Look_Down"]):
 		var look_vector : Vector2 = Input.get_vector(mapped_inputs["Look_Left"], mapped_inputs["Look_Right"], mapped_inputs["Look_Up"], mapped_inputs["Look_Down"])
 		rotate_look(look_vector, player_main.look_sensitivity * 35, delta)

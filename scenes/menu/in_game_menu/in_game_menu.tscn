@@ -1,0 +1,146 @@
+[gd_scene format=3 uid="uid://barl4q1kugrmm"]
+
+[ext_resource type="Script" uid="uid://do7kkb4ijqk5p" path="res://scenes/menu/in_game_menu/in_game_menu.gd" id="1_ed4us"]
+[ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://scenes/menu/settings/settings_menu.tscn" id="2_hgr3c"]
+[ext_resource type="PackedScene" uid="uid://ce0wxs3oxi5p6" path="res://scenes/menu/settings/character_settings_menu.tscn" id="3_rixt0"]
+
+[node name="InGameMenu" type="CanvasLayer" unique_id=896552845]
+script = ExtResource("1_ed4us")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1357005840]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.06, 0.09, 0.85)
+
+[node name="PauseRoot" type="Control" parent="." unique_id=1595004792]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseVbox" type="VBoxContainer" parent="PauseRoot" unique_id=204148895]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -120.0
+offset_right = 150.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResumeButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=834396206]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SuccessButton"
+text = "Resume"
+
+[node name="CharacterSettingsButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=770476796]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DangerButton"
+text = "Character Settings"
+
+[node name="SettingsButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=1268453022]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"WarningButton"
+text = "Settings"
+
+[node name="LeaveButton" type="Button" parent="PauseRoot/PauseVbox" unique_id=1378301109]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Leave Game"
+
+[node name="HostPanel" type="VBoxContainer" parent="PauseRoot" unique_id=288046486]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 80.0
+offset_top = -160.0
+offset_right = 560.0
+offset_bottom = 160.0
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="PauseRoot/HostPanel" unique_id=160181005]
+layout_mode = 2
+text = "Level"
+
+[node name="LevelOption" type="OptionButton" parent="PauseRoot/HostPanel" unique_id=1234392650]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LoadLevelButton" type="Button" parent="PauseRoot/HostPanel" unique_id=1623162290]
+unique_name_in_owner = true
+layout_mode = 2
+text = "LOAD LEVEL"
+
+[node name="LobbyAddressLabel" type="Label" parent="PauseRoot/HostPanel" unique_id=1719588550]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="PlayersPanel" type="VBoxContainer" parent="PauseRoot" unique_id=158972631]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -620.0
+offset_top = -160.0
+offset_right = -80.0
+offset_bottom = 160.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="PauseRoot/PlayersPanel" unique_id=459749276]
+layout_mode = 2
+text = "Players"
+
+[node name="PlayerList" type="VBoxContainer" parent="PauseRoot/PlayersPanel" unique_id=1993935941]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingsMenu" parent="." unique_id=220478154 instance=ExtResource("2_hgr3c")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -426.0
+offset_top = -385.5
+offset_right = 426.0
+offset_bottom = 385.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CharacterSettingsMenu" parent="." unique_id=1203948571 instance=ExtResource("3_rixt0")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -266.0
+offset_top = -238.0
+offset_right = 266.0
+offset_bottom = 238.0
+grow_horizontal = 2
+grow_vertical = 2

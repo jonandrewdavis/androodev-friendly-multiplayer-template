@@ -6,6 +6,7 @@ const CONFIG_FILE_PATH = &"user://settings.cfg"
 var config = ConfigFile.new()
 
 signal resolution_scale_changed
+signal signal_persist
 
 const SUPPORTED_LOCALES = {
 	"en": "English",
@@ -47,7 +48,7 @@ func reset() -> void:
 
 func persist() -> void:
 	config.save(CONFIG_FILE_PATH)
-
+	signal_persist.emit()
 
 func revert_to(cfg: ConfigFile) -> void:
 	config.parse(cfg.encode_to_text())

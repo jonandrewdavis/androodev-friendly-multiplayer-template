@@ -9,7 +9,6 @@ static var steam_ready := false
 
 var phase := Phase.IDLE
 var lobby_id := 0
-var max_players := 0
 var lobby_name := ""
 var joinable := false
 
@@ -18,25 +17,25 @@ func _ready() -> void:
 		var result: Dictionary = Steam.steamInitEx(APP_ID, true)
 		steam_ready = result.get("status") == Steam.STEAM_API_INIT_RESULT_OK
 		if not steam_ready:
-			status_changed.emit("%s %s" % [NOT_RUNNING, result.get("verbal", "")])
+			var reason := "%s %s" % [NOT_RUNNING, result.get("verbal", "")]
+			push_error(reason)
+			status_changed.emit(reason)
 			return
 		Steam.initRelayNetworkAccess()
 	Steam.lobby_created.connect(_on_lobby_created)
 	Steam.lobby_joined.connect(_on_lobby_joined)
 	Steam.lobby_match_list.connect(_on_lobby_match_list)
 	Steam.join_requested.connect(_on_join_requested)
-	multiplayer.peer_connected.connect(_on_peer_connected)
 	status_changed.emit("Steam ready")
 
 func host_game(options: HostOptions) -> void:
 	if not steam_ready:
 		join_lobby_failed.emit(NOT_RUNNING)
 		return
-	max_players = options.max_players
 	lobby_name = options.lobby_name
 	phase = Phase.HOSTING
 	status_changed.emit("Creating lobby...")
-	Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, max_players)
+	Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, options.max_players)
 
 func _on_lobby_created(result: int, new_lobby_id: int) -> void:
 	if phase != Phase.HOSTING:
@@ -93,8 +92,7 @@ func _on_lobby_joined(joined_lobby_id: int, _permissions: int, _locked: bool, re
 	lobby_joined.emit()
 
 func _on_join_requested(requested_lobby_id: int, _friend_id: int) -> void:
-	if phase == Phase.IDLE and not MultiplayerService.pending:
-		MultiplayerService.join_game(requested_lobby_id)
+	MultiplayerService.join_game(requested_lobby_id)
 
 func leave_game() -> void:
 	phase = Phase.IDLE
@@ -104,22 +102,20 @@ func leave_game() -> void:
 		lobby_id = 0
 	_close_peer()
 
-func fetch_lobby_list() -> void:
+func fetch_lobby_list() -> bool:
 	if not steam_ready:
-		return
+		return false
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
 	Steam.addRequestLobbyListStringFilter("tag", LOBBY_TAG, Steam.LOBBY_COMPARISON_EQUAL)
 	Steam.requestLobbyList()
+	await Steam.lobby_match_list
+	return true
 
 func _on_lobby_match_list(lobbies: Array) -> void:
 	if phase != Phase.IDLE:
 		return
 	for id: int in lobbies:
 		lobby_found.emit(id, Steam.getLobbyData(id, "name"), Steam.getNumLobbyMembers(id), Steam.getLobbyMemberLimit(id))
-
-func _on_peer_connected(id: int) -> void:
-	if phase == Phase.IN_LOBBY and multiplayer.is_server() and multiplayer.get_peers().size() + 1 > max_players:
-		(multiplayer.multiplayer_peer as SteamMultiplayerPeer).disconnect_peer(id)
 
 func set_joinable(value: bool) -> void:
 	joinable = value
@@ -143,9 +139,6 @@ func get_username(peer_id: int) -> String:
 	if uid is int and uid != peer_id:
 		return Steam.getFriendPersonaName(uid)
 	return str(peer_id)
-
-func has_active_session() -> bool:
-	return phase == Phase.IN_LOBBY
 
 func get_room_code() -> String:
 	return str(lobby_id) if phase == Phase.IN_LOBBY else ""

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b6qk2xn4vd7ms"]
+
+[ext_resource type="Script" uid="uid://d1fe7d5oam5a" path="res://scenes/menu/backend_selector.gd" id="1_selector"]
+
+[node name="BackendSelector" type="OptionButton" unique_id=1938274615]
+tooltip_text = "Debug builds only"
+script = ExtResource("1_selector")

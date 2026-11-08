@@ -22,6 +22,6 @@ func get_ground_speed() -> float:
 
 ## Scales animation speed with player speed when appropriate
 func apply(ground_speed : float) -> void:
-	animation_tree.set("parameters/Walk/Character_Speed_Scale/scale", ground_speed / walk_anim_speed)
-	animation_tree.set("parameters/Sprint/Character_Speed_Scale/scale", ground_speed / sprint_anim_speed)
-	animation_tree.set("parameters/Crouch Walk/Character_Speed_Scale/scale", ground_speed / crouch_walk_anim_speed)
+	animation_tree.set("parameters/Locomotion/Walk/Character_Speed_Scale/scale", ground_speed / walk_anim_speed)
+	animation_tree.set("parameters/Locomotion/Sprint/Character_Speed_Scale/scale", ground_speed / sprint_anim_speed)
+	animation_tree.set("parameters/Locomotion/Crouch Walk/Character_Speed_Scale/scale", ground_speed / crouch_walk_anim_speed)

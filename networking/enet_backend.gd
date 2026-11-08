@@ -83,12 +83,12 @@ func leave_game() -> void:
 
 
 ## Sends a packet over the [constant BROADCAST_ADDRESS] to request lobby information from other instances on the LAN.
-func fetch_lobby_list() -> void:
+func fetch_lobby_list() -> bool:
 	assert(not search_server.is_listening())
 	assert(not multiplayer.has_multiplayer_peer() or multiplayer.multiplayer_peer is OfflineMultiplayerPeer)
 	print_debug("Searching For Games over LAN...")
 	search_peer.put_packet(GREETING_MESSAGE.to_utf8_buffer())
-
+	return true
 
 func set_joinable(joinable_: bool) -> void:
 	print_debug("Setting ENet Lobby Joinable=" + str(joinable_))

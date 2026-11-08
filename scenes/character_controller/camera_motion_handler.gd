@@ -27,4 +27,3 @@ func _process(delta: float) -> void:
 	camera_offset.z = (cos(headbob_time * bob_speed) * length * rotational_intensity / 200)
 	
 	camera.rotation = Vector3(camera_offset.x, camera_offset.y, camera_offset.z)
-	

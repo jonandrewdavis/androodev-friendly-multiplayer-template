@@ -1,8 +1,13 @@
 extends CharacterBody3D
 
+# Added
 @export var added_velocity : Vector3 = Vector3.ZERO
+# TODO: Remove as much of these as possible, use handlers
+# like perspective_handler.camera_dolly
 @onready var camera: Camera3D = %Camera
+@onready var skeleton: Skeleton3D = %Skeleton3D
 
+@export var input_allowed: bool = true : get = _is_input_allowed
 @export var movement_allowed : bool = true
 ## Determines if the player can control the camera, disable when you want to move the camera manually
 @export var camera_control_allowed : bool = true
@@ -27,13 +32,6 @@ extends CharacterBody3D
 @export var toggle_sprint : bool = false
 @export var toggle_crouch : bool = false
 @export var invert_mouse : bool = false
-
-
-# CRITICAL: Think about how we want to stop accepting inputs and resume them
-# TODO: is it this, or another mechanism, and then does the UI change instead?
-# What is movement_allowed ?
-@export var mouse_lock : bool = true
-
 
 @onready var moving : bool = false
 @onready var jumping : bool = false
@@ -66,6 +64,8 @@ extends CharacterBody3D
 ## Upward gravity is divided by this when jump is released early (lower = shorter hops)
 @export var jump_cut_multiplier : float = 0.5
 @export var model_rotation_speed : float = 6.5
+## How close (in degrees) the body must be to the camera's facing for an interact to fire on release
+@export var interact_facing_tolerance : float = 10.0
 #Amount of times a player can jump
 @export var max_jumps : int = 1
 @onready var jumps_remaining : int
@@ -100,8 +100,10 @@ extends CharacterBody3D
 	"Look_Left": "Look_Left",
 	"Look_Right": "Look_Right",
 	"Zoom_Out": "Zoom_Out",
-	"Zoom_In": "Zoom_In"
-	
+	"Zoom_In": "Zoom_In",
+	"Interact": "Interact",
+	"Primary": "Primary",
+	"Secondary": "Secondary"
 }
 
 @export_group("Network")
@@ -114,6 +116,12 @@ extends CharacterBody3D
 @export var vertical_interp_multiplier : float = 4.0
 ## Puppets snap instead of lerping when further than this from the synced position (teleports, respawns).
 @export var snap_distance : float = 3.0
+## -1 strafing left, 1 strafing right, 0 not strafing. Written by the authority, replicated on change.
+## Drives the walk/strafe transitions in the AnimationTree's Walk state machine.
+@export var strafe_direction : int = 0
+## True while walking backward facing the camera. Written by the authority, replicated on change.
+## Drives the Player_Walk Back state in the AnimationTree's Walk state machine.
+@export var walking_backward : bool = false
 ## Written by the authority from the character settings, replicated on change.
 ## NOTE: requires `resource_local_to_scene` on the material to be TRUE, or it'll effect all instances!!
 @export var player_color : Color = Color.WHITE:
@@ -132,7 +140,7 @@ extends CharacterBody3D
 @onready var head : SpringArm3D = $Head
 @onready var perspective_handler : Node = $Head/Camera/Perspective_Handler
 @onready var collider : CollisionShape3D = $Collider 
-@onready var player_mesh : MeshInstance3D = $"Skeleton3D/Skinned Mesh 0"
+@onready var player_mesh : MeshInstance3D = $"Skeleton3D/PlayerMesh"
 @onready var nameplate : Label3D = %Nameplate
 
 ## Debounce vars
@@ -142,6 +150,10 @@ extends CharacterBody3D
 ## Signals. NOTE: Keep gameplay specific signals in sub-systems or components!
 signal jumped
 signal landed
+
+## NOTE: Does this count??
+@warning_ignore("unused_signal")
+signal signal_oneshot(param_name: StringName, oneshot_mode: AnimationNodeOneShot.OneShotRequest)
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(int(name))
@@ -155,6 +167,7 @@ func _ready() -> void:
 		# "Puppets"  
 		set_process(false)
 		set_process_input(false)
+		set_process_input(false)
 		position = sync_position
 		rotation.y = sync_rotation_y
 	else:
@@ -162,12 +175,13 @@ func _ready() -> void:
 		camera.current = true
 		sync_position = position
 		sync_rotation_y = rotation.y
-		player_color = GGT_GameConfig.get_player_color()
-		username = GGT_GameConfig.get_username()
 		nameplate.hide()
+		_apply_config()
+		GGT_GameConfig.signal_persist.connect(_apply_config)
 
-	_apply_player_color()
-	_apply_username()
+func _input(event: InputEvent) -> void:
+	if event.is_action_released(mapped_inputs["Interact"]):
+		_interact()
 
 func _unhandled_input(_event: InputEvent) -> void:
 	#Toggle noclip mode
@@ -189,14 +203,16 @@ func _physics_process(delta: float) -> void:
 		landed.emit()
 		jumps_remaining = max_jumps
 		coyote_time_timer = coyote_time
-		
+	
 	#Changes velocity to move the player
 	if movement_allowed:
+		# TODO: Account for controllers?
+	
 		#Removes a jump if falling off of a ledge
 		if (jumps_remaining == max_jumps and not is_on_floor() and coyote_time_timer <= 0):
 			jumps_remaining -= 1
 		#Apply jump velocity
-		if jump_allowed and (is_on_floor() or (coyote_time_timer > 0 and jumps_remaining > 0) and not swimming and not floating):
+		if input_allowed and jump_allowed and (is_on_floor() or (coyote_time_timer > 0 and jumps_remaining > 0) and not swimming and not floating):
 			if (Input.is_action_just_pressed(mapped_inputs["Jump"]) or (Input.is_action_pressed(mapped_inputs["Jump"]) and hold_jump == true)):
 				velocity.y = jump_power
 				jumps_remaining -= 1
@@ -230,7 +246,10 @@ func _physics_process(delta: float) -> void:
 				
 		
 		var input_direction : Vector2 = Input.get_vector(mapped_inputs["Left"], mapped_inputs["Right"], mapped_inputs["Forward"], mapped_inputs["Backward"])
-		
+		# If the menu is present, remove input.
+		if not input_allowed:
+			input_direction = Vector2.ZERO
+
 		if is_on_floor():
 			if strafing_allowed == false:
 				input_direction.x = 0
@@ -238,7 +257,12 @@ func _physics_process(delta: float) -> void:
 			if air_strafing_allowed == false or strafing_allowed == false:
 				input_direction.x = 0
 		
-		
+		var update_facing : bool = should_face_forwards()
+		strafe_direction = 0
+		if update_facing and absf(input_direction.x) > absf(input_direction.y):
+			strafe_direction = 1 if input_direction.x > 0 else -1
+		walking_backward = update_facing and strafe_direction == 0 and input_direction.y > 0
+
 		var current_acceleration : float = acceleration
 		var current_friction : float = friction
 		var target_speed : float = base_speed
@@ -266,7 +290,7 @@ func _physics_process(delta: float) -> void:
 		
 		var movement_vector : Vector3
 		if perspective_handler.camera_dolly > perspective_handler.first_person_threshold and body_faces_movement == true:
-			if input_direction != Vector2.ZERO:
+			if input_direction != Vector2.ZERO or update_facing:
 				var new_basis : Basis = head.global_transform.basis
 				new_basis.z.y = 0
 				new_basis.z = new_basis.z.normalized()
@@ -274,6 +298,9 @@ func _physics_process(delta: float) -> void:
 				new_basis.x = new_basis.x.normalized() #Scrubs some axis off the basis that cause the player to move slower when the camera looks down
 				movement_vector = (new_basis * Vector3(input_direction.x, 0, input_direction.y))
 				var target_rotation : float = Vector3.FORWARD.signed_angle_to(movement_vector, up_direction)
+				# Holding interact or secondary faces the camera, even while moving (strafing)
+				if update_facing:
+					target_rotation = _camera_yaw()
 				rotation.y = rotate_toward(rotation.y, target_rotation, model_rotation_speed * delta)
 		else:
 			movement_vector = (transform.basis * Vector3(input_direction.x, 0, input_direction.y))
@@ -335,21 +362,26 @@ func _physics_process(delta: float) -> void:
 
 	sync_position = position
 	sync_rotation_y = rotation.y
-
-## Puppets ease toward the last replicated transform instead of jumping to each packet.
+	
 func _interpolate_remote(delta: float) -> void:
-
-	#Frame-rate independent lerp weight
 	var weight : float = 1.0 - exp(-interp_speed * delta)
 	if position.distance_to(sync_position) > snap_distance:
 		position = sync_position
 	else:
-		#Vertical uses a faster rate so landings aren't so "floaty"
+		# Vertical uses a faster rate so landings aren't so "floaty"
 		var vertical_weight : float = 1.0 - exp(-interp_speed * vertical_interp_multiplier * delta)
 		position.x = lerpf(position.x, sync_position.x, weight)
 		position.z = lerpf(position.z, sync_position.z, weight)
 		position.y = lerpf(position.y, sync_position.y, vertical_weight)
 	rotation.y = lerp_angle(rotation.y, sync_rotation_y, weight)
+
+
+# TODO: we should move these off the plaeyr?
+func _apply_config():
+	player_color = GGT_GameConfig.get_player_color()
+	username = GGT_GameConfig.get_username()
+	_apply_player_color()
+	_apply_username()	
 
 func _apply_player_color() -> void:
 	var material : StandardMaterial3D = player_mesh.get_surface_override_material(0)
@@ -372,11 +404,47 @@ func disable_noclip() -> void:
 		floating = false
 
 ## Chunks for unassigned input actions
-
 func check_mappings() -> void:
-	
 	if movement_allowed:
 		for current_mapping in mapped_inputs:
 			if not InputMap.has_action(mapped_inputs[current_mapping]):
 				push_warning("No " + str(mapped_inputs[current_mapping]) + " InputAction found, disabling controls")
 				movement_allowed = false
+
+# TODO: Account for controller mappings
+func _is_input_allowed() -> bool:
+	return Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+
+func can_sprint() -> bool:
+	return sprint_allowed and not should_face_forwards()
+
+# TODO: Use "in"
+func should_face_forwards() -> bool:
+	return Input.is_action_pressed(mapped_inputs["Secondary"]) \
+		or Input.is_action_pressed(mapped_inputs["Interact"])  \
+		or Input.is_action_pressed(mapped_inputs["Primary"])
+
+
+# TODO: Backwards, slower. Speed scale? 
+## True when the body is lined up with the camera (within interact_facing_tolerance).
+## In first person, or when the body doesn't turn toward movement, the body always faces the camera.
+func _is_facing_forward() -> bool:
+	if not movement_allowed:
+		return false
+	var body_turns : bool = body_faces_movement \
+		and perspective_handler.camera_dolly > perspective_handler.first_person_threshold
+	if not body_turns:
+		return true
+	return absf(angle_difference(rotation.y, _camera_yaw())) <= deg_to_rad(interact_facing_tolerance)
+
+func _interact() -> void:
+	if _is_facing_forward():
+		_perform_interact()
+
+func _camera_yaw() -> float:
+	var forward : Vector3 = -head.global_basis.z
+	forward.y = 0
+	return Vector3.FORWARD.signed_angle_to(forward.normalized(), up_direction)
+
+func _perform_interact():
+	pass

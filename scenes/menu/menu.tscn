@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://c2gocuhw2o7py"]
 
 [ext_resource type="Theme" uid="uid://brfyamk8dn0ef" path="res://resources/theme/theme_casual_pop.tres" id="1_y1o0p"]
-[ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="3_e0arn"]
-[ext_resource type="PackedScene" uid="uid://ce0wxs3oxi5p6" path="res://addons/ggt-core/settings/character_settings_menu.tscn" id="4_charset"]
+[ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://scenes/menu/settings/settings_menu.tscn" id="3_e0arn"]
+[ext_resource type="PackedScene" uid="uid://ce0wxs3oxi5p6" path="res://scenes/menu/settings/character_settings_menu.tscn" id="4_charset"]
 [ext_resource type="Script" uid="uid://cvc42inud8fxx" path="res://scenes/menu/menu.gd" id="5"]
+[ext_resource type="PackedScene" uid="uid://b6qk2xn4vd7ms" path="res://scenes/menu/backend_selector.tscn" id="backend_selector"]
 [ext_resource type="PackedScene" uid="uid://cgcnducd51he7" path="res://scenes/menu/host_panel.tscn" id="host"]
 [ext_resource type="PackedScene" uid="uid://cuh12k38iu367" path="res://scenes/menu/join_panel.tscn" id="join"]
 
@@ -16,7 +17,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_y1o0p")
 script = ExtResource("5")
-backend_type = 1
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1540281165]
 layout_mode = 1
@@ -69,10 +69,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16
 
-[node name="DebugBackendOption" type="OptionButton" parent="MainContainer/Control/VBoxContainer" unique_id=1938274615]
-unique_name_in_owner = true
+[node name="BackendSelector" parent="MainContainer/Control/VBoxContainer" unique_id=1938274615 instance=ExtResource("backend_selector")]
 layout_mode = 2
-tooltip_text = "Debug builds only"
 
 [node name="StatusLabel" type="Label" parent="MainContainer/Control/VBoxContainer" unique_id=1864743545]
 unique_name_in_owner = true
@@ -98,13 +96,13 @@ focus_next = NodePath("../SettingsButton")
 theme_type_variation = &"SuccessButton"
 text = "Join"
 
-[node name="CharacterButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=1159395239]
+[node name="CharacterSettingsButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=1159395239]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
 focus_next = NodePath("../SettingsButton")
 theme_type_variation = &"DangerButton"
-text = "Create Character"
+text = "Character Settings"
 
 [node name="SettingsButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=879990348]
 unique_name_in_owner = true
@@ -113,6 +111,7 @@ layout_mode = 2
 focus_neighbor_top = NodePath("../JoinButton")
 focus_neighbor_bottom = NodePath("../ExitButton")
 focus_next = NodePath("../ExitButton")
+theme_type_variation = &"WarningButton"
 text = "Settings"
 
 [node name="ExitButton" type="Button" parent="MainContainer/Control/VBoxContainer" unique_id=1212985906]
@@ -196,7 +195,7 @@ offset_bottom = 238.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Help" type="PanelContainer" parent="." unique_id=891782893]
+[node name="HelpPanel" type="PanelContainer" parent="." unique_id=891782893]
 unique_name_in_owner = true
 auto_translate_mode = 2
 layout_mode = 1
@@ -209,10 +208,10 @@ offset_right = 464.0
 offset_bottom = 276.0
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Help" unique_id=2052955873]
+[node name="MarginContainer" type="MarginContainer" parent="HelpPanel" unique_id=2052955873]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Help/MarginContainer" unique_id=1170172205]
+[node name="RichTextLabel" type="RichTextLabel" parent="HelpPanel/MarginContainer" unique_id=1170172205]
 layout_mode = 2
 bbcode_enabled = true
 text = "Host a game for your friends, or join an existing lobby.
