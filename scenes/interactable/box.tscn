@@ -15,6 +15,7 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Box" type="RigidBody3D" unique_id=90710318]
+collision_layer = 0
 mass = 800.0
 script = ExtResource("1_3tijx")
 

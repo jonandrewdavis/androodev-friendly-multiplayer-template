@@ -285,6 +285,13 @@ layout_mode = 2
 text = "Connecting..."
 horizontal_alignment = 1
 
+[node name="LoadProgressBar" type="ProgressBar" parent="PendingOverlay/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
 [node name="FailedLabel" type="Label" parent="PendingOverlay/CenterContainer/VBoxContainer" unique_id=1355574199]
 unique_name_in_owner = true
 visible = false

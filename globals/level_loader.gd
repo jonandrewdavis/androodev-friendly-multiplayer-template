@@ -7,6 +7,9 @@ const LEVEL_DICT: Dictionary[String, String] = {
 	"test": "uid://xgs22y8bv2cw",
 	"example": "uid://dltcmsd3purl0",
 }
+
+signal load_progress(progress: float)
+
 var current_key := ""
 var generation := 0
 
@@ -38,7 +41,10 @@ func spawn_level(key: String) -> bool:
 		push_error("Could not load level: ", key)
 		MultiplayerService.leave_game()
 		return false
-	while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+	var progress := []
+	load_progress.emit(0.0)
+	while ResourceLoader.load_threaded_get_status(path, progress) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		load_progress.emit(progress[0])
 		await get_tree().create_timer(WAIT_INTERVAL).timeout
 		if token != generation:
 			return false
@@ -48,6 +54,7 @@ func spawn_level(key: String) -> bool:
 		push_error("Could not load level: ", key)
 		MultiplayerService.leave_game()
 		return false
+	load_progress.emit(1.0)
 	var packed: PackedScene = ResourceLoader.load_threaded_get(path)
 	add_child(packed.instantiate())
 	return true

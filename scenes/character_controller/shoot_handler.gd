@@ -2,7 +2,6 @@ extends Node3D
 class_name ShootHandler
 
 @export var player: CharacterBody3D
-@export var CURRENT_PROJECTILE: ProjectileResource
 
 func _ready():
 	if not player:
@@ -24,25 +23,13 @@ func _input(event: InputEvent) -> void:
 		else:
 			oneshot_handler.cancel_bow()
 
-
 func _shoot():
-	var new_arrow: ProjectileResource = CURRENT_PROJECTILE
-	new_arrow.position = global_position
-	new_arrow.direction = _get_shoot_direction()
-	new_arrow.body_entered = _on_hit
-	# TODO: Distinguish between player with "1" and NPCs (enemies) with "1"
-	new_arrow.source_id = get_multiplayer_authority() 
-	World.prop_spawner.add_projectile.rpc_id(1, inst_to_dict(new_arrow))
+	var scene_path: String = World.prop_spawner.ARROW.resource_path
+	var origin := global_position
+	var direction := _get_shoot_direction()
+	World.prop_spawner.request_projectile.rpc_id(1, scene_path, origin, direction)
 
-# We can't send a callable.
-func _on_hit(body_hit: Node3D, projectile: RigidBody3D, projectile_resource: ProjectileResource):
-	projectile.freeze = true
-	if multiplayer.is_server():
-		var health := body_hit.get_node_or_null("Health_Component") as HealthComponent
-		if health:
-			health.damage(projectile_resource.damage, projectile_resource.source_id)
-
-func _get_shoot_direction():
+func _get_shoot_direction() -> Vector3:
 	var viewport_rect = get_viewport().get_visible_rect().size
 	var raycast_start = player.camera.project_ray_origin(viewport_rect / 2)
 	var raycast_end = raycast_start + player.camera.project_ray_normal(viewport_rect / 2) * 200

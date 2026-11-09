@@ -1,7 +1,7 @@
 extends MultiplayerBackend
 
-const APP_ID := 480
-const LOBBY_TAG := "androodev-fmt"
+const APP_ID := 480 # spacewar
+const LOBBY_TAG := "androodev-template"
 const NOT_RUNNING := "Steam is not running."
 enum Phase {IDLE, HOSTING, JOINING, IN_LOBBY}
 

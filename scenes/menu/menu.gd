@@ -21,6 +21,7 @@ var pending_attempt_id := 0
 @onready var help_panel: PanelContainer = %HelpPanel
 
 @onready var pending_label: Label = %PendingLabel
+@onready var load_progress_bar: ProgressBar = %LoadProgressBar
 @onready var failed_label: Label = %FailedLabel
 @onready var failed_button: Button = %FailedButton
 
@@ -35,6 +36,7 @@ func _ready() -> void:
 	MultiplayerService.joining_lobby.connect(_show_pending.bind("Joining game..."))
 	MultiplayerService.join_lobby_failed.connect(_show_failure)
 	MultiplayerService.lobby_joined.connect(_on_lobby_joined)
+	World.level_loader.load_progress.connect(func(value: float) -> void: load_progress_bar.value = value)
 	host_button.pressed.connect(func() -> void:
 		main_container.hide()
 		help_panel.hide()
@@ -85,6 +87,7 @@ func _show_pending(text: String) -> void:
 	pending_label.text = text
 	failed_label.hide()
 	failed_button.hide()
+	load_progress_bar.hide()
 	pending_overlay.show()
 	pending_overlay.grab_focus()
 	await get_tree().create_timer(TIMEOUT_DUR).timeout
@@ -100,6 +103,7 @@ func _show_failure(reason: String) -> void:
 	help_panel.hide()
 	pending_label.text = "Unable to continue"
 	failed_label.text = reason
+	load_progress_bar.hide()
 	failed_label.show()
 	failed_button.show()
 	pending_overlay.show()
@@ -107,7 +111,10 @@ func _show_failure(reason: String) -> void:
 
 func _on_lobby_joined() -> void:
 	pending_attempt_id += 1
-	pending_overlay.hide()
+	# Keep the overlay up while the level loads; the scene change frees the menu.
+	pending_label.text = "Loading level..."
+	load_progress_bar.value = 0.0
+	load_progress_bar.show()
 
 func _update_session_buttons() -> void:
 	join_button.disabled = MultiplayerService.backend_type == MultiplayerBackend.Type.OFFLINE
