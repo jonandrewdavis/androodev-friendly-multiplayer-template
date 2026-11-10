@@ -48,12 +48,6 @@ extends CharacterBody3D
 @export var crouch_speed_decrease : float = 0.5
 @export var crouch_animation_time : float = 0.075
 @export var water_speed_decrease : float = 0.25
-## Visual model root shifted up while swimming (UAL swim clips put the pelvis ~1m below standing height)
-@export var visual_root : Node3D
-## How far visual_root is raised while swimming; 0 disables
-@export var swim_visual_offset : float = 0.9
-## Lerp rate (per second) for the swim visual offset
-@export var swim_visual_offset_speed : float = 8.0
 #Speed multiplier used internally for things like sprinting, if you want to give the player boosts use the exported multiplier instead.
 @onready var base_speed_multiplier : float = 1.0
 #Speed modifier to be used externally, for things such as gear and items
@@ -122,20 +116,11 @@ extends CharacterBody3D
 @export var vertical_interp_multiplier : float = 4.0
 ## Puppets snap instead of lerping when further than this from the synced position (teleports, respawns).
 @export var snap_distance : float = 3.0
-## -1 strafing left, 1 strafing right, 0 not strafing. Written by the authority, replicated on change.
-## Drives the walk/strafe transitions in the AnimationTree's Walk state machine.
-@export var strafe_direction : int = 0
-## True while walking backward facing the camera. Written by the authority, replicated on change.
-## Drives the Player_Walk Back state in the AnimationTree's Walk state machine.
-@export var walking_backward : bool = false
-
-
 
 ## Object references
 @onready var head : SpringArm3D = $Head
 @onready var perspective_handler : Node = $Head/Camera/Perspective_Handler
 @onready var collider : CollisionShape3D = $Collider 
-@onready var nameplate : Label3D = %Nameplate
 
 ## Debounce vars
 @onready var stored_sprint_state : bool = false
@@ -144,10 +129,6 @@ extends CharacterBody3D
 ## Signals. NOTE: Keep gameplay specific signals in sub-systems or components!
 signal jumped
 signal landed
-
-## NOTE: Does this count??
-@warning_ignore("unused_signal")
-signal signal_oneshot(param_name: StringName, oneshot_mode: AnimationNodeOneShot.OneShotRequest)
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(int(name))
@@ -158,22 +139,18 @@ func _ready() -> void:
 	check_mappings()
 
 	if not is_multiplayer_authority():
-		# "Puppets"  
+		# Non-authority remote player bodies (aka "Puppets")
 		set_process(false)
 		set_process_input(false)
 		set_process_input(false)
 		position = sync_position
 		rotation.y = sync_rotation_y
 	else:
-		# Client processing
+		# The authority. Client processing.
 		camera.current = true
 		sync_position = position
 		sync_rotation_y = rotation.y
 
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_released(mapped_inputs["Interact"]):
-		_interact()
 
 func _unhandled_input(_event: InputEvent) -> void:
 	#Toggle noclip mode
@@ -184,8 +161,6 @@ func _unhandled_input(_event: InputEvent) -> void:
 			disable_noclip()
 
 func _physics_process(delta: float) -> void:
-	_update_swim_visual_offset(delta)
-
 	if not is_multiplayer_authority():
 		_interpolate_remote(delta)
 		return
@@ -231,6 +206,9 @@ func _physics_process(delta: float) -> void:
 				#print("Sink")
 				#print((get_gravity() * 0.1) * delta)
 				velocity += (get_gravity() * 0.1) * delta
+			elif swimming and not noclipping:
+				#Neutral buoyancy: no gravity, vertical drag so the player settles instead of drifting forever
+				velocity.y = lerpf(velocity.y, 0.0, minf(2.0 * delta, 1.0)) # 2.0 is vertical drag
 			elif not is_on_floor() and not floating:
 				#Rising gravity is increased when jump is released early, for variable jump height
 				var gravity : Vector3 = get_gravity()
@@ -252,10 +230,6 @@ func _physics_process(delta: float) -> void:
 				input_direction.x = 0
 		
 		var update_facing : bool = should_face_forwards()
-		strafe_direction = 0
-		if update_facing and absf(input_direction.x) > absf(input_direction.y):
-			strafe_direction = 1 if input_direction.x > 0 else -1
-		walking_backward = update_facing and strafe_direction == 0 and input_direction.y > 0
 
 		var current_acceleration : float = acceleration
 		var current_friction : float = friction
@@ -357,13 +331,6 @@ func _physics_process(delta: float) -> void:
 	sync_position = position
 	sync_rotation_y = rotation.y
 	
-func _update_swim_visual_offset(delta: float) -> void:
-	if not visual_root:
-		return
-	var target : float = swim_visual_offset if swimming else 0.0
-	var weight : float = 1.0 - exp(-swim_visual_offset_speed * delta)
-	visual_root.position.y = lerpf(visual_root.position.y, target, weight)
-
 func _interpolate_remote(delta: float) -> void:
 	var weight : float = 1.0 - exp(-interp_speed * delta)
 	if position.distance_to(sync_position) > snap_distance:
@@ -375,7 +342,6 @@ func _interpolate_remote(delta: float) -> void:
 		position.z = lerpf(position.z, sync_position.z, weight)
 		position.y = lerpf(position.y, sync_position.y, vertical_weight)
 	rotation.y = lerp_angle(rotation.y, sync_rotation_y, weight)
-
 
 
 func enable_noclip() -> void:
@@ -391,7 +357,6 @@ func disable_noclip() -> void:
 		collider.disabled = false
 		floating = false
 
-## Chunks for unassigned input actions
 func check_mappings() -> void:
 	if movement_allowed:
 		for current_mapping in mapped_inputs:
@@ -412,10 +377,8 @@ func should_face_forwards() -> bool:
 		or Input.is_action_pressed(mapped_inputs["Interact"])  \
 		or Input.is_action_pressed(mapped_inputs["Primary"])
 
-
-# TODO: Backwards, slower. Speed scale? 
 ## True when the body is lined up with the camera (within interact_facing_tolerance).
-## In first person, or when the body doesn't turn toward movement, the body always faces the camera.
+## Rotates towards forward if not (with an input).
 func _is_facing_forward() -> bool:
 	if not movement_allowed:
 		return false
@@ -425,14 +388,7 @@ func _is_facing_forward() -> bool:
 		return true
 	return absf(angle_difference(rotation.y, _camera_yaw())) <= deg_to_rad(interact_facing_tolerance)
 
-func _interact() -> void:
-	if _is_facing_forward():
-		_perform_interact()
-
 func _camera_yaw() -> float:
 	var forward : Vector3 = -head.global_basis.z
 	forward.y = 0
 	return Vector3.FORWARD.signed_angle_to(forward.normalized(), up_direction)
-
-func _perform_interact():
-	pass

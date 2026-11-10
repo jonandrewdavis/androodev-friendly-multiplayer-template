@@ -1,5 +1,6 @@
 extends Node3D
 
+@onready var player : CharacterBody3D = get_parent()
 @onready var nameplate : Label3D = %Nameplate
 @onready var player_mesh: MeshInstance3D = $UniversalAnimationLibrary/Armature/Skeleton3D/Mannequin
 
@@ -22,12 +23,12 @@ func _apply_config():
 	_apply_player_color()
 	_apply_username()
 
-
 ## Written by the authority from the character settings, replicated on change.
 ## NOTE: requires `resource_local_to_scene` on the material to be TRUE, or it'll effect all instances!!
 func _apply_player_color() -> void:
-	var material : StandardMaterial3D = player_mesh.get_surface_override_material(0)
+	var _material : StandardMaterial3D = player_mesh.get_surface_override_material(0)
 	#material.albedo_color = player_color
+
 
 func _apply_username() -> void:
 	nameplate.text = username

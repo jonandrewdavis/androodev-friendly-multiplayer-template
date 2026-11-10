@@ -78,9 +78,9 @@ func _on_resource_loaded(resource):
 	if _transitions.is_transition_in_playing():
 		await _transitions.anim.animation_finished
 	var load_time = Time.get_ticks_msec() - _loading_start_time # ms
-	print(
-		"[GGT] {scn} loaded in {elapsed}ms".format({"scn": resource.resource_path, "elapsed": load_time})
-	)
+	#print(
+		#"[GGT] {scn} loaded in {elapsed}ms".format({"scn": resource.resource_path, "elapsed": load_time})
+	#)
 	# artificially wait some time in order to have a gentle scene transition
 	if load_time < _config.transitions_minimum_duration_ms:
 		await get_tree().create_timer((_config.transitions_minimum_duration_ms - load_time) / 1000.0).timeout

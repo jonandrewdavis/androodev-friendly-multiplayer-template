@@ -3,6 +3,13 @@ extends Node
 @onready var body : PhysicsBody3D = get_parent()
 @onready var head : Node3D = self.get_parent().get_node("Head")
 
+## Visual model root shifted up while swimming (UAL swim clips put the pelvis ~1m below standing height)
+@export var visual_root : Node3D
+## How far visual_root is raised while swimming; 0 disables
+@export var swim_visual_offset : float = 0.9
+## Lerp rate (per second) for the swim visual offset
+@export var swim_visual_offset_speed : float = 8.0
+
 #Returns a list of true or false values checking if each position is in a water volume
 func check_underwater_points(...points: Array) -> Array:
 	
@@ -35,8 +42,8 @@ func check_underwater_points(...points: Array) -> Array:
 # Called when the node enters the scene tree for the first time.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta: float) -> void:
-	var water_points : Array = check_underwater_points(body.position, head.position)
+func _physics_process(delta: float) -> void:
+	var water_points : Array = check_underwater_points(body.global_position, head.global_position)
 	#print(water_points)
 	if water_points[0] and water_points[1]:
 		if body.swimming_allowed:
@@ -45,3 +52,12 @@ func _physics_process(_delta: float) -> void:
 	elif not water_points[0] and not water_points[1]:
 		body.swimming = false
 		body.remove_from_group("Submerged")
+
+	_update_swim_visual_offset(delta)
+
+func _update_swim_visual_offset(delta: float) -> void:
+	if not visual_root:
+		return
+	var target : float = swim_visual_offset if body.swimming else 0.0
+	var weight : float = 1.0 - exp(-swim_visual_offset_speed * delta)
+	visual_root.position.y = lerpf(visual_root.position.y, target, weight)

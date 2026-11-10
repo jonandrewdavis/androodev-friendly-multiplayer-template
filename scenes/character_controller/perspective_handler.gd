@@ -1,14 +1,11 @@
 extends Node
 
-
 @export var player_main : PhysicsBody3D
 @export var player_mesh : GeometryInstance3D
 @export var camera_dolly : float = 0
 @export var max_dolly : float = 5
 @export var dolly_change_sensitivity : float = 50
 @export var hide_model_in_first_person : bool = true
-
-
 
 @onready var camera : Camera3D = self.get_parent() 
 @onready var head : SpringArm3D = self.get_parent().get_parent()
@@ -35,6 +32,13 @@ func _ready() -> void:
 	if not is_multiplayer_authority():
 		set_process_input(false)
 		set_process(false)
+		return
+
+	_update_mesh_visibility()
+
+func _update_mesh_visibility() -> void:
+	var first_person : bool = hide_model_in_first_person and head.get_hit_length() <= first_person_threshold
+	player_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if first_person else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
 func _input(event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion and player_main.camera_control_allowed: # event is InputEventMouseMotion:
@@ -71,11 +75,8 @@ func _process(delta: float) -> void:
 			camera_dolly = default_camera_position.z
 		
 
-	if is_multiplayer_authority() and hide_model_in_first_person and camera_dolly <= first_person_threshold: #Makes the local player main body invisible on the client, to avoid camera clipping
-		player_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
-	else:
-		player_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-		
+	_update_mesh_visibility()
+
 	camera_dolly += camera_dolly_change
 	camera_dolly = clampf(camera_dolly, default_camera_position.z, max_dolly)
 	head.spring_length = camera_dolly 
