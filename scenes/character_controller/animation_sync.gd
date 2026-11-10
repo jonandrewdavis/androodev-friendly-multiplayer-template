@@ -2,6 +2,8 @@
 extends AnimationTree
 class_name AnimationSync
 
+# TODO: We could make a list of required animations and have them fed to the Tree, allowing better "bring your own"
+
 const MOVEMENT := &"Movement"
 const WALK_SCALE := "parameters/Movement/Walk/Character_Speed_Scale/scale"
 const SPRINT_SCALE := "parameters/Movement/Sprint/Character_Speed_Scale/scale"

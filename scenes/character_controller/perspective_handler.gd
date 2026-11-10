@@ -38,7 +38,7 @@ func _ready() -> void:
 
 func _update_mesh_visibility() -> void:
 	var first_person : bool = hide_model_in_first_person and head.get_hit_length() <= first_person_threshold
-	player_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if first_person else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	if player_mesh: player_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if first_person else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 
 func _input(event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion and player_main.camera_control_allowed: # event is InputEventMouseMotion:

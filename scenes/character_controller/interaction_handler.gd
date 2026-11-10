@@ -24,7 +24,7 @@ func _input(event: InputEvent) -> void:
 func _interact():
 	var viewport_rect = get_viewport().get_visible_rect().size
 	var raycast_start = player.camera.project_ray_origin(viewport_rect / 2)
-	var raycast_end = raycast_start + player.camera.project_ray_normal(viewport_rect / 2) * interact_length
+	var _raycast_end = raycast_start + player.camera.project_ray_normal(viewport_rect / 2) * interact_length
 
 
 #func _input(event: InputEvent) -> void:
