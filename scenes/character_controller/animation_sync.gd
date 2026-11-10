@@ -7,9 +7,9 @@ extends AnimationTree
 ## Feeds into the Speed_Scaler so each animation gets its own scale.
 @export var ground_speed : float = 0.0
 @onready var speed_scaler : Node = $Speed_Scaler
-const LOCOMOTION_PLAYBACK := "parameters/Locomotion/playback"
+const MOVEMENT_PLAYBACK := "parameters/Movement/playback"
 
-@onready var playback : AnimationNodeStateMachinePlayback = get(LOCOMOTION_PLAYBACK)
+@onready var playback : AnimationNodeStateMachinePlayback = get(MOVEMENT_PLAYBACK)
 
 ## Puppet-side smoothed copy of ground_speed, so playback speed doesn't flicker between packets.
 var _smoothed_speed : float = 0.0
@@ -46,10 +46,10 @@ func _apply_remote_state(delta: float) -> void:
 ## we duplicate the tree and disabled auto-advance, so stale local variables can't interfere.
 func _make_puppet_tree() -> void:
 	var root : AnimationNodeBlendTree = tree_root.duplicate(true)
-	var locomotion : AnimationNodeStateMachine = root.get_node(&"Locomotion")
-	for i in locomotion.get_transition_count():
-		var transition := locomotion.get_transition(i)
+	var movement : AnimationNodeStateMachine = root.get_node(&"Movement")
+	for i in movement.get_transition_count():
+		var transition := movement.get_transition(i)
 		transition.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
 		transition.advance_expression = ""
 	tree_root = root
-	playback = get(LOCOMOTION_PLAYBACK)
+	playback = get(MOVEMENT_PLAYBACK)

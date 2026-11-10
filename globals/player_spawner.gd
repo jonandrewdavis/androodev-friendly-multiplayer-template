@@ -1,7 +1,7 @@
 class_name PlayerSpawner
 extends MultiplayerSpawner
 
-const PLAYER_CHARACTER = preload("uid://p8nowy1cujv1")
+const PLAYER_CHARACTER = preload("uid://dvp4kx5ygmpgw")
 
 func _ready() -> void:
 	self.add_spawnable_scene(PLAYER_CHARACTER.resource_path)

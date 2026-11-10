@@ -1,8 +1,10 @@
+# TODO: These all expect AnimationTree as a fed node,
+# This should all be put together some how and referenced much more neatly
 extends Node
 class_name OneShotHandler
 
 # TODO: Death, respawn, etc.
-const UPPER_BODY := "parameters/UpperBody_OneShot/request"
+const UPPER_BODY := "parameters/UpperBody/request"
 const BOW_HOLD := "parameters/BowHold/request"
 const BOW_HOLD_ACTIVE := "parameters/BowHold/active"
 const BOW_PLAYBACK := "parameters/BowStateMachine/playback"
@@ -44,8 +46,5 @@ func travel_bow_remote(state: StringName) -> void:
 func cancel_bow_remote() -> void:
 	_fade_out_upper_body()
 
-## Only fade the outer layer: the bow pose stays underneath while UpperBody_OneShot
-## blends back to locomotion. (Fading BowHold too would snap to Player_Idle first.)
-## BowHold is re-fired on the next draw, which restarts BowStateMachine.
 func _fade_out_upper_body() -> void:
 	animation_tree.set(UPPER_BODY, AnimationNodeOneShot.ONE_SHOT_REQUEST_FADE_OUT)

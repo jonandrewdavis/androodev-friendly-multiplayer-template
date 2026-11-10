@@ -5,7 +5,7 @@ class_name ShootHandler
 
 func _ready():
 	if not player:
-		push_warning("Player not set for: ", name)
+		push_error("Player not set for: ", name)
 		queue_free()
 		return	
 	

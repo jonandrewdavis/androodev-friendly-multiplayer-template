@@ -2,10 +2,10 @@ extends CharacterBody3D
 
 # Added
 @export var added_velocity : Vector3 = Vector3.ZERO
+
 # TODO: Remove as much of these as possible, use handlers
 # like perspective_handler.camera_dolly
 @onready var camera: Camera3D = %Camera
-@onready var skeleton: Skeleton3D = %Skeleton3D
 
 @export var input_allowed: bool = true : get = _is_input_allowed
 @export var movement_allowed : bool = true
@@ -48,6 +48,12 @@ extends CharacterBody3D
 @export var crouch_speed_decrease : float = 0.5
 @export var crouch_animation_time : float = 0.075
 @export var water_speed_decrease : float = 0.25
+## Visual model root shifted up while swimming (UAL swim clips put the pelvis ~1m below standing height)
+@export var visual_root : Node3D
+## How far visual_root is raised while swimming; 0 disables
+@export var swim_visual_offset : float = 0.9
+## Lerp rate (per second) for the swim visual offset
+@export var swim_visual_offset_speed : float = 8.0
 #Speed multiplier used internally for things like sprinting, if you want to give the player boosts use the exported multiplier instead.
 @onready var base_speed_multiplier : float = 1.0
 #Speed modifier to be used externally, for things such as gear and items
@@ -75,7 +81,7 @@ extends CharacterBody3D
 
 ## Soft clamp for velocity, can be exceeded but counterfources will be applied.
 @export var max_speed : float = 30
-@export var look_sensitivity : float = 0.002
+@export var look_sensitivity : float = 1.0
 @export var max_vertical_look_angle : float = 85
 
 ## Gets the velocity the character intends to go at, even if it doesn't actually move.
@@ -122,25 +128,13 @@ extends CharacterBody3D
 ## True while walking backward facing the camera. Written by the authority, replicated on change.
 ## Drives the Player_Walk Back state in the AnimationTree's Walk state machine.
 @export var walking_backward : bool = false
-## Written by the authority from the character settings, replicated on change.
-## NOTE: requires `resource_local_to_scene` on the material to be TRUE, or it'll effect all instances!!
-@export var player_color : Color = Color.WHITE:
-	set(value):
-		player_color = value
-		if is_node_ready():
-			_apply_player_color()
 
-@export var username : String = "":
-	set(value):
-		username = value
-		if is_node_ready():
-			_apply_username()
+
 
 ## Object references
 @onready var head : SpringArm3D = $Head
 @onready var perspective_handler : Node = $Head/Camera/Perspective_Handler
 @onready var collider : CollisionShape3D = $Collider 
-@onready var player_mesh : MeshInstance3D = $"Skeleton3D/PlayerMesh"
 @onready var nameplate : Label3D = %Nameplate
 
 ## Debounce vars
@@ -175,9 +169,7 @@ func _ready() -> void:
 		camera.current = true
 		sync_position = position
 		sync_rotation_y = rotation.y
-		nameplate.hide()
-		_apply_config()
-		GGT_GameConfig.signal_persist.connect(_apply_config)
+
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_released(mapped_inputs["Interact"]):
@@ -192,6 +184,8 @@ func _unhandled_input(_event: InputEvent) -> void:
 			disable_noclip()
 
 func _physics_process(delta: float) -> void:
+	_update_swim_visual_offset(delta)
+
 	if not is_multiplayer_authority():
 		_interpolate_remote(delta)
 		return
@@ -363,6 +357,13 @@ func _physics_process(delta: float) -> void:
 	sync_position = position
 	sync_rotation_y = rotation.y
 	
+func _update_swim_visual_offset(delta: float) -> void:
+	if not visual_root:
+		return
+	var target : float = swim_visual_offset if swimming else 0.0
+	var weight : float = 1.0 - exp(-swim_visual_offset_speed * delta)
+	visual_root.position.y = lerpf(visual_root.position.y, target, weight)
+
 func _interpolate_remote(delta: float) -> void:
 	var weight : float = 1.0 - exp(-interp_speed * delta)
 	if position.distance_to(sync_position) > snap_distance:
@@ -376,19 +377,6 @@ func _interpolate_remote(delta: float) -> void:
 	rotation.y = lerp_angle(rotation.y, sync_rotation_y, weight)
 
 
-# TODO: we should move these off the plaeyr?
-func _apply_config():
-	player_color = GGT_GameConfig.get_player_color()
-	username = GGT_GameConfig.get_username()
-	_apply_player_color()
-	_apply_username()	
-
-func _apply_player_color() -> void:
-	var material : StandardMaterial3D = player_mesh.get_surface_override_material(0)
-	material.albedo_color = player_color
-
-func _apply_username() -> void:
-	nameplate.text = username
 
 func enable_noclip() -> void:
 	if noclip_allowed:
