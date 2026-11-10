@@ -6,7 +6,7 @@ const BOW_HOLD := &"BowHold"
 const BOW_STATE_MACHINE := &"BowStateMachine"
 const BOW_PULL_HOLD := &"Bow_Pull_Hold"
 const BOW_RELEASE := &"Bow_Release"
-const BOW_RELEASE_ANIM := &"Mesh2Motion/Bow_Release"
+const BOW_RELEASE_ANIM := &"Bow_Release"
 
 @onready var player : CharacterBody3D = owner.get_parent()
 @onready var animation_sync : AnimationSync = %AnimationTree

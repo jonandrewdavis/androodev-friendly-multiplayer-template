@@ -98,7 +98,7 @@ func _apply_remote_state() -> void:
 
 # AnimationTrees running on non-authorities (aka "puppets") will have
 # stale or incorrect values. This duplicates the tree and assures
-# the correct values from the authority are set. 
+# the latest values from the authority are sent. 
 func _make_puppet_tree() -> void:
 	var root : AnimationNodeBlendTree = tree_root.duplicate(true)
 	var movement : AnimationNodeStateMachine = root.get_node(MOVEMENT)
@@ -106,4 +106,5 @@ func _make_puppet_tree() -> void:
 		var transition := movement.get_transition(i)
 		transition.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
 		transition.advance_expression = ""
+	# Replace the whole thing on remotes
 	tree_root = root

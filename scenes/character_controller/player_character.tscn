@@ -90,31 +90,5 @@ script = ExtResource("8_qmc74")
 
 [node name="PlayerCharacterModel" parent="." unique_id=1661659010 instance=ExtResource("7_3k0qe")]
 
-[node name="Skeleton3D" parent="PlayerCharacterModel/UniversalAnimationLibrary/Armature" parent_id_path=PackedInt32Array(1661659010, 570371295, 1162286161) index="0" unique_id=131191363]
-bones/1/position = Vector3(0.005215015, 0.08706909, 0.8758391)
-bones/1/rotation = Quaternion(0.7587126, -0.088620044, -0.0748722, 0.64101166)
-bones/3/rotation = Quaternion(0.019364381, 0.00012504945, 0.00024629492, 0.9998125)
-bones/4/rotation = Quaternion(0.09630446, 0.00031589327, 0.00025529592, 0.9953519)
-bones/5/rotation = Quaternion(0.014491972, -0.00023883543, -0.00024049805, 0.999895)
-bones/6/rotation = Quaternion(-0.0005617441, 0.0959857, -0.0035269158, 0.99537635)
-bones/7/rotation = Quaternion(-0.6018063, -0.37190953, -0.39566743, 0.58562773)
-bones/8/rotation = Quaternion(-0.2800406, 0.6727488, -0.5009427, 0.4669506)
-bones/9/rotation = Quaternion(0.28455266, 0.035640363, -0.0029342687, 0.95799327)
-bones/31/rotation = Quaternion(-0.6379522, 0.30925345, 0.33075243, 0.6228821)
-bones/32/rotation = Quaternion(-0.29167616, -0.6791697, 0.47551054, 0.47701496)
-bones/33/rotation = Quaternion(0.3675791, -0.14891152, 0.059753295, 0.91604614)
-bones/55/rotation = Quaternion(0.9613039, 0.111803964, -0.01378511, 0.2514055)
-bones/56/rotation = Quaternion(0.194845, -0.11152387, 0.022294976, 0.9742181)
-bones/57/rotation = Quaternion(-0.49924746, 0.022368766, 0.09230467, 0.8612384)
-bones/60/rotation = Quaternion(0.9923987, -0.12014892, 0.014814042, 0.022130286)
-bones/61/rotation = Quaternion(0.12991995, 0.3565637, -0.050154127, 0.92383313)
-bones/62/rotation = Quaternion(-0.5840864, -0.050687917, -0.1634444, 0.7934481)
-
-[node name="HandBoneAttachment" parent="PlayerCharacterModel" index="3" unique_id=1839084864]
-transform = Transform3D(0.8762962, -0.024044381, 0.48117223, -0.23911983, -0.88875675, 0.3910659, 0.4182423, -0.45774758, -0.78456384, -0.34492767, 0.8958458, -0.013595842)
-
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=327674647]
 replication_config = SubResource("SceneReplicationConfig_5t6bb")
-
-[editable path="PlayerCharacterModel"]
-[editable path="PlayerCharacterModel/UniversalAnimationLibrary"]

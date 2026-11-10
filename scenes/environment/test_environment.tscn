@@ -1,25 +1,10 @@
 [gd_scene format=3 uid="uid://xgs22y8bv2cw"]
 
 [ext_resource type="Script" uid="uid://bds04lyhxk0bt" path="res://scenes/environment/test_environment.gd" id="1_iuoaa"]
-[ext_resource type="Texture2D" uid="uid://dlefk7rtyu8jb" path="res://assets/img/01_PrototypeCheckerBig_2048.png" id="1_xp3i3"]
 [ext_resource type="Shader" uid="uid://cfktlsroqfaof" path="res://resources/shaders/water_shader_cheap.gdshader" id="2_hdyyf"]
 [ext_resource type="Texture2D" uid="uid://cje0uotqddck8" path="res://assets/img/bwr_caustic.png" id="3_3yfl1"]
 [ext_resource type="Material" uid="uid://dxfxq8bqwxf15" path="res://resources/materials/water_material_1.tres" id="5_37ylr"]
 [ext_resource type="PackedScene" uid="uid://oa10q5wt4bq2" path="res://assets/models/environment/maleficents_throne_room/scene.gltf" id="6_3msyu"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nowew"]
-albedo_texture = ExtResource("1_xp3i3")
-metallic_specular = 0.0
-uv1_scale = Vector3(0.2, 0.2, 0.2)
-uv1_triplanar = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_deljx"]
-albedo_color = Color(0.37922162, 0.9988268, 0, 1)
-metallic_specular = 0.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hdyyf"]
-albedo_texture = ExtResource("1_xp3i3")
-uv1_triplanar = true
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6frc2"]
 sky_top_color = Color(0.31567037, 0.78453845, 0.9322208, 1)
@@ -66,96 +51,6 @@ subdivide_depth = 4
 script = ExtResource("1_iuoaa")
 
 [node name="Map" type="Node3D" parent="." unique_id=1325860739]
-
-[node name="Floor" type="CSGBox3D" parent="Map" unique_id=1968738334]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 2.5)
-use_collision = true
-collision_layer = 255
-collision_mask = 255
-size = Vector3(140, 0, 140)
-material = SubResource("StandardMaterial3D_nowew")
-
-[node name="Greenscreen" type="Node3D" parent="Map" unique_id=1892806947]
-
-[node name="Wall" type="CSGBox3D" parent="Map/Greenscreen" unique_id=1910090423]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 11.25, -15.5)
-use_collision = true
-size = Vector3(30, 21.5, 1)
-material = SubResource("StandardMaterial3D_deljx")
-
-[node name="Floor" type="CSGBox3D" parent="Map/Greenscreen" unique_id=381883029]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1, -5.5)
-use_collision = true
-size = Vector3(30, 1, 19)
-material = SubResource("StandardMaterial3D_deljx")
-
-[node name="Test_Structure" type="Node3D" parent="Map" unique_id=865442033]
-
-[node name="Wall" type="CSGBox3D" parent="Map/Test_Structure" unique_id=111330167]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -15.5)
-use_collision = true
-size = Vector3(6, 6, 1)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall2" type="CSGBox3D" parent="Map/Test_Structure" unique_id=1656425351]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.5, -15.5)
-use_collision = true
-size = Vector3(6, 6, 1)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall3" type="CSGBox3D" parent="Map/Test_Structure" unique_id=444499319]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -22.5)
-use_collision = true
-size = Vector3(10, 6, 1)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall4" type="CSGBox3D" parent="Map/Test_Structure" unique_id=447612416]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 3.5, -25)
-use_collision = true
-size = Vector3(1, 6, 4)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall5" type="CSGBox3D" parent="Map/Test_Structure" unique_id=1401094855]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 3.5, -26.5)
-use_collision = true
-size = Vector3(4, 6, 1)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall6" type="CSGBox3D" parent="Map/Test_Structure" unique_id=1088322418]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3.5, -17)
-use_collision = true
-size = Vector3(1, 6, 2)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall7" type="CSGBox3D" parent="Map/Test_Structure" unique_id=1646788157]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3.5, -21)
-use_collision = true
-size = Vector3(1, 6, 2)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall8" type="CSGBox3D" parent="Map/Test_Structure" unique_id=2065648652]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 3.5, -21)
-use_collision = true
-size = Vector3(1, 6, 12)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall9" type="CSGBox3D" parent="Map/Test_Structure" unique_id=2013050393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1, -19)
-use_collision = true
-size = Vector3(1, 1, 2)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall10" type="CSGBox3D" parent="Map/Test_Structure" unique_id=1321554481]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 5, -19)
-use_collision = true
-size = Vector3(1, 3, 2)
-material = SubResource("StandardMaterial3D_hdyyf")
-
-[node name="Wall11" type="CSGBox3D" parent="Map/Test_Structure" unique_id=1201346602]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5.5, -15.5)
-use_collision = true
-size = Vector3(2, 2, 1)
-material = SubResource("StandardMaterial3D_hdyyf")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Map" unique_id=938238249]
 environment = SubResource("Environment_c6qvu")
@@ -217,10 +112,9 @@ shadow_enabled = true
 directional_shadow_max_distance = 400.0
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=820217728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.496202, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=191162278]
 shape = SubResource("WorldBoundaryShape3D_yruvy")
 
 [node name="Sketchfab_Scene" parent="." unique_id=625810335 instance=ExtResource("6_3msyu")]
-
-[editable path="Sketchfab_Scene"]
