@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://bhslj1aklcv1q"]
 
-[ext_resource type="Script" uid="uid://bds04lyhxk0bt" path="res://scenes/environment/test_environment.gd" id="1_klljd"]
+[ext_resource type="Script" uid="uid://bds04lyhxk0bt" path="res://scenes/environment/castle.gd" id="1_klljd"]
 [ext_resource type="Texture2D" uid="uid://cfxdkyhv45smt" path="res://assets/models/environment/free_quick_terrain_test_0.jpg" id="1_mt6e4"]
 [ext_resource type="PackedScene" uid="uid://cpsef6p7kuohh" path="res://assets/models/environment/free_quick_terrain_test.glb" id="2_mt6e4"]
 [ext_resource type="Texture2D" uid="uid://6k4ntfclphy" path="res://assets/models/environment/free_quick_terrain_test_1.png" id="2_skeqq"]

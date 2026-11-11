@@ -3,9 +3,7 @@ extends Node
 
 const WAIT_INTERVAL := 0.1
 const LEVEL_DICT: Dictionary[String, String] = {
-	"test": "uid://xgs22y8bv2cw",
-	"example": "uid://dltcmsd3purl0",
-	"example-2": "uid://bhslj1aklcv1q",
+	"castle": "uid://xgs22y8bv2cw"
 }
 
 signal load_progress(progress: float)

@@ -2,7 +2,7 @@ extends Node3D
 
 @onready var player : CharacterBody3D = get_parent()
 @onready var nameplate : Label3D = %Nameplate
-@onready var player_mesh: MeshInstance3D = $UniversalAnimationLibrary/Armature/Skeleton3D/Mannequin
+@onready var player_mesh: MeshInstance3D = $Rig/Mannequin/Armature/GeneralSkeleton/Mannequin
 
 @export var player_color : Color = Color.WHITE:
 	set(value):
