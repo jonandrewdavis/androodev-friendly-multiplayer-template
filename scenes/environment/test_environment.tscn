@@ -1,51 +1,56 @@
 [gd_scene format=3 uid="uid://xgs22y8bv2cw"]
 
 [ext_resource type="Script" uid="uid://bds04lyhxk0bt" path="res://scenes/environment/test_environment.gd" id="1_iuoaa"]
-[ext_resource type="Shader" uid="uid://cfktlsroqfaof" path="res://resources/shaders/water_shader_cheap.gdshader" id="2_hdyyf"]
-[ext_resource type="Texture2D" uid="uid://cje0uotqddck8" path="res://assets/img/bwr_caustic.png" id="3_3yfl1"]
-[ext_resource type="Material" uid="uid://dxfxq8bqwxf15" path="res://resources/materials/water_material_1.tres" id="5_37ylr"]
-[ext_resource type="PackedScene" uid="uid://oa10q5wt4bq2" path="res://assets/models/environment/maleficents_throne_room/scene.gltf" id="6_3msyu"]
+[ext_resource type="PackedScene" uid="uid://dqoi66srry6ba" path="res://assets/models/environment/maleficents_throne_room/throne_room.glb" id="6_3msyu"]
+[ext_resource type="LightmapGIData" uid="uid://dlurfwpvxjpt6" path="res://scenes/environment/test_environment.lmbake" id="6_8xb50"]
+[ext_resource type="Material" uid="uid://c4uudb0m5p048" path="res://resources/shaders/lightbeam_material.tres" id="7_beam"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6frc2"]
-sky_top_color = Color(0.31567037, 0.78453845, 0.9322208, 1)
-sky_horizon_color = Color(0.4516955, 0.84670377, 0.96652037, 1)
-ground_bottom_color = Color(0.10754537, 0.35025185, 0.4801603, 1)
-ground_horizon_color = Color(0.3928013, 0.70346344, 0.8142568, 1)
-sun_angle_max = 38.24
+sky_top_color = Color(0.3, 0.34, 0.4, 1)
+sky_horizon_color = Color(0.56, 0.6, 0.66, 1)
+sky_curve = 0.12
+sky_energy_multiplier = 0.8
+ground_bottom_color = Color(0.08, 0.09, 0.1, 1)
+ground_horizon_color = Color(0.4, 0.43, 0.48, 1)
+sun_angle_max = 12.0
 
 [sub_resource type="Sky" id="Sky_44ri0"]
 sky_material = SubResource("ProceduralSkyMaterial_6frc2")
 
 [sub_resource type="Environment" id="Environment_c6qvu"]
 background_mode = 2
+background_energy_multiplier = 1.2
 sky = SubResource("Sky_44ri0")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xp3i3"]
-render_priority = 0
-shader = ExtResource("2_hdyyf")
-shader_parameter/tint_color = Vector4(0.3, 0.9, 1, 0.7)
-shader_parameter/caustics = ExtResource("3_3yfl1")
-shader_parameter/slowdown = 5.0
-shader_parameter/time_caust = 0.13
-shader_parameter/caust_form = 0.15
-shader_parameter/tile = 4.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_o64p6"]
-material = SubResource("ShaderMaterial_xp3i3")
-subdivide_width = 1
-subdivide_height = 1
-subdivide_depth = 1
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_8hw4u"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_7rdng"]
-lightmap_size_hint = Vector2i(14, 21)
-material = ExtResource("5_37ylr")
-subdivide_width = 4
-subdivide_height = 4
-subdivide_depth = 4
+ambient_light_source = 3
+ambient_light_color = Color(0.5, 0.55, 0.65, 1)
+tonemap_mode = 4
+tonemap_white = 6.0
+ssao_radius = 2.0
+ssao_intensity = 4.0
+ssao_power = 1.8
+glow_enabled = true
+glow_intensity = 0.5
+glow_strength = 1.1
+glow_bloom = 0.04
+glow_hdr_threshold = 1.2
+fog_enabled = true
+fog_light_color = Color(0.5, 0.55, 0.62, 1)
+fog_light_energy = 0.7
+fog_density = 0.005
+fog_aerial_perspective = 0.4
+fog_sky_affect = 0.6
+adjustment_enabled = true
+adjustment_brightness = 1.05
+adjustment_contrast = 1.15
+adjustment_saturation = 0.7
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_yruvy"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_beam"]
+material = ExtResource("7_beam")
+size = Vector2(8, 1)
+center_offset = Vector3(0, 0, 0.5)
+orientation = 1
 
 [node name="test_environment" type="Node3D" unique_id=187425105]
 script = ExtResource("1_iuoaa")
@@ -55,66 +60,130 @@ script = ExtResource("1_iuoaa")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Map" unique_id=938238249]
 environment = SubResource("Environment_c6qvu")
 
-[node name="Water_Volumes" type="Node3D" parent="Map" unique_id=1730913073]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.75, 0, 27)
-
-[node name="Water_Volume" type="Node3D" parent="Map/Water_Volumes" unique_id=948107577 groups=["Water_Volume"]]
-transform = Transform3D(3, 0, 0, 0, 0.25, 0, 0, 0, 3, -6.75, 0.5, -4.75)
-
-[node name="Water_Volume" type="MeshInstance3D" parent="Map/Water_Volumes/Water_Volume" unique_id=611339719]
-mesh = SubResource("BoxMesh_o64p6")
-skeleton = NodePath("../../..")
-
-[node name="Area3D" type="Area3D" parent="Map/Water_Volumes/Water_Volume" unique_id=1325023274]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Water_Volumes/Water_Volume/Area3D" unique_id=984135252]
-shape = SubResource("BoxShape3D_8hw4u")
-
-[node name="Water_Volume2" type="Node3D" parent="Map/Water_Volumes" unique_id=2021340175 groups=["Water_Volume"]]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 3, -10.75, 1, -4.75)
-
-[node name="Water_Volume" type="MeshInstance3D" parent="Map/Water_Volumes/Water_Volume2" unique_id=1382669527]
-mesh = SubResource("BoxMesh_o64p6")
-skeleton = NodePath("../../..")
-
-[node name="Area3D" type="Area3D" parent="Map/Water_Volumes/Water_Volume2" unique_id=1699010608]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Water_Volumes/Water_Volume2/Area3D" unique_id=1932167568]
-shape = SubResource("BoxShape3D_8hw4u")
-
-[node name="Water_Volume3" type="Node3D" parent="Map/Water_Volumes" unique_id=982149368 groups=["Water_Volume"]]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -16.25, 2, -4.75)
-
-[node name="Water_Volume" type="MeshInstance3D" parent="Map/Water_Volumes/Water_Volume3" unique_id=565838745]
-mesh = SubResource("BoxMesh_7rdng")
-skeleton = NodePath("../../..")
-
-[node name="Area3D" type="Area3D" parent="Map/Water_Volumes/Water_Volume3" unique_id=324637913]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Water_Volumes/Water_Volume3/Area3D" unique_id=490278041]
-shape = SubResource("BoxShape3D_8hw4u")
-
-[node name="Water_Volume4" type="Node3D" parent="Map/Water_Volumes" unique_id=80888912 groups=["Water_Volume"]]
-transform = Transform3D(26.229807, 0, 0, 0, 6, 0, 0, 0, 9.017709, -16.25, 3.5, 4.5)
-
-[node name="Water_Volume" type="MeshInstance3D" parent="Map/Water_Volumes/Water_Volume4" unique_id=1839976641]
-mesh = SubResource("BoxMesh_o64p6")
-skeleton = NodePath("../../..")
-
-[node name="Area3D" type="Area3D" parent="Map/Water_Volumes/Water_Volume4" unique_id=379044431]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Water_Volumes/Water_Volume4/Area3D" unique_id=193276903]
-shape = SubResource("BoxShape3D_8hw4u")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=251366875]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0.86602545, 0, -0.86602545, 0.5, 0, 9.5, 0)
-shadow_enabled = true
-directional_shadow_max_distance = 400.0
-
 [node name="Floor" type="StaticBody3D" parent="." unique_id=820217728]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.496202, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=191162278]
 shape = SubResource("WorldBoundaryShape3D_yruvy")
 
-[node name="Sketchfab_Scene" parent="." unique_id=625810335 instance=ExtResource("6_3msyu")]
+[node name="ThroneRoom" parent="." unique_id=625810335 instance=ExtResource("6_3msyu")]
+
+[node name="Lights" type="Node3D" parent="." unique_id=1400000001]
+
+[node name="Brazier1" type="OmniLight3D" parent="Lights" unique_id=1400000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, 12)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="Brazier2" type="OmniLight3D" parent="Lights" unique_id=1400000004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 12)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="Brazier3" type="OmniLight3D" parent="Lights" unique_id=1400000005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, -28)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="Brazier4" type="OmniLight3D" parent="Lights" unique_id=1400000006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, -28)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="BackGlow" type="OmniLight3D" parent="Lights" unique_id=1400000007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -46)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 16.0
+
+[node name="CoolBounce" type="OmniLight3D" parent="Lights" unique_id=1400000008]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32, -15)
+light_color = Color(0.55, 0.62, 0.78, 1)
+light_energy = 1.5
+omni_range = 45.0
+
+[node name="CentralLight" type="OmniLight3D" parent="Lights" unique_id=1400000009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18, -12)
+light_color = Color(1, 0.9, 0.78, 1)
+light_energy = 3.0
+light_indirect_energy = 1.5
+omni_range = 50.0
+omni_attenuation = 0.6
+
+[node name="LightBeams" type="Node3D" parent="." unique_id=1400000020]
+
+[node name="Beam2" type="MeshInstance3D" parent="LightBeams" unique_id=1400000022]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 24, 30, -38)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam3" type="MeshInstance3D" parent="LightBeams" unique_id=1400000023]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27, 30, -31.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam4" type="MeshInstance3D" parent="LightBeams" unique_id=1400000024]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 28, 30, -26.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam5" type="MeshInstance3D" parent="LightBeams" unique_id=1400000025]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27.5, 30, -18)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam1" type="MeshInstance3D" parent="LightBeams" unique_id=1400000021]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 20.5, 28, -14.772169)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam6" type="MeshInstance3D" parent="LightBeams" unique_id=1400000026]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 18.5, 32, -16.27217)
+visible = false
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam7" type="MeshInstance3D" parent="LightBeams" unique_id=1400000027]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 21.5, 25, -13.272169)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam8" type="MeshInstance3D" parent="LightBeams" unique_id=1400000028]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 23.5, 35, -37.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam9" type="MeshInstance3D" parent="LightBeams" unique_id=1400000029]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27.3, 35, -29)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam10" type="MeshInstance3D" parent="LightBeams" unique_id=1400000030]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 28, 25, -24.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam11" type="MeshInstance3D" parent="LightBeams" unique_id=1400000031]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27.3, 34, -16)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=268253106]
+quality = 2
+bounces = 4
+light_data = ExtResource("6_8xb50")

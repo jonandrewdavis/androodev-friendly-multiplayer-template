@@ -11,7 +11,9 @@ uniform float beam_fade : hint_range(0.1, 10.0, 0.1) = 4.0;
 uniform bool use_gradient = false;
 uniform sampler2D gradient: source_color, repeat_disable;
 uniform float proximity_fade_distance : hint_range(0.0, 4096.0, 0.01) = 0.75;
+#if CURRENT_RENDERER != RENDERER_COMPATIBILITY
 uniform sampler2D depth_texture : hint_depth_texture, repeat_disable, filter_nearest;
+#endif
 
 uniform float z_fade_start : hint_range(0.0, 1.0, 0.01) = 0.5;
 uniform float z_fade_end : hint_range(0.0, 1.0, 0.01) = 0.8;
@@ -39,7 +41,9 @@ void vertex() {
 		MODEL_MATRIX[3]
 	);
 
-	z_axis_fade = smoothstep(z_fade_end, z_fade_start, abs(dot(to_camera, local_z)));
+	// smoothstep with edge0 > edge1 is undefined in GLSL and yields NaN on the
+	// Compatibility (GL) backend, so invert explicitly.
+	z_axis_fade = 1.0 - smoothstep(z_fade_start, z_fade_end, abs(dot(to_camera, local_z)));
 }
 
 void fragment() {
@@ -96,9 +100,12 @@ void fragment() {
 
 	ALPHA = horizontal_mask * vertical_mask * input_alpha * z_axis_fade;
 
-	// Proximity Fade
+	// Proximity Fade (skipped on Compatibility: no reliable depth texture there,
+	// and the depth copy is a cost we don't want on web).
+#if CURRENT_RENDERER != RENDERER_COMPATIBILITY
 	float proximity_depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
 	vec4 proximity_view_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0 - 1.0, proximity_depth_tex, 1.0);
 	proximity_view_pos.xyz /= proximity_view_pos.w;
-	ALPHA *= clamp(1.0 - smoothstep(proximity_view_pos.z + proximity_fade_distance, proximity_view_pos.z, VERTEX.z), 0.0, 1.0);
+	ALPHA *= smoothstep(proximity_view_pos.z, proximity_view_pos.z + proximity_fade_distance, VERTEX.z);
+#endif
 }

@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bdp0nutmpwrp2"]
+
+[ext_resource type="Texture2D" uid="uid://drfb4cmdkkpby" path="res://assets/materials/Metal062C_1K-JPG/mannequin_bake/mannequin_metal_albedo.png" id="1_jbixk"]
+[ext_resource type="Texture2D" uid="uid://cn4hw2pqqylgm" path="res://assets/materials/Metal062C_1K-JPG/mannequin_bake/mannequin_metal_metallic.png" id="2_4jlvb"]
+[ext_resource type="Texture2D" uid="uid://bf6ycbgk7fd8l" path="res://assets/materials/Metal062C_1K-JPG/mannequin_bake/mannequin_metal_normal.png" id="3_pqhtw"]
+[ext_resource type="Texture2D" uid="uid://dkep18qb64wi6" path="res://assets/materials/Metal062C_1K-JPG/mannequin_bake/mannequin_metal_roughness.png" id="4_ikgj0"]
+
+[resource]
+resource_name = "M_Main"
+albedo_color = Color(0.37629998, 0.44303998, 0.71, 1)
+albedo_texture = ExtResource("1_jbixk")
+metallic = 1.0
+metallic_texture = ExtResource("2_4jlvb")
+metallic_texture_channel = 4
+roughness_texture = ExtResource("4_ikgj0")
+roughness_texture_channel = 4
+normal_enabled = true
+normal_texture = ExtResource("3_pqhtw")
