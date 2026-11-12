@@ -3,8 +3,7 @@
 importer="2d_array_texture"
 type="CompressedTexture2DArray"
 uid="uid://cpiuykobwd6mq"
-path.bptc="res://.godot/imported/castle.exr-ec763d9b5aa894aa91a656b9dcfdab1b.bptc.ctexarray"
-path.astc="res://.godot/imported/castle.exr-ec763d9b5aa894aa91a656b9dcfdab1b.astc.ctexarray"
+path="res://.godot/imported/castle.exr-ec763d9b5aa894aa91a656b9dcfdab1b.ctexarray"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -13,7 +12,7 @@ metadata={
 [deps]
 
 source_file="res://scenes/environment/castle.exr"
-dest_files=["res://.godot/imported/castle.exr-ec763d9b5aa894aa91a656b9dcfdab1b.bptc.ctexarray", "res://.godot/imported/castle.exr-ec763d9b5aa894aa91a656b9dcfdab1b.astc.ctexarray"]
+dest_files=["res://.godot/imported/castle.exr-ec763d9b5aa894aa91a656b9dcfdab1b.ctexarray"]
 
 [params]
 
@@ -22,7 +21,7 @@ compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
-compress/hdr_compression=1
+compress/hdr_compression=0
 compress/channel_pack=1
 mipmaps/generate=false
 mipmaps/limit=-1

@@ -3,12 +3,10 @@ class_name PropSpawner
 
 const BOX = preload("uid://c38er141mkjb")
 const ARROW = preload("uid://cpncw03ipoymd")
-const SEAGULL = preload("uid://c2kxbafiemnpg")
 
 var PROPS_LIST = [
 	BOX,
 	ARROW,
-	SEAGULL,
 ]
 
 func _ready() -> void:

@@ -8,7 +8,7 @@ const BOW_PULL_HOLD := &"Bow_Pull_Hold"
 const BOW_RELEASE := &"Bow_Release"
 const BOW_RELEASE_ANIM := &"Bow_Release"
 
-@onready var player : CharacterBody3D = owner.get_parent()
+@onready var player : CharacterBody3D = get_parent().get_parent()
 @onready var animation_sync : AnimationSync = %AnimationTree
 
 func _ready() -> void:

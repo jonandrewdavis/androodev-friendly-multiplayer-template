@@ -7,7 +7,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_r8yej"]
 font_size = 64
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_akvs8"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_nxlc7"]
 
 [node name="CharacterSettingsMenu" type="PanelContainer" unique_id=1203948571 node_paths=PackedStringArray("username_line_edit", "reset_confirmation_dialog", "cancel_confirmation_dialog", "cancel_button")]
 offset_right = 353.0
@@ -67,7 +67,8 @@ text = "Color"
 [node name="ColorPickerGrid" parent="MarginContainer/VBox/CharacterSettings/Color" unique_id=1233574238 instance=ExtResource("2_yxgmj")]
 unique_name_in_owner = true
 layout_mode = 2
-toggle_group = SubResource("ButtonGroup_akvs8")
+toggle_group = SubResource("ButtonGroup_nxlc7")
+color = Color(1, 1, 1, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=1254007193]
 layout_mode = 2

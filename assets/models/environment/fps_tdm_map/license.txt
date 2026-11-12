@@ -1,0 +1,11 @@
+Model Information:
+* title:	Fps Tdm Map
+* source:	https://sketchfab.com/3d-models/fps-tdm-map-b4f318d2de4749a59b63c66c6a274585
+* author:	Riyan (https://sketchfab.com/ImperialEel5363Riyan)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Fps Tdm Map" (https://sketchfab.com/3d-models/fps-tdm-map-b4f318d2de4749a59b63c66c6a274585) by Riyan (https://sketchfab.com/ImperialEel5363Riyan) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

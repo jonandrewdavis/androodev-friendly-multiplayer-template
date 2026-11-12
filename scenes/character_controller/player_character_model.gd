@@ -2,7 +2,7 @@ extends Node3D
 
 @onready var player : CharacterBody3D = get_parent()
 @onready var nameplate : Label3D = %Nameplate
-@onready var player_mesh: MeshInstance3D = $Rig/Mannequin/Armature/GeneralSkeleton/Mannequin
+@onready var player_mesh: MeshInstance3D = $GeneralSkeleton/PlayerMesh
 
 @export var player_color : Color = Color.WHITE:
 	set(value):
@@ -15,6 +15,9 @@ extends Node3D
 		username = value
 		if is_node_ready():
 			_apply_username()
+
+func _ready():
+	GGT_GameConfig.signal_persist.connect(_apply_config)
 
 # TODO: we should move these off the plaeyr?
 func _apply_config():

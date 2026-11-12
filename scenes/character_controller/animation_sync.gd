@@ -23,7 +23,7 @@ const MIN_BLEND_SPEED := 0.1
 @export_group("Walk Blend")
 @export var walk_blend_smoothing : float = 10.0
 
-@onready var player : CharacterBody3D = owner.get_parent()
+@onready var player : CharacterBody3D = get_parent()
 
 var _smoothed_speed : float = 0.0
 var _smoothed_blend : Vector2 = Vector2.UP

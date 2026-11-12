@@ -3,6 +3,20 @@
 Make a cooperative multiplayer game on any backend. 
 Bring your own gameplay or use the existing game as a guide!
 
+
+## BIG TICKET TO DO:
+	
+- Interaction, Pick up
+- Weapon System
+- Ragdoll
+
+
+## Probably should do:
+	
+	- FPS
+
+
+
 ### 
 
 - Character Controller

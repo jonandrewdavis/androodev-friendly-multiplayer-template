@@ -16,6 +16,8 @@ sun_angle_max = 12.0
 
 [sub_resource type="Sky" id="Sky_44ri0"]
 sky_material = SubResource("ProceduralSkyMaterial_6frc2")
+process_mode = 2
+radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_c6qvu"]
 background_mode = 2
@@ -28,7 +30,6 @@ tonemap_white = 6.0
 ssao_radius = 2.0
 ssao_intensity = 4.0
 ssao_power = 1.8
-glow_enabled = true
 glow_intensity = 0.5
 glow_strength = 1.1
 glow_bloom = 0.04
@@ -187,3 +188,6 @@ mesh = SubResource("QuadMesh_beam")
 quality = 2
 bounces = 4
 light_data = ExtResource("4_t001k")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1653106157]
+transform = Transform3D(0.692258, -0.42358288, 0.5842571, -2.9802322e-08, 0.80961275, 0.58696437, -0.72165006, -0.4063308, 0.5604609, 12.185846, 10.682197, -9.511833)

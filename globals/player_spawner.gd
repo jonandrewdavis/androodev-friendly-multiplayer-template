@@ -3,9 +3,10 @@ extends MultiplayerSpawner
 
 const PLAYER_CHARACTER = preload("uid://dvp4kx5ygmpgw")
 
+
+
 func _ready() -> void:
 	self.add_spawnable_scene(PLAYER_CHARACTER.resource_path)
-	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _on_peer_connected(peer_id: int) -> void:

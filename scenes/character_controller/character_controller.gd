@@ -145,6 +145,7 @@ func _ready() -> void:
 		set_process_input(false)
 		position = sync_position
 		rotation.y = sync_rotation_y
+		camera.current = false
 	else:
 		# The authority. Client processing.
 		camera.current = true
