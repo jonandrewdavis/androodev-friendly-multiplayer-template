@@ -1,7 +1,11 @@
 class_name PlayerSpawner
 extends MultiplayerSpawner
 
-const PLAYER_CHARACTER = preload("uid://p8nowy1cujv1")
+const PLAYER_CHARACTER = preload("uid://dvp4kx5ygmpgw")
+
+# TODO: Additional character types here.
+# Bascially: if more than 1, we want to add characters manually
+# based on the game type we're playing, FPS, Racing, etc.
 
 func _ready() -> void:
 	self.add_spawnable_scene(PLAYER_CHARACTER.resource_path)

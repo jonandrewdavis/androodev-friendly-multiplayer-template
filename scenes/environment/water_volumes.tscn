@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://cmst6wvfi25rs"]
+
+[ext_resource type="Shader" uid="uid://cfktlsroqfaof" path="res://resources/shaders/water_shader_cheap.gdshader" id="1_gs1nq"]
+[ext_resource type="Texture2D" uid="uid://cje0uotqddck8" path="res://assets/img/bwr_caustic.png" id="2_h0qgr"]
+[ext_resource type="Material" uid="uid://dxfxq8bqwxf15" path="res://resources/shaders/water_shader_material_1.tres" id="3_2s5qq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xp3i3"]
+render_priority = 0
+shader = ExtResource("1_gs1nq")
+shader_parameter/tint_color = Vector4(0.3, 0.9, 1, 0.7)
+shader_parameter/caustics = ExtResource("2_h0qgr")
+shader_parameter/slowdown = 5.0
+shader_parameter/time_caust = 0.13
+shader_parameter/caust_form = 0.15
+shader_parameter/tile = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_o64p6"]
+material = SubResource("ShaderMaterial_xp3i3")
+subdivide_width = 1
+subdivide_height = 1
+subdivide_depth = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8hw4u"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7rdng"]
+lightmap_size_hint = Vector2i(14, 21)
+material = ExtResource("3_2s5qq")
+subdivide_width = 4
+subdivide_height = 4
+subdivide_depth = 4
+
+[node name="Water_Volumes" type="Node3D" unique_id=427734229]
+
+[node name="Water_Volume" type="Node3D" parent="." unique_id=1081185939 groups=["Water_Volume"]]
+transform = Transform3D(3, 0, 0, 0, 0.25, 0, 0, 0, 3, -6.75, 0.5, -4.75)
+
+[node name="Water_Volume" type="MeshInstance3D" parent="Water_Volume" unique_id=45534307]
+mesh = SubResource("BoxMesh_o64p6")
+skeleton = NodePath("../../..")
+
+[node name="Area3D" type="Area3D" parent="Water_Volume" unique_id=1391056265]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water_Volume/Area3D" unique_id=540142560]
+shape = SubResource("BoxShape3D_8hw4u")
+
+[node name="Water_Volume2" type="Node3D" parent="." unique_id=528795421 groups=["Water_Volume"]]
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 3, -10.75, 1, -4.75)
+
+[node name="Water_Volume" type="MeshInstance3D" parent="Water_Volume2" unique_id=2127107219]
+mesh = SubResource("BoxMesh_o64p6")
+skeleton = NodePath("../../..")
+
+[node name="Area3D" type="Area3D" parent="Water_Volume2" unique_id=1140344943]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water_Volume2/Area3D" unique_id=543587735]
+shape = SubResource("BoxShape3D_8hw4u")
+
+[node name="Water_Volume3" type="Node3D" parent="." unique_id=1417512340 groups=["Water_Volume"]]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -16.25, 2, -4.75)
+
+[node name="Water_Volume" type="MeshInstance3D" parent="Water_Volume3" unique_id=832375746]
+mesh = SubResource("BoxMesh_7rdng")
+skeleton = NodePath("../../..")
+
+[node name="Area3D" type="Area3D" parent="Water_Volume3" unique_id=1023615459]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water_Volume3/Area3D" unique_id=1398094782]
+shape = SubResource("BoxShape3D_8hw4u")
+
+[node name="Water_Volume4" type="Node3D" parent="." unique_id=445030211 groups=["Water_Volume"]]
+transform = Transform3D(26.229807, 0, 0, 0, 6, 0, 0, 0, 9.017709, -16.25, 3.5, 4.5)
+
+[node name="Water_Volume" type="MeshInstance3D" parent="Water_Volume4" unique_id=1968889051]
+mesh = SubResource("BoxMesh_o64p6")
+skeleton = NodePath("../../..")
+
+[node name="Area3D" type="Area3D" parent="Water_Volume4" unique_id=1849664175]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Water_Volume4/Area3D" unique_id=727824849]
+shape = SubResource("BoxShape3D_8hw4u")

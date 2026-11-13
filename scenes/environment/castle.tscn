@@ -1,0 +1,193 @@
+[gd_scene format=3 uid="uid://xgs22y8bv2cw"]
+
+[ext_resource type="Script" uid="uid://bds04lyhxk0bt" path="res://scenes/environment/castle.gd" id="1_foxbq"]
+[ext_resource type="PackedScene" uid="uid://dqoi66srry6ba" path="res://assets/models/environment/maleficents_throne_room/throne_room.glb" id="2_imeel"]
+[ext_resource type="Material" uid="uid://c4uudb0m5p048" path="res://resources/shaders/lightbeam_material.tres" id="3_gesuy"]
+[ext_resource type="LightmapGIData" uid="uid://ce3xrkatydouk" path="res://scenes/environment/castle.lmbake" id="4_t001k"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6frc2"]
+sky_top_color = Color(0.3, 0.34, 0.4, 1)
+sky_horizon_color = Color(0.56, 0.6, 0.66, 1)
+sky_curve = 0.12
+sky_energy_multiplier = 0.8
+ground_bottom_color = Color(0.08, 0.09, 0.1, 1)
+ground_horizon_color = Color(0.4, 0.43, 0.48, 1)
+sun_angle_max = 12.0
+
+[sub_resource type="Sky" id="Sky_44ri0"]
+sky_material = SubResource("ProceduralSkyMaterial_6frc2")
+process_mode = 2
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_c6qvu"]
+background_mode = 2
+background_energy_multiplier = 1.2
+sky = SubResource("Sky_44ri0")
+ambient_light_source = 3
+ambient_light_color = Color(0.5, 0.55, 0.65, 1)
+tonemap_mode = 4
+tonemap_white = 6.0
+ssao_radius = 2.0
+ssao_intensity = 4.0
+ssao_power = 1.8
+glow_intensity = 0.5
+glow_strength = 1.1
+glow_bloom = 0.04
+glow_hdr_threshold = 1.2
+fog_enabled = true
+fog_light_color = Color(0.5, 0.55, 0.62, 1)
+fog_light_energy = 0.7
+fog_density = 0.005
+fog_aerial_perspective = 0.4
+fog_sky_affect = 0.6
+adjustment_enabled = true
+adjustment_brightness = 1.05
+adjustment_contrast = 1.15
+adjustment_saturation = 0.7
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_yruvy"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_beam"]
+material = ExtResource("3_gesuy")
+size = Vector2(8, 1)
+center_offset = Vector3(0, 0, 0.5)
+orientation = 1
+
+[node name="Castle" type="Node3D" unique_id=187425105]
+script = ExtResource("1_foxbq")
+
+[node name="Map" type="Node3D" parent="." unique_id=1325860739]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Map" unique_id=938238249]
+environment = SubResource("Environment_c6qvu")
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=820217728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.496202, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=191162278]
+shape = SubResource("WorldBoundaryShape3D_yruvy")
+
+[node name="ThroneRoom" parent="." unique_id=625810335 instance=ExtResource("2_imeel")]
+
+[node name="Lights" type="Node3D" parent="." unique_id=1400000001]
+
+[node name="Brazier1" type="OmniLight3D" parent="Lights" unique_id=1400000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, 12)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="Brazier2" type="OmniLight3D" parent="Lights" unique_id=1400000004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 12)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="Brazier3" type="OmniLight3D" parent="Lights" unique_id=1400000005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 2.5, -28)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="Brazier4" type="OmniLight3D" parent="Lights" unique_id=1400000006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, -28)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 14.0
+
+[node name="BackGlow" type="OmniLight3D" parent="Lights" unique_id=1400000007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -46)
+light_color = Color(1, 0.48, 0.18, 1)
+light_energy = 5.0
+omni_range = 16.0
+
+[node name="CoolBounce" type="OmniLight3D" parent="Lights" unique_id=1400000008]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32, -15)
+light_color = Color(0.55, 0.62, 0.78, 1)
+light_energy = 1.5
+omni_range = 45.0
+
+[node name="CentralLight" type="OmniLight3D" parent="Lights" unique_id=1400000009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18, -12)
+light_color = Color(1, 0.9, 0.78, 1)
+light_energy = 3.0
+light_indirect_energy = 1.5
+omni_range = 50.0
+omni_attenuation = 0.6
+
+[node name="LightBeams" type="Node3D" parent="." unique_id=1400000020]
+
+[node name="Beam2" type="MeshInstance3D" parent="LightBeams" unique_id=1400000022]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 24, 30, -38)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam3" type="MeshInstance3D" parent="LightBeams" unique_id=1400000023]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27, 30, -31.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam4" type="MeshInstance3D" parent="LightBeams" unique_id=1400000024]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 28, 30, -26.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam5" type="MeshInstance3D" parent="LightBeams" unique_id=1400000025]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27.5, 30, -18)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam1" type="MeshInstance3D" parent="LightBeams" unique_id=1400000021]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 20.5, 28, -14.772169)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam6" type="MeshInstance3D" parent="LightBeams" unique_id=1400000026]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 18.5, 32, -16.27217)
+visible = false
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam7" type="MeshInstance3D" parent="LightBeams" unique_id=1400000027]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 21.5, 25, -13.272169)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam8" type="MeshInstance3D" parent="LightBeams" unique_id=1400000028]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 23.5, 35, -37.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam9" type="MeshInstance3D" parent="LightBeams" unique_id=1400000029]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27.3, 35, -29)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam10" type="MeshInstance3D" parent="LightBeams" unique_id=1400000030]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 28, 25, -24.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="Beam11" type="MeshInstance3D" parent="LightBeams" unique_id=1400000031]
+transform = Transform3D(-0.0963, -0.7778, -29.8137, 0, 0.624, -37.5076, 0.9954, -0.0753, -2.8852, 27.3, 34, -16)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("QuadMesh_beam")
+
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=268253106]
+quality = 2
+bounces = 4
+light_data = ExtResource("4_t001k")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1653106157]
+transform = Transform3D(0.692258, -0.42358288, 0.5842571, -2.9802322e-08, 0.80961275, 0.58696437, -0.72165006, -0.4063308, 0.5604609, 12.185846, 10.682197, -9.511833)

@@ -2,16 +2,17 @@ class_name LevelLoader
 extends Node
 
 const WAIT_INTERVAL := 0.1
+
 const LEVEL_DICT: Dictionary[String, String] = {
-	"example-2": "uid://bhslj1aklcv1q",
-	"test": "uid://xgs22y8bv2cw",
-	"example": "uid://dltcmsd3purl0",
+	"fps": "uid://dltcmsd3purl0",
+	"castle": "uid://xgs22y8bv2cw",
+	"mountain" : "uid://bhslj1aklcv1q"
 }
 
 signal load_progress(progress: float)
 
 var current_key := ""
-var generation := 0
+var spawn_level_attempts := 0
 
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
@@ -21,12 +22,11 @@ func _on_peer_connected(peer_id: int) -> void:
 		spawn_level.rpc_id(peer_id, current_key)
 
 func clear_level() -> void:
-	generation += 1
+	spawn_level_attempts += 1
 	current_key = ""
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
-
 
 @rpc("authority", "call_local", "reliable")
 func spawn_level(key: String) -> bool:
@@ -34,7 +34,7 @@ func spawn_level(key: String) -> bool:
 		return false
 	clear_level()
 	current_key = key
-	var token := generation
+	var curr_spawn_attempt := spawn_level_attempts
 	var path := LEVEL_DICT[key]
 	var err := ResourceLoader.load_threaded_request(path, "PackedScene")
 	if err != OK:
@@ -46,9 +46,9 @@ func spawn_level(key: String) -> bool:
 	while ResourceLoader.load_threaded_get_status(path, progress) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		load_progress.emit(progress[0])
 		await get_tree().create_timer(WAIT_INTERVAL).timeout
-		if token != generation:
+		if curr_spawn_attempt != spawn_level_attempts:
 			return false
-	if token != generation:
+	if curr_spawn_attempt != spawn_level_attempts:
 		return false
 	if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_LOADED:
 		push_error("Could not load level: ", key)

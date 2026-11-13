@@ -1,5 +1,4 @@
 shader_type sky;
-render_mode use_quarter_res_pass;
 
 // Originaly based on https://godotshaders.com/shader/stylized-sky-shader-with-clouds/ but there's not much left
 
@@ -27,10 +26,10 @@ group_uniforms moon; // Second DirectionalLight3D will be the moon
 	uniform float moon_blur : hint_range( 0.01, 10.0 ) = 0.1;
 
 group_uniforms clouds;
-	// Replaced by noise functions, unncomment if you want to use graphical textures
-//	uniform sampler2D clouds_top_texture : filter_linear_mipmap, hint_default_black;
-//	uniform sampler2D clouds_middle_texture : filter_linear_mipmap, hint_default_black;
-//	uniform sampler2D clouds_bottom_texture : filter_linear_mipmap, hint_default_black;
+	uniform sampler2D clouds_top_texture : filter_linear_mipmap, repeat_enable, hint_default_black;
+	uniform sampler2D clouds_middle_texture : filter_linear_mipmap, repeat_enable, hint_default_black;
+	uniform sampler2D clouds_bottom_texture : filter_linear_mipmap, repeat_enable, hint_default_black;
+	uniform float clouds_texture_period = 8.0;
 	uniform vec3 clouds_edge_color : source_color = vec3( 0.8, 0.8, 0.98 );
 	uniform vec3 clouds_top_color : source_color = vec3( 1.0, 1.0, 1.00 );
 	uniform vec3 clouds_middle_color : source_color = vec3( 0.92, 0.92, 0.98 );
@@ -46,92 +45,12 @@ group_uniforms clouds;
 
 group_uniforms stars;
 	// Stars should be at black background
-	uniform sampler2D stars_texture : filter_linear_mipmap, hint_default_black;
+	uniform sampler2D stars_texture : filter_linear_mipmap, repeat_enable, hint_default_black;
 	uniform float stars_speed : hint_range( 0.0, 20.0, 0.01 ) = 1.0;
 
 group_uniforms settings;
 	uniform float overwritten_time = 0.0;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Function for clouds noises. You can replace using "gen_fractal_ping_pong" with a simple texture reading.
-	// I was frustrated with the repeating texture that's why I included the algorithm in the code.
-	// Source: https://github.com/Auburn/FastNoiseLite/tree/master
-	const int PRIME_X = 501125321;
-	const int PRIME_Y = 1136930381;
-	float lerp( float a, float b, float t )
-	{
-		return a + t * ( b - a );
-	}
-	float cubic_lerp( float a, float b, float c, float d, float t )
-	{
-		float p = d - c - ( a - b );
-		return t * t * t * p + t * t * ( a - b - p ) + t * ( c - a ) + b;
-	}
-	float ping_pong( float t )
-	{
-		t -= trunc( t * 0.5 ) * 2.0;
-		return t < 1.0 ? t : 2.0 - t;
-	}
-	int hash( int seed, int x_primed, int y_primed )
-	{
-		return ( seed ^ x_primed ^ y_primed ) * 0x27d4eb2d;
-	}
-	float val_coord( int seed, int x_primed, int y_primed )
-	{
-		int hash = hash( seed, x_primed, y_primed );
-		hash *= hash;
-		hash ^= hash << 19;
-		return float( hash ) * ( 1.0 / 2147483648.0 );
-	}
-	float single_value_cubic( int seed, float x, float y )
-	{
-		int x1 = int( floor( x ));
-		int y1 = int( floor( y ));
-
-		float xs = x - float( x1 );
-		float ys = y - float( y1 );
-
-		x1 *= PRIME_X;
-		y1 *= PRIME_Y;
-		int x0 = x1 - PRIME_X;
-		int y0 = y1 - PRIME_Y;
-		int x2 = x1 + PRIME_X;
-		int y2 = y1 + PRIME_Y;
-		int x3 = x1 + ( PRIME_X << 1 );
-		int y3 = y1 + ( PRIME_Y << 1 );
-
-		return cubic_lerp(
-			cubic_lerp( val_coord( seed, x0, y0 ), val_coord( seed, x1, y0 ), val_coord( seed, x2, y0 ), val_coord( seed, x3, y0 ), xs ),
-			cubic_lerp( val_coord( seed, x0, y1 ), val_coord( seed, x1, y1 ), val_coord( seed, x2, y1 ), val_coord( seed, x3, y1 ), xs ),
-			cubic_lerp( val_coord( seed, x0, y2 ), val_coord( seed, x1, y2 ), val_coord( seed, x2, y2 ), val_coord( seed, x3, y2 ), xs ),
-			cubic_lerp( val_coord( seed, x0, y3 ), val_coord( seed, x1, y3 ), val_coord( seed, x2, y3 ), val_coord( seed, x3, y3 ), xs ),
-		ys ) * ( 1.0 / ( 1.5 * 1.5 ));
-	}
-	// Params can be change in the same way as in noise settings in Godot
-	const float FRACTAL_BOUNDING = 1.0 / 1.75;
-	const int OCTAVES = 5;
-	const float PING_PONG_STRENGTH = 2.0;
-	const float WEIGHTED_STRENGTH = 0.0;
-	const float GAIN = 0.5;
-	const float LACUNARITY = 2.0;
-	float gen_fractal_ping_pong( vec2 pos, int seed, float frequency )
-	{
-		float x = pos.x * frequency;
-		float y = pos.y * frequency;
-		float sum = 0.0;
-		float amp = FRACTAL_BOUNDING;
-		for( int i = 0; i < OCTAVES; i++ )
-		{
-			float noise = ping_pong(( single_value_cubic( seed++, x, y ) + 1.0 ) * PING_PONG_STRENGTH );
-			sum += ( noise - 0.5 ) * 2.0 * amp;
-			amp *= lerp( 1.0, noise, WEIGHTED_STRENGTH );
-			x *= LACUNARITY;
-			y *= LACUNARITY;
-			amp *= GAIN;
-		}
-		return sum * 0.5 + 0.5;
-	}
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Function needed to calculate the phase of the moon
 // Source: https://kelvinvanhoorn.com/2022/03/17/skybox-tutorial-part-1/
@@ -230,7 +149,7 @@ void sky()
 	}
 
 	//////////////////// STARS /////////////////////////////////////////////////////////////////
-	vec2 _sky_uv = EYEDIR.xz / sqrt( EYEDIR.y );
+	vec2 _sky_uv = EYEDIR.xz / sqrt( max( EYEDIR.y, 0.001 ));
 	if( EYEDIR.y > -0.01 && LIGHT0_DIRECTION.y < 0.0  )
 	{
 		// Stars UV rotation
@@ -248,7 +167,7 @@ void sky()
 	}
 
 	//////////////////// CLOUDS ////////////////////////////////////////////////////////////////
-	if( EYEDIR.y > 0.0 )
+	if( EYEDIR.y > 0.0 && !AT_CUBEMAP_PASS )
 	{
 		// Clouds UV movement direction
 		float _clouds_speed = time * clouds_speed * 0.01;
@@ -257,14 +176,11 @@ void sky()
 		// I using 3 levels of clouds. Top is the lightes and botom the darkest.
 		// The speed of movement (and direction a little) is different for the illusion of the changing shape of the clouds.
 		vec2 _clouds_movement = vec2( _sin_x, _cos_y ) * _clouds_speed;
-//		float _noise_top = texture( clouds_top_texture, ( _sky_uv + _clouds_movement ) * clouds_scale ).r;
-		float _noise_top = gen_fractal_ping_pong( ( _sky_uv + _clouds_movement ) * clouds_scale, 0, 0.5 );
+		float _noise_top = texture( clouds_top_texture, ( _sky_uv + _clouds_movement ) * clouds_scale / clouds_texture_period ).r;
 		_clouds_movement = vec2( _sin_x * 0.97, _cos_y * 1.07 ) * _clouds_speed * 0.89;
-//		float _noise_middle = texture( clouds_middle_texture, ( _sky_uv + _clouds_movement ) * clouds_scale ).r;
-		float _noise_middle = gen_fractal_ping_pong( ( _sky_uv + _clouds_movement ) * clouds_scale, 1, 0.75 );
+		float _noise_middle = texture( clouds_middle_texture, ( _sky_uv + _clouds_movement ) * clouds_scale / clouds_texture_period ).r;
 		_clouds_movement = vec2( _sin_x * 1.01, _cos_y * 0.89 ) * _clouds_speed * 0.79;
-//		float _noise_bottom = texture( clouds_bottom_texture, ( _sky_uv + _clouds_movement ) * clouds_scale ).r;
-		float _noise_bottom = gen_fractal_ping_pong( ( _sky_uv + _clouds_movement ) * clouds_scale, 2, 1.0 );
+		float _noise_bottom = texture( clouds_bottom_texture, ( _sky_uv + _clouds_movement ) * clouds_scale / clouds_texture_period ).r;
 		// Smoothstep with the addition of a noise value from a lower level gives a nice, deep result
 		_noise_bottom = smoothstep( clouds_cutoff, clouds_cutoff + clouds_fuzziness, _noise_bottom );
 		_noise_middle = smoothstep( clouds_cutoff, clouds_cutoff + clouds_fuzziness, _noise_middle + _noise_bottom * 0.2 ) * 1.1;

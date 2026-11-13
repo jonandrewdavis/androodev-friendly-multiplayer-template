@@ -1,0 +1,44 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://c4uudb0m5p048"]
+
+[ext_resource type="Shader" uid="uid://c77hfyht2fpxt" path="res://resources/shaders/lightbeam.gdshader" id="1_4nd3r"]
+
+[sub_resource type="Gradient" id="Gradient_h2jn1"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.004115226, 0.11728395, 0.18724279, 0.28189301, 0.38477367, 0.4341564, 0.63786006, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.923899, 0.9239001, 0.9238985, 1, 0.90349716, 0.90349704, 0.90349674, 1, 0.8460438, 0.846044, 0.84604335, 1, 0.696885, 0.6968867, 0.6968853, 1, 0.6556004, 0.6556013, 0.65559965, 1, 0.6364806, 0.63648057, 0.6364794, 1, 0.061926693, 0.061926708, 0.061926648, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0fp8q"]
+gradient = SubResource("Gradient_h2jn1")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h2jn1"]
+noise_type = 0
+fractal_weighted_strength = 0.3
+domain_warp_enabled = true
+domain_warp_frequency = 0.01
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0fp8q"]
+noise = SubResource("FastNoiseLite_h2jn1")
+seamless = true
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_4nd3r")
+shader_parameter/color = Color(1.2, 1.25, 1.4, 0.35)
+shader_parameter/use_second_color = true
+shader_parameter/second_color = Color(0.9, 0.95, 1.2, 0)
+shader_parameter/cone_start_width = 0.45
+shader_parameter/cone_curve = 0.0999999977648
+shader_parameter/beam_sharpness = 0.35
+shader_parameter/beam_fade = 1.2
+shader_parameter/use_gradient = true
+shader_parameter/gradient = SubResource("GradientTexture1D_0fp8q")
+shader_parameter/proximity_fade_distance = 1.499999966472
+shader_parameter/z_fade_start = 0.85
+shader_parameter/z_fade_end = 0.98
+shader_parameter/use_noise = true
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_0fp8q")
+shader_parameter/noise_scale = 1.0000000149012
+shader_parameter/noise_intensity = 0.5
+shader_parameter/noise_scroll_speed = Vector2(0.01, 0.01)
+shader_parameter/noise_distortion_intensity = 0.01
+shader_parameter/noise_distortion_scroll_speed = Vector2(-0.02, -0.01)

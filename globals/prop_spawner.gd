@@ -3,12 +3,10 @@ class_name PropSpawner
 
 const BOX = preload("uid://c38er141mkjb")
 const ARROW = preload("uid://cpncw03ipoymd")
-const SEAGULL = preload("uid://c2kxbafiemnpg")
 
 var PROPS_LIST = [
 	BOX,
 	ARROW,
-	SEAGULL,
 ]
 
 func _ready() -> void:
@@ -33,6 +31,7 @@ func request_projectile(scene_path: StringName, origin: Vector3, direction: Vect
 
 # NOTE: Spawn is always a variant. 
 # TODO: Figure out how to type this better, better type contract?
+# TODO: See: res://resources/contracts/projectile_request.gd
 func _custom_projectile_spawn(data: Variant) -> Node:
 	var scene_path = data[0] 
 	var origin = data[1]
@@ -47,9 +46,4 @@ func _custom_projectile_spawn(data: Variant) -> Node:
 	new_projectile.basis = Basis.looking_at(direction)
 	new_projectile.source_id = source_id
 
-	#if proj.body_entered: new_projectile.body_entered.connect(proj.body_entered.bind(new_projectile, proj))
-	#if proj.tree_entered: new_projectile.tree_entered.connect(proj.tree_entered.bind(new_projectile, proj))		
-	#if multiplayer.is_server():
-		#if proj.lifetime: new_projectile.tree_entered.connect(_bind_lifetime.bind(new_projectile, proj.lifetime))		
-#
 	return new_projectile

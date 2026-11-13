@@ -86,12 +86,12 @@ func leave_game() -> void:
 func fetch_lobby_list() -> bool:
 	assert(not search_server.is_listening())
 	assert(not multiplayer.has_multiplayer_peer() or multiplayer.multiplayer_peer is OfflineMultiplayerPeer)
-	print_debug("Searching For Games over LAN...")
+	#print_debug("Searching For Games over LAN...")
 	search_peer.put_packet(GREETING_MESSAGE.to_utf8_buffer())
 	return true
 
 func set_joinable(joinable_: bool) -> void:
-	print_debug("Setting ENet Lobby Joinable=" + str(joinable_))
+	#print_debug("Setting ENet Lobby Joinable=" + str(joinable_))
 	self.joinable = joinable_
 	if multiplayer.multiplayer_peer is ENetMultiplayerPeer:
 		multiplayer.multiplayer_peer.refuse_new_connections = not joinable_

@@ -1,5 +1,8 @@
 extends Node
 
+# TODO: Rename "Global"?
+
+
 const MENU_SCENE := "res://scenes/menu/menu.tscn"
 const IN_GAME_MENU_SCENE := "res://scenes/menu/in_game_menu/in_game_menu.tscn"
 
@@ -17,16 +20,17 @@ func _ready() -> void:
 	multiplayer.connection_failed.connect(MultiplayerService.leave_game)
 	
 	if multiplayer.is_server():
-		MultiplayerService.lobby_joined.connect(_on_lobby_joined_server)
-		
+		MultiplayerService.lobby_joined.connect(_on_server_lobby_started)
+
 func _on_lobby_joined() -> void:
 	_go_to_scene(IN_GAME_MENU_SCENE)
 
-func _on_lobby_joined_server():
+func _on_server_lobby_started():
 	if not await level_loader.spawn_level(LevelLoader.LEVEL_DICT.keys()[0]):
 		return
 	if not multiplayer.is_server():
 		return
+
 	player_spawner.spawn_player(1)
 	MultiplayerService.set_joinable(true)
 
