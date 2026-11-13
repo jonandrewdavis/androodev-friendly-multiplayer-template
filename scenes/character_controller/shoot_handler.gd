@@ -6,7 +6,7 @@ const BOW_HOLD := &"BowHold"
 const BOW_STATE_MACHINE := &"BowStateMachine"
 const BOW_PULL_HOLD := &"Bow_Pull_Hold"
 const BOW_RELEASE := &"Bow_Release"
-const BOW_RELEASE_ANIM := &"Bow_Release"
+const BOW_RELEASE_ANIM := &"Bow_Shoot"
 
 @onready var player : CharacterBody3D = get_parent().get_parent()
 @onready var animation_sync : AnimationSync = %AnimationTree
@@ -34,9 +34,13 @@ func _on_animation_finished(anim_name: StringName) -> void:
 	if anim_name == BOW_RELEASE_ANIM:
 		animation_sync.fade_out_oneshot(UPPER_BODY)
 
+
+
 func _shoot() -> void:
 	var scene_path : String = World.prop_spawner.ARROW.resource_path
 	World.prop_spawner.request_projectile.rpc_id(1, scene_path, global_position, _get_shoot_direction())
+
+
 
 func _get_shoot_direction() -> Vector3:
 	var viewport_center : Vector2 = get_viewport().get_visible_rect().size / 2

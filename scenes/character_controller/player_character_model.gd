@@ -1,5 +1,7 @@
 extends Node3D
 
+# TODO: CURRENTLY NOT USED.
+
 @onready var player : CharacterBody3D = get_parent()
 @onready var nameplate : Label3D = %Nameplate
 @onready var player_mesh: MeshInstance3D = $GeneralSkeleton/PlayerMesh

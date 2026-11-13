@@ -2,7 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://cfktlsroqfaof" path="res://resources/shaders/water_shader_cheap.gdshader" id="1_gs1nq"]
 [ext_resource type="Texture2D" uid="uid://cje0uotqddck8" path="res://assets/img/bwr_caustic.png" id="2_h0qgr"]
-[ext_resource type="Material" uid="uid://dxfxq8bqwxf15" path="res://resources/materials/water_material_1.tres" id="3_2s5qq"]
+[ext_resource type="Material" uid="uid://dxfxq8bqwxf15" path="res://resources/shaders/water_shader_material_1.tres" id="3_2s5qq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xp3i3"]
 render_priority = 0

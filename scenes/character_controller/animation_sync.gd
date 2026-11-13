@@ -3,12 +3,17 @@ extends AnimationTree
 class_name AnimationSync
 
 # TODO: We could make a list of required animations and have them fed to the Tree, allowing better "bring your own"
+# TODO: Figure out how to add on additional "modules" for oneshots, for gameplay
+# For now, we'll need to make a new tree. This could become an abstract class at that point,
+# because for a "racing" character controller, we wouldn't have walk, crouch, etc.,
+# this works for humaniods only for now.
 
 const MOVEMENT := &"Movement"
 const WALK_SCALE := "parameters/Movement/Walk/Character_Speed_Scale/scale"
 const SPRINT_SCALE := "parameters/Movement/Sprint/Character_Speed_Scale/scale"
 const CROUCH_WALK_SCALE := "parameters/Movement/Crouch Walk/Character_Speed_Scale/scale"
 const WALK_BLEND := "parameters/Movement/Walk/Walk/blend_position"
+const CROUCH_BLEND := "parameters/Movement/Crouch Walk/Crouch/blend_position"
 const MIN_BLEND_SPEED := 0.1
 
 @export var anim_state : StringName = &""
@@ -16,9 +21,9 @@ const MIN_BLEND_SPEED := 0.1
 @export var walk_blend : Vector2 = Vector2.UP
 
 @export_group("Stride Speed")
-@export var walk_speed : float = 3.0
-@export var sprint_speed : float = 6.8
-@export var crouch_speed : float = 1.5
+@export var walk_speed : float = 2.3
+@export var sprint_speed : float = 5.357
+@export var crouch_speed : float = 1.75
 
 @export_group("Walk Blend")
 @export var walk_blend_smoothing : float = 10.0
@@ -42,13 +47,13 @@ func _process(delta: float) -> void:
 		anim_state = get_current_state(MOVEMENT)
 		walk_blend = walk_blend.lerp(_get_walk_direction(), 1.0 - exp(-walk_blend_smoothing * delta))
 		_apply_speed_scaler(ground_speed)
-		set(WALK_BLEND, walk_blend)
+		_apply_blend(walk_blend)
 	else:
 		var weight : float = 1.0 - exp(-player.interp_speed * delta)
 		_smoothed_speed = lerpf(_smoothed_speed, ground_speed, weight)
 		_smoothed_blend = _smoothed_blend.lerp(walk_blend, weight)
 		_apply_speed_scaler(_smoothed_speed)
-		set(WALK_BLEND, _smoothed_blend)
+		_apply_blend(_smoothed_blend)
 		_apply_remote_state()
 
 func _get_walk_direction() -> Vector2:
@@ -81,6 +86,10 @@ func _playback(state_machine: StringName) -> AnimationNodeStateMachinePlayback:
 
 func _param(node: StringName, property: String) -> String:
 	return "parameters/%s/%s" % [node, property]
+
+func _apply_blend(blend: Vector2) -> void:
+	set(WALK_BLEND, blend)
+	set(CROUCH_BLEND, blend)
 
 func _apply_speed_scaler(speed: float) -> void:
 	set(WALK_SCALE, speed / walk_speed)

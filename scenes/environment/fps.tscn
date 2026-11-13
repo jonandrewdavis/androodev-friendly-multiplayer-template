@@ -1,10 +1,23 @@
 [gd_scene format=3 uid="uid://dltcmsd3purl0"]
 
+[ext_resource type="Material" uid="uid://crunxays15nrv" path="res://resources/shaders/bright_sky_shader_material.tres" id="1_f1c7m"]
 [ext_resource type="PackedScene" uid="uid://3yyqaa4ebi2y" path="res://assets/models/environment/fps_tdm_map/fps_tdm_map.glb" id="2_lfuvy"]
+
+[sub_resource type="Sky" id="Sky_pefmw"]
+sky_material = ExtResource("1_f1c7m")
+radiance_size = 1
 
 [sub_resource type="Environment" id="Environment_n51mc"]
 background_mode = 2
+sky = SubResource("Sky_pefmw")
+ambient_light_source = 2
+ambient_light_color = Color(0.7, 0.75, 1, 1)
+ambient_light_energy = 0.7
 tonemap_mode = 2
+fog_enabled = true
+fog_light_energy = 0.2
+fog_density = 0.02
+fog_sky_affect = 0.0
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_yruvy"]
 

@@ -45,7 +45,7 @@ extends CharacterBody3D
 @export_group("Attributes")
 @export var base_speed : float = 3.5
 @export var sprint_increase : float = 0.6
-@export var crouch_speed_decrease : float = 0.5
+@export var crouch_speed_decrease : float = 0.325
 @export var crouch_animation_time : float = 0.075
 @export var water_speed_decrease : float = 0.25
 #Speed multiplier used internally for things like sprinting, if you want to give the player boosts use the exported multiplier instead.
@@ -58,8 +58,6 @@ extends CharacterBody3D
 @export var acceleration : float = 8.0
 @export var sprint_acceleration : float = 3.5
 @export var air_acceleration : float = 6.0
-## Max horizontal speed the player can steer to while midair
-@export var air_speed : float = 3.2
 @export var jump_power : float = 6.5
 ## Upward gravity is divided by this when jump is released early (lower = shorter hops)
 @export var jump_cut_multiplier : float = 0.5
@@ -240,17 +238,17 @@ func _physics_process(delta: float) -> void:
 			current_friction = sprint_friction
 		var crouch_slow : float = (crouch_speed_decrease * int(crouching))
 		var water_slow : float = (water_speed_decrease * int(swimming))
-		var base_slow : float = crouch_slow + water_slow
-
-		# Changes acceleration and crouch slow based on being in the air and crouch state
+		# Changes acceleration and crouch slow based on being in the air and crouch state.
+		# Midair keeps the ground target speed (walk or sprint), only steering is slower.
 		if not is_on_floor() and not swimming:
 			current_acceleration = air_acceleration
-			target_speed = air_speed
 			crouch_slow = 0
 		elif noclipping:
 			current_acceleration = 1000
 			crouch_slow = 0
 			current_friction = 5000
+		# Applied after the branch above so its crouch_slow reset takes effect
+		var speed_scale : float = base_speed_multiplier - crouch_slow - water_slow
 
 		#Lerp weights, clamped so high rates don't overshoot
 		var accel_weight : float = minf(current_acceleration * delta, 1.0)
@@ -279,10 +277,10 @@ func _physics_process(delta: float) -> void:
 			movement_vector = (head.global_basis * Vector3(input_direction.x, 0, input_direction.y))
 			#Workaround for moving cancelling y velocity, there is probably a better way to do this.
 			var stored_vel_y : float = velocity.y
-			velocity = velocity.lerp(movement_vector * base_speed * (base_speed_multiplier - base_slow) * speed_multiplier, accel_weight)
+			velocity = velocity.lerp(movement_vector * base_speed * speed_scale * speed_multiplier, accel_weight)
 			velocity.y = stored_vel_y
 		elif movement_vector:
-			var target_velocity : Vector3 = movement_vector * target_speed * (base_speed_multiplier - base_slow) * speed_multiplier
+			var target_velocity : Vector3 = movement_vector * target_speed * speed_scale * speed_multiplier
 			velocity.x = lerp(velocity.x, target_velocity.x, accel_weight)
 			velocity.z = lerp(velocity.z, target_velocity.z, accel_weight)
 		elif is_on_floor() or midair_deceleration == true:

@@ -3,10 +3,13 @@ extends MultiplayerSpawner
 
 const PLAYER_CHARACTER = preload("uid://dvp4kx5ygmpgw")
 
-
+# TODO: Additional character types here.
+# Bascially: if more than 1, we want to add characters manually
+# based on the game type we're playing, FPS, Racing, etc.
 
 func _ready() -> void:
 	self.add_spawnable_scene(PLAYER_CHARACTER.resource_path)
+	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _on_peer_connected(peer_id: int) -> void:
