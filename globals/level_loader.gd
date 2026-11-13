@@ -34,7 +34,7 @@ func spawn_level(key: String) -> bool:
 		return false
 	clear_level()
 	current_key = key
-	var cancel_token := spawn_level_attempts
+	var curr_spawn_attempt := spawn_level_attempts
 	var path := LEVEL_DICT[key]
 	var err := ResourceLoader.load_threaded_request(path, "PackedScene")
 	if err != OK:
@@ -46,9 +46,9 @@ func spawn_level(key: String) -> bool:
 	while ResourceLoader.load_threaded_get_status(path, progress) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		load_progress.emit(progress[0])
 		await get_tree().create_timer(WAIT_INTERVAL).timeout
-		if cancel_token != spawn_level_attempts:
+		if curr_spawn_attempt != spawn_level_attempts:
 			return false
-	if cancel_token != spawn_level_attempts:
+	if curr_spawn_attempt != spawn_level_attempts:
 		return false
 	if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_LOADED:
 		push_error("Could not load level: ", key)
