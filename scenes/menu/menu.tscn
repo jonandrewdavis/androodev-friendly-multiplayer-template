@@ -50,9 +50,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 80
 text = "AndrooDev's Friendly Template"
 
-[node name="ButtonVBoxContainer" type="VBoxContainer" parent="MainContainer" unique_id=833858432]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 0)
+[node name="CenterContainer" type="CenterContainer" parent="MainContainer" unique_id=1862888370]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -66,25 +64,60 @@ offset_bottom = 110.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HostButton" type="Button" parent="MainContainer/ButtonVBoxContainer" unique_id=825751872]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer/CenterContainer" unique_id=1749744962]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer" unique_id=724326054]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=814624582]
+layout_mode = 2
+size_flags_horizontal = 3
+translation_context = &"menu"
+
+[node name="MultiplayerOptionButton" type="OptionButton" parent="MainContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1051786108]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 1
+item_count = 6
+popup/item_0/text = "Offline"
+popup/item_0/id = 0
+popup/item_1/text = "ENet (Localhost)"
+popup/item_1/id = 1
+popup/item_2/text = "Tube (WebRTC)"
+popup/item_2/id = 2
+popup/item_3/text = "NodeTunnel (Relay)"
+popup/item_3/id = 3
+popup/item_4/text = "Steam"
+popup/item_4/id = 4
+popup/item_5/text = "Epic Online Services"
+popup/item_5/id = 5
+
+[node name="ButtonVBoxContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer" unique_id=833858432]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/ButtonVBoxContainer" unique_id=825751872]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"PrimaryButton"
 text = "Host"
 
-[node name="JoinButton" type="Button" parent="MainContainer/ButtonVBoxContainer" unique_id=273285036]
+[node name="JoinButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/ButtonVBoxContainer" unique_id=273285036]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"SuccessButton"
 text = "Join"
 
-[node name="SettingsButton" type="Button" parent="MainContainer/ButtonVBoxContainer" unique_id=950034772]
+[node name="SettingsButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/ButtonVBoxContainer" unique_id=950034772]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"WarningButton"
 text = "Settings"
 
-[node name="ExitButton" type="Button" parent="MainContainer/ButtonVBoxContainer" unique_id=465099698]
+[node name="ExitButton" type="Button" parent="MainContainer/CenterContainer/VBoxContainer/ButtonVBoxContainer" unique_id=465099698]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"

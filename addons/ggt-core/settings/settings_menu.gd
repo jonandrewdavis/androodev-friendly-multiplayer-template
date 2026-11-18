@@ -61,7 +61,6 @@ func _ready() -> void:
 	# We only allow this selection while debugging in editor.
 	multiplayer_option_button.disabled = !OS.is_debug_build()
 
-
 func _unhandled_input(event: InputEvent) -> void:
 	if !visible: return
 	if event is InputEventJoypadButton:

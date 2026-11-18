@@ -18,6 +18,7 @@ settings/startup_visibility=1
 config/name="androodev-friendly-multiplayer-template"
 config/version="0.0.1"
 run/main_scene="res://scenes/menu/menu.tscn"
+run/print_header=false
 config/features=PackedStringArray("4.8")
 config/icon="uid://dack0gg1ftok4"
 

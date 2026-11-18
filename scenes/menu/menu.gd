@@ -7,6 +7,7 @@ extends Control
 @onready var join_button: Button = %JoinButton
 @onready var settings_button: Button = %SettingsButton
 @onready var exit_button: Button = %ExitButton
+@onready var multiplayer_option_button: OptionButton = %MultiplayerOptionButton
 
 @onready var settings_menu: PanelContainer = %SettingsMenu
 
@@ -17,7 +18,7 @@ func _ready():
 	settings_menu.visibility_changed.connect(_on_settings_menu_visibility_changed)
 	settings_menu.confirm_button_clicked.connect(_on_settings_menu_confirm_button_clicked)
 	exit_button.pressed.connect(_on_exit_button_pressed)
-
+	#multiplayer_option_button.connect()
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
