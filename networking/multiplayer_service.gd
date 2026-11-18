@@ -7,7 +7,9 @@ const REFUSE_REASON_NOT_JOINABLE := "This lobby is not joinable."
 const KICK_GRACE_SECONDS := 1.0
 
 enum State {
+	ERROR,
 	IDLE,
+	READY,
 	CONNECTING,
 	IN_GAME,
 }
@@ -21,21 +23,20 @@ const BACKEND_LABELS := {
 	MultiplayerBackend.Type.EOS: "Epic Online Services"
 }
 
-const ADDRESS_HINTS := {
-	MultiplayerBackend.Type.OFFLINE: "Unavailable offline",
-	MultiplayerBackend.Type.ENET: "IP address",
-	MultiplayerBackend.Type.TUBE: "Session ID",
-	MultiplayerBackend.Type.NODETUNNEL: "Room code",
-	MultiplayerBackend.Type.STEAM: "Lobby ID",
-	MultiplayerBackend.Type.EOS: "Lobby ID"
+const BACKEND_SCRIPTS := { 
+	MultiplayerBackend.Type.OFFLINE: "res://networking/offline_backend.gd",
+	MultiplayerBackend.Type.ENET: "res://networking/enet_backend.gd",
+	#MultiplayerBackend.Type.TUBE: "",
+	#MultiplayerBackend.Type.NODETUNNEL: "",
+	#MultiplayerBackend.Type.STEAM: "",
+	#MultiplayerBackend.Type.EOS: ""
 }
 
 var backend: MultiplayerBackend
-var state: State = State.IDLE
 var max_players := 0
 var banlist: Array
 var kick_reason: String
-var status_text: String
+var state: State = State.IDLE : set = _set_state
 
 signal lobby_found(address: Variant, cur_players: int, max_players: int)
 signal joining_lobby
@@ -43,24 +44,24 @@ signal lobby_joined
 signal creating_lobby
 signal join_lobby_failed(reason: String)
 signal game_exited
-#signal backend_changed(type: MultiplayerBackend.Type)
+signal state_updated(state: State)
 
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	GGT_GameConfig.game_config_changed.connect(_on_game_config_changed)
-	#_init_backend()
-	#set_backend.call_deferred()
+	_init_backend.call_deferred(GGT_GameConfig.get_multiplayer_backend())
+
 
 ## Modify for each [enum BackendType] you want to support.
 func _init_backend(type: MultiplayerBackend.Type) -> void:
-	match type:
-		MultiplayerBackend.Type.ENET:
-			backend = ENetBackend.new()
-	backend.lobby_found.connect(lobby_found.emit)
-	backend.lobby_joined.connect(lobby_joined.emit)
-	backend.join_lobby_failed.connect(join_lobby_failed.emit)
-	add_child(backend)
-
+	if _is_backend_valid(type):
+		backend = load(BACKEND_SCRIPTS[type]).new()
+		backend.lobby_found.connect(lobby_found.emit)
+		backend.lobby_joined.connect(lobby_joined.emit)
+		backend.join_lobby_failed.connect(join_lobby_failed.emit)
+		backend.name = MultiplayerBackend.Type.keys()[type] # Identifies the node better
+		add_child(backend, true)
+	
 func host_game(options: HostOptions) -> void:
 	assert(not multiplayer.has_multiplayer_peer() or multiplayer.get_multiplayer_peer() is OfflineMultiplayerPeer)
 	creating_lobby.emit()
@@ -122,6 +123,26 @@ func get_username(peer_id: int) -> String:
 	return backend.get_username(peer_id)
 
 
+# NOTE: We get notified our backend has updated, so we need to test if our current
+# backend needs to be removed & set up new.
 func _on_game_config_changed():
-	print(GGT_GameConfig.get_multiplayer_backend())
-	
+	var _index: int = GGT_GameConfig.get_multiplayer_backend()
+	var next_backend_name = MultiplayerBackend.Type.keys()[_index]
+	if backend.name != next_backend_name and _is_backend_valid(_index):
+		backend.queue_free()
+		_init_backend(_index)
+		
+	#if GGT_GameConfig.get_multiplayer_backend():
+	#	prints("DEBUG: Multiplayer backend changed", GGT_GameConfig.get_multiplayer_backend())
+
+func _is_backend_valid(type: MultiplayerBackend.Type):
+	if type >= BACKEND_SCRIPTS.size():
+		push_error('Backend script not available')
+		state = State.ERROR
+		return false
+		
+	return true
+		
+func _set_state(new_state: State):
+	state = new_state
+	state_updated.emit(new_state)

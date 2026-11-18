@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://do7kkb4ijqk5p" path="res://menu/in_game_menu/in_game_menu.gd" id="1_2akbd"]
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="2_cpsnh"]
-[ext_resource type="PackedScene" uid="uid://0kt8q1n5fyt3" path="res://scenes/levels/home.tscn" id="3_cpsnh"]
 
 [node name="InGameMenu" type="CanvasLayer" unique_id=2102314706]
 process_mode = 3
@@ -64,9 +63,6 @@ offset_right = 426.0
 offset_bottom = 385.5
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="Home" parent="." unique_id=893317769 instance=ExtResource("3_cpsnh")]
-visible = true
 
 [connection signal="confirm_button_clicked" from="SettingsMenu" to="." method="_on_settings_menu_confirm_button_clicked"]
 [connection signal="visibility_changed" from="SettingsMenu" to="." method="_on_settings_menu_visibility_changed"]

@@ -14,11 +14,12 @@ func _ready():
 
 	resume_button.pressed.connect(func(): resume())
 	settings_button.pressed.connect(func() -> void: settings_menu.show())
+	settings_menu.confirm_button_clicked.connect(func() -> void: settings_menu.hide())
 	leave_button.pressed.connect(MultiplayerService.leave_game)
 	
 	if GGT.is_changing_scene():
 		await GGT.scene_transition_finished
-		await get_tree().process_frame	
+		await get_tree().process_frame
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -29,6 +30,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if GGT.is_changing_scene():
 			return
 		if settings_menu.visible:
+			# TODO: Handle the corner case of a "Reset values" modal visible. 
+			# Need to zero out the current action, not as simple as just hide.
+			# Maack's does a lot of this for you. GGT is a little more loose,
+			# but it is much lighter weight, which I like - AD.
 			settings_menu.hide()
 		elif visible:
 			resume()

@@ -54,7 +54,7 @@ bg_color = Color(0.26666668, 0.3019608, 0.35686275, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
-border_width_bottom = 1
+border_width_bottom = 2
 border_color = Color(0.4509804, 0.47843137, 0.5176471, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -75,13 +75,14 @@ border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.32941177, 0.7882353, 0.9411765, 0.40784314)
+border_color = Color(0.46666667, 0.46666667, 0.46666667, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 corner_detail = 12
-shadow_color = Color(0.015999999, 0.024000002, 0.04, 0.19607843)
+shadow_color = Color(0.23753911, 0.23753914, 0.23753908, 0.45490196)
+shadow_size = 1
 shadow_offset = Vector2(0, 2)
 
 [sub_resource type="DPITexture" id="DPITexture_35ptd"]

@@ -5,11 +5,13 @@ extends Node
 
 enum Type {OFFLINE, ENET, TUBE, NODETUNNEL, STEAM, EOS}
 
+## Custom string used to identify a lobby or session
+var lobby_hint: String = "Lobby ID"
+
 @warning_ignore_start('unused_signal')
 signal lobby_found(address: Variant, lobby_name: String, cur_players: int, max_players: int)
 signal lobby_joined
 signal join_lobby_failed(reason: String)
-signal status_changed(text: String)
 @warning_ignore_restore('unused_signal')
 
 ## Host a lobby using the given [param options].

@@ -22,7 +22,7 @@ var lobby_name: String
 func _ready() -> void:
 	search_peer.set_dest_address(BROADCAST_ADDRESS, SEARCH_PORT)
 	search_peer.set_broadcast_enabled(true)
-
+	MultiplayerService.state = MultiplayerService.State.READY
 
 ## [b]Polls the Local Area Network for lobbies.[/b]
 ## If this instance is a host, we listen for packets from other instances searching for a lobby.
