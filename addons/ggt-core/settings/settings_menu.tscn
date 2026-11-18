@@ -9,7 +9,7 @@ font_size = 64
 [sub_resource type="LabelSettings" id="LabelSettings_y1o0p"]
 font_size = 32
 
-[node name="SettingsMenu" type="PanelContainer" unique_id=190195239 node_paths=PackedStringArray("sound_master_slider", "sound_sfx_slider", "sound_music_slider", "resolution_scale_slider", "resolution_scale_value", "v_sync_checkbox", "fps_limit_option_button", "fullscreen_checkbox", "locale_option_button", "reset_confirmation_dialog", "cancel_confirmation_dialog", "cancel_button")]
+[node name="SettingsMenu" type="PanelContainer" unique_id=190195239 node_paths=PackedStringArray("sound_master_slider", "sound_sfx_slider", "sound_music_slider", "resolution_scale_slider", "resolution_scale_value", "v_sync_checkbox", "fps_limit_option_button", "fullscreen_checkbox", "locale_option_button", "reset_confirmation_dialog", "cancel_confirmation_dialog", "cancel_button", "multiplayer_option_button")]
 offset_right = 353.0
 offset_bottom = 707.0
 script = ExtResource("1_25law")
@@ -25,6 +25,7 @@ locale_option_button = NodePath("MarginContainer/VBox/Language/LocaleOptionButto
 reset_confirmation_dialog = NodePath("MarginContainer/VBox/ResetConfirmationDialog")
 cancel_confirmation_dialog = NodePath("MarginContainer/VBox/CancelConfirmationDialog")
 cancel_button = NodePath("MarginContainer/VBox/HBoxContainer/HBoxContainer/SettingsCancelButton")
+multiplayer_option_button = NodePath("MarginContainer/VBox/Multiplayer/MultiplayerOptionButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1411647293]
 layout_mode = 2
@@ -53,6 +54,32 @@ horizontal_alignment = 1
 [node name="HSeparator4" type="Control" parent="MarginContainer/VBox" unique_id=34763276]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
+
+[node name="Multiplayer" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=602579702]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBox/Multiplayer" unique_id=83297234]
+layout_mode = 2
+size_flags_horizontal = 3
+translation_context = &"menu"
+text = "Multiplayer Peer"
+
+[node name="MultiplayerOptionButton" type="OptionButton" parent="MarginContainer/VBox/Multiplayer" unique_id=202771814]
+layout_mode = 2
+selected = 1
+item_count = 6
+popup/item_0/text = "Offline"
+popup/item_0/id = 0
+popup/item_1/text = "ENet (Localhost)"
+popup/item_1/id = 1
+popup/item_2/text = "Tube (WebRTC)"
+popup/item_2/id = 2
+popup/item_3/text = "NodeTunnel (Relay)"
+popup/item_3/id = 3
+popup/item_4/text = "Steam"
+popup/item_4/id = 4
+popup/item_5/text = "Epic Online Services"
+popup/item_5/id = 5
 
 [node name="Language" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=336382435]
 layout_mode = 2

@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cawekr44fruhm"
-path="res://.godot/imported/open-sans-regular.ttf-17e45665bae6f7f22a9ebeaf99960c2e.fontdata"
+uid="uid://bgcy1faqh1xjk"
+path="res://.godot/imported/Inconsolata-Regular.ttf-63714e0bfc6d5e7c3e68dab39631d0f4.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/open-sans/open-sans-regular.ttf"
-dest_files=["res://.godot/imported/open-sans-regular.ttf-17e45665bae6f7f22a9ebeaf99960c2e.fontdata"]
+source_file="res://assets/fonts/Inconsolata-Regular.ttf"
+dest_files=["res://.godot/imported/Inconsolata-Regular.ttf-63714e0bfc6d5e7c3e68dab39631d0f4.fontdata"]
 
 [params]
 
@@ -22,8 +22,8 @@ msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
 modulate_color_glyphs=false
-hinting=1
-subpixel_positioning=1
+hinting=3
+subpixel_positioning=4
 keep_rounding_remainders=true
 oversampling=0.0
 Fallbacks=null

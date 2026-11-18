@@ -1,0 +1,8 @@
+[gd_resource type="DPITexture" format=3 uid="uid://ms8fukmc7lrq"]
+
+[resource]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><circle cx=\"8\" cy=\"8\" r=\"7\" fill=\"#fefefe\"/></svg>
+"
+color_map = {
+Color(0, 0, 0, 1): Color(0.32156864, 0.32156864, 0.32156864, 1)
+}

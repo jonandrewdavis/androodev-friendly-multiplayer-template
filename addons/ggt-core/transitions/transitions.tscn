@@ -1,13 +1,11 @@
 [gd_scene format=3 uid="uid://82fiitkfc6wn"]
 
-[ext_resource type="FontFile" uid="uid://cawekr44fruhm" path="res://assets/fonts/open-sans/open-sans-regular.ttf" id="1"]
 [ext_resource type="Script" uid="uid://c8ru70vkpmvyy" path="res://addons/ggt-core/transitions/progress.gd" id="3"]
 [ext_resource type="Script" uid="uid://cqeuawll14hnl" path="res://addons/ggt-core/transitions/transitions.gd" id="4"]
 [ext_resource type="Script" uid="uid://dfnwymtygg1to" path="res://scenes/menu/game_version.gd" id="4_mcnah"]
 [ext_resource type="Script" uid="uid://baky6bgu7psf2" path="res://scenes/menu/godot_version.gd" id="5_03rgt"]
 
 [sub_resource type="FontFile" id="4"]
-fallbacks = Array[Font]([ExtResource("1")])
 subpixel_positioning = 0
 msdf_pixel_range = 14
 msdf_size = 128

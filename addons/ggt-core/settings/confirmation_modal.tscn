@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b8y8u6k8j8p8"]
 
-[ext_resource type="Script" uid="uid://umnufqxdcx3o" path="res://objects/ui/confirmation_modal.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://umnufqxdcx3o" path="res://addons/ggt-core/settings/confirmation_modal.gd" id="1_script"]
 
 [node name="ConfirmationModal" type="ColorRect" unique_id=2109052131 node_paths=PackedStringArray("label", "confirm_button", "cancel_button")]
 top_level = true

@@ -17,6 +17,7 @@ signal confirm_button_clicked
 @export var reset_confirmation_dialog: ConfirmationModal
 @export var cancel_confirmation_dialog: ConfirmationModal
 @export var cancel_button: Button
+@export var multiplayer_option_button: Button
 
 const FPS_OPTIONS = [0, 30, 45, 60, 75, 90, 120, 144, 165, 240]
 
@@ -38,6 +39,7 @@ func _ready() -> void:
 	cancel_confirmation_dialog.confirmed.connect(_on_cancel_confirmed)
 	reset_confirmation_dialog.cancelled.connect(_on_modal_canceled)
 	cancel_confirmation_dialog.cancelled.connect(_on_modal_canceled)
+	multiplayer_option_button.item_selected.connect(on_multiplayer_option_button_selected)
 
 	sound_master_slider.value_changed.connect(_on_setting_changed)
 	sound_sfx_slider.value_changed.connect(_on_setting_changed)
@@ -47,6 +49,7 @@ func _ready() -> void:
 	fps_limit_option_button.item_selected.connect(_on_setting_changed)
 	fullscreen_checkbox.toggled.connect(_on_setting_changed)
 	locale_option_button.item_selected.connect(_on_setting_changed)
+	multiplayer_option_button.item_selected.connect(_on_setting_changed)
 
 	initialize()
 
@@ -54,6 +57,9 @@ func _ready() -> void:
 		control.visible = OS.has_feature('pc')
 
 	visibility_changed.connect(on_visibility_changed)
+	
+	# We only allow this selection while debugging in editor.
+	multiplayer_option_button.disabled = !OS.is_debug_build()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -78,7 +84,7 @@ func on_visibility_changed() -> void:
 		previous_config = ConfigFile.new()
 		previous_config.parse(GGT_GameConfig.config.encode_to_text())
 		cancel_button.disabled = true
-		locale_option_button.grab_focus()
+		multiplayer_option_button.grab_focus()
 	else:
 		previous_config = null
 
@@ -151,6 +157,8 @@ func on_locale_option_button_item_selected(index: int) -> void:
 	var locale_code = locale_option_button.get_item_metadata(index)
 	GGT_GameConfig.set_locale(locale_code)
 
+func on_multiplayer_option_button_selected(index: int) -> void:
+	pass
 
 func _on_settings_cancel_button_pressed() -> void:
 	_focus_before_modal = get_viewport().gui_get_focus_owner()

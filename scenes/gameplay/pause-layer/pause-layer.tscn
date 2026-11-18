@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://barl4q1kugrmm"]
 
 [ext_resource type="Script" uid="uid://do7kkb4ijqk5p" path="res://scenes/gameplay/pause-layer/pause-layer.gd" id="2"]
-[ext_resource type="Theme" uid="uid://ducfept6pmkkm" path="res://resources/theme/theme-main.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://byniue2cdd2yv" path="res://scenes/gameplay/pause-layer/pause_button.png" id="4"]
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="4_5vvpd"]
 
@@ -85,7 +84,6 @@ offset_left = -222.0
 offset_right = 222.0
 offset_bottom = 28.0
 grow_horizontal = 2
-theme = ExtResource("3")
 theme_override_colors/font_color = Color(0.788235, 0.788235, 0.788235, 1)
 text = "Pause: ESC (keyboard) or START button (joypad)"
 
