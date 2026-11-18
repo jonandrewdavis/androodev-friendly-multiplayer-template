@@ -6,6 +6,7 @@ const CONFIG_FILE_PATH = &"user://settings.cfg"
 var config = ConfigFile.new()
 
 signal resolution_scale_changed
+signal game_config_changed # NOTE: Added by AndrooDev
 
 const SUPPORTED_LOCALES = {
 	"en": "English",
@@ -44,6 +45,7 @@ func reset() -> void:
 
 func persist() -> void:
 	config.save(CONFIG_FILE_PATH)
+	game_config_changed.emit()
 
 
 func revert_to(cfg: ConfigFile) -> void:
@@ -60,6 +62,8 @@ func initialize_default_file() -> void:
 	if not OS.has_feature('web'):
 		config.set_value("gfx", "fullscreen", true)
 		config.set_value("gfx", "vsync", true)
+
+	config.set_value("game", "multiplayer_backend", 0)
 
 	var os_locale = OS.get_locale_language()
 	if os_locale in SUPPORTED_LOCALES:
@@ -135,6 +139,10 @@ func set_fullscreen(v: bool) -> void:
 func set_locale(locale: String) -> void:
 	config.set_value("game", "locale", locale)
 	TranslationServer.set_locale(locale)
+
+func set_multiplayer_backend(index: int) -> void:
+	config.set_value("game", "multiplayer_backend", index)
+
 #endregion
 
 
@@ -142,7 +150,10 @@ func set_locale(locale: String) -> void:
 func get_resolution_scale() -> float:
 	return float(config.get_value("gfx", "resolution_scale"))
 
-
 func get_locale() -> String:
 	return config.get_value("game", "locale", "en")
+
+func get_multiplayer_backend() -> int:
+		return config.get_value("game", "multiplayer_backend", 0)
+
 #endregion

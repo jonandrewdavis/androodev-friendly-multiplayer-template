@@ -1,4 +1,5 @@
 extends Control
+# TODO: Settings menu esc key close (if no changes)
 
 const CONFIG_FILE_PATH = GGT_GameConfig.CONFIG_FILE_PATH
 
@@ -17,7 +18,7 @@ signal confirm_button_clicked
 @export var reset_confirmation_dialog: ConfirmationModal
 @export var cancel_confirmation_dialog: ConfirmationModal
 @export var cancel_button: Button
-@export var multiplayer_option_button: Button
+@export var multiplayer_option_button: OptionButton
 
 const FPS_OPTIONS = [0, 30, 45, 60, 75, 90, 120, 144, 165, 240]
 
@@ -50,7 +51,7 @@ func _ready() -> void:
 	fullscreen_checkbox.toggled.connect(_on_setting_changed)
 	locale_option_button.item_selected.connect(_on_setting_changed)
 	multiplayer_option_button.item_selected.connect(_on_setting_changed)
-
+	
 	initialize()
 
 	for control in get_tree().get_nodes_in_group("settings_desktop_only"):
@@ -58,8 +59,12 @@ func _ready() -> void:
 
 	visibility_changed.connect(on_visibility_changed)
 	
-	# We only allow this selection while debugging in editor.
-	multiplayer_option_button.disabled = !OS.is_debug_build()
+	# Allow selecting a multiplayer backend when in editor AND we're idle
+	if OS.is_debug_build and MultiplayerService.state == MultiplayerService.State.IDLE:
+		multiplayer_option_button.disabled = false
+	else:
+		# Any other case, it's disabled
+		multiplayer_option_button.disabled = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if !visible: return
@@ -121,7 +126,12 @@ func initialize(cfg: ConfigFile = GGT_GameConfig.config) -> void:
 		if locale_option_button.get_item_metadata(i) == current_locale:
 			locale_option_button.select(i)
 			break
+	
+	# multiplayer backend
 
+	for i in range(MultiplayerService.BACKEND_LABELS.size()):
+		multiplayer_option_button.add_item(MultiplayerService.BACKEND_LABELS[i], i)
+	multiplayer_option_button.select(GGT_GameConfig.get_multiplayer_backend())
 
 func on_sound_master_slider(value: float) -> void:
 	GGT_GameConfig.set_master_volume(value)
@@ -157,7 +167,7 @@ func on_locale_option_button_item_selected(index: int) -> void:
 	GGT_GameConfig.set_locale(locale_code)
 
 func on_multiplayer_option_button_selected(index: int) -> void:
-	pass
+	GGT_GameConfig.set_multiplayer_backend(index)
 
 func _on_settings_cancel_button_pressed() -> void:
 	_focus_before_modal = get_viewport().gui_get_focus_owner()

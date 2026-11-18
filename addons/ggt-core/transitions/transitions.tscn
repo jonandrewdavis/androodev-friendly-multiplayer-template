@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://c8ru70vkpmvyy" path="res://addons/ggt-core/transitions/progress.gd" id="3"]
 [ext_resource type="Script" uid="uid://cqeuawll14hnl" path="res://addons/ggt-core/transitions/transitions.gd" id="4"]
-[ext_resource type="Script" uid="uid://dfnwymtygg1to" path="res://scenes/menu/game_version.gd" id="4_mcnah"]
-[ext_resource type="Script" uid="uid://baky6bgu7psf2" path="res://scenes/menu/godot_version.gd" id="5_03rgt"]
+[ext_resource type="Script" uid="uid://dfnwymtygg1to" path="res://menu/game_version.gd" id="4_mcnah"]
+[ext_resource type="Script" uid="uid://baky6bgu7psf2" path="res://menu/godot_version.gd" id="5_03rgt"]
 
 [sub_resource type="FontFile" id="4"]
 subpixel_positioning = 0

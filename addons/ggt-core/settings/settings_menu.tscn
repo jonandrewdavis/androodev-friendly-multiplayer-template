@@ -66,20 +66,6 @@ text = "Multiplayer Peer"
 
 [node name="MultiplayerOptionButton" type="OptionButton" parent="MarginContainer/VBox/Multiplayer" unique_id=202771814]
 layout_mode = 2
-selected = 1
-item_count = 6
-popup/item_0/text = "Offline"
-popup/item_0/id = 0
-popup/item_1/text = "ENet (Localhost)"
-popup/item_1/id = 1
-popup/item_2/text = "Tube (WebRTC)"
-popup/item_2/id = 2
-popup/item_3/text = "NodeTunnel (Relay)"
-popup/item_3/id = 3
-popup/item_4/text = "Steam"
-popup/item_4/id = 4
-popup/item_5/text = "Epic Online Services"
-popup/item_5/id = 5
 
 [node name="Language" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=336382435]
 layout_mode = 2

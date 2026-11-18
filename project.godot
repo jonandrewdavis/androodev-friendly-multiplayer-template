@@ -17,7 +17,7 @@ settings/startup_visibility=1
 
 config/name="androodev-friendly-multiplayer-template"
 config/version="0.0.1"
-run/main_scene="res://scenes/menu/menu.tscn"
+run/main_scene="res://menu/menu.tscn"
 run/print_header=false
 config/features=PackedStringArray("4.8")
 config/icon="uid://dack0gg1ftok4"
@@ -28,6 +28,7 @@ GGT_DebugShortcuts="*res://addons/ggt-debug-shortcuts/autoload/debug_shortcuts.t
 GGT="*uid://cg0wu8g5j7s4w"
 GGT_GameConfig="*uid://16licpbm1tux"
 DebugMenu="*uid://cggqb75a8w8r"
+MultiplayerService="*uid://dsr7i0lu8bo4r"
 
 [category]
 
@@ -42,13 +43,16 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/ggt-core/plugin.cfg", "res://addons/ggt-debug-shortcuts/plugin.cfg")
+enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/ggt-core/plugin.cfg", "res://addons/ggt-debug-shortcuts/plugin.cfg", "res://addons/nodetunnel/plugin.cfg", "res://addons/tube/plugin.cfg")
 
 [file_customization]
 
 folder_colors={
 "res://addons/": "gray",
 "res://assets/": "green",
+"res://globals/": "purple",
+"res://menu/": "blue",
+"res://networking/": "yellow",
 "res://resources/": "pink",
 "res://scenes/": "red"
 }
@@ -204,7 +208,7 @@ ggt_debug_step_frame={
 [internationalization]
 
 locale/translations=PackedStringArray("res://resources/localization/it.po")
-locale/translations_pot_files=PackedStringArray("res://scenes/menu/menu.tscn", "res://addons/ggt-core/settings/settings_menu.tscn", "res://scenes/gameplay/pause-layer/pause-layer.tscn")
+locale/translations_pot_files=PackedStringArray("res://addons/ggt-core/settings/settings_menu.tscn", "res://menu/menu.tscn", "res://menu/in_game_menu/in_game_menu.tscn")
 
 [rendering]
 

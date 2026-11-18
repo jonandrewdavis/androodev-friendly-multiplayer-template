@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c2gocuhw2o7py"]
 
 [ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="3_e0arn"]
-[ext_resource type="Script" uid="uid://cvc42inud8fxx" path="res://scenes/menu/menu.gd" id="5"]
+[ext_resource type="Script" uid="uid://cvc42inud8fxx" path="res://menu/menu.gd" id="5"]
 
 [node name="Menu" type="Control" unique_id=1641158152]
 layout_mode = 3
@@ -79,20 +79,6 @@ translation_context = &"menu"
 [node name="MultiplayerOptionButton" type="OptionButton" parent="MainContainer/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1051786108]
 unique_name_in_owner = true
 layout_mode = 2
-selected = 1
-item_count = 6
-popup/item_0/text = "Offline"
-popup/item_0/id = 0
-popup/item_1/text = "ENet (Localhost)"
-popup/item_1/id = 1
-popup/item_2/text = "Tube (WebRTC)"
-popup/item_2/id = 2
-popup/item_3/text = "NodeTunnel (Relay)"
-popup/item_3/id = 3
-popup/item_4/text = "Steam"
-popup/item_4/id = 4
-popup/item_5/text = "Epic Online Services"
-popup/item_5/id = 5
 
 [node name="ButtonVBoxContainer" type="VBoxContainer" parent="MainContainer/CenterContainer/VBoxContainer" unique_id=833858432]
 unique_name_in_owner = true

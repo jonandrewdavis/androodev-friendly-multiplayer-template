@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://barl4q1kugrmm"]
+
+[ext_resource type="Script" uid="uid://do7kkb4ijqk5p" path="res://menu/in_game_menu/in_game_menu.gd" id="1_2akbd"]
+[ext_resource type="PackedScene" uid="uid://c2jxemjmao00b" path="res://addons/ggt-core/settings/settings_menu.tscn" id="2_cpsnh"]
+[ext_resource type="PackedScene" uid="uid://0kt8q1n5fyt3" path="res://scenes/levels/home.tscn" id="3_cpsnh"]
+
+[node name="InGameMenu" type="CanvasLayer" unique_id=2102314706]
+process_mode = 3
+script = ExtResource("1_2akbd")
+
+[node name="InGameContainer" type="Control" parent="." unique_id=678704751]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxOptions" type="VBoxContainer" parent="InGameContainer" unique_id=1084727180]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -58.0
+offset_top = -38.0
+offset_right = 58.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ResumeButton" type="Button" parent="InGameContainer/VBoxOptions" unique_id=1983025843]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SuccessButton"
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="InGameContainer/VBoxOptions" unique_id=154962595]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Settings"
+
+[node name="LeaveButton" type="Button" parent="InGameContainer/VBoxOptions" unique_id=707325533]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Leave Game"
+
+[node name="SettingsMenu" parent="." unique_id=190195239 instance=ExtResource("2_cpsnh")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -426.0
+offset_top = -385.5
+offset_right = 426.0
+offset_bottom = 385.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Home" parent="." unique_id=893317769 instance=ExtResource("3_cpsnh")]
+visible = true
+
+[connection signal="confirm_button_clicked" from="SettingsMenu" to="." method="_on_settings_menu_confirm_button_clicked"]
+[connection signal="visibility_changed" from="SettingsMenu" to="." method="_on_settings_menu_visibility_changed"]
