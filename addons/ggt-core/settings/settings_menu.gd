@@ -78,6 +78,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				_on_settings_cancel_button_pressed() # asks confirmation before closing the settings menu
 
+	
+	# TODO: Handle the corner case of a "Reset values" modal visible. 
+	# Need to zero out the current action, not as simple as just hide.
+	# Maack's does a lot of this for you. GGT is a little more loose,
+	# but it is much lighter weight, which I like - AD.
+	if event.is_action_pressed("pause") and not event.is_echo():
+		get_viewport().set_input_as_handled()
+		if GGT.is_changing_scene():
+			return
+		if visible:
+			hide()
+
 
 func _on_setting_changed(_v=null) -> void:
 	cancel_button.disabled = false

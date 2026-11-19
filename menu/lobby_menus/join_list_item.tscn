@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://da7j7kjf5qunx"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_sekyi"]
+content_margin_right = 8.0
+color = Color(0.27450982, 0.30588236, 0.36078432, 1)
+
+[node name="JoinListItem" type="VBoxContainer" unique_id=1258275536]
+offset_right = 344.0
+offset_bottom = 64.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=824575948]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=1035909952]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Lobby name "
+
+[node name="Button" type="Button" parent="HBoxContainer" unique_id=2125351521]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_type_variation = &"SuccessButton"
+text = "Join"
+
+[node name="Label2" type="Label" parent="HBoxContainer" unique_id=1281213429]
+layout_mode = 2
+text = "  "
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=738181267]
+layout_mode = 2
+theme_override_constants/separation = 6
+theme_override_styles/separator = SubResource("StyleBoxLine_sekyi")

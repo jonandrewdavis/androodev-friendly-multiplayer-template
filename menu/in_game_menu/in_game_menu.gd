@@ -29,13 +29,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		if GGT.is_changing_scene():
 			return
-		if settings_menu.visible:
-			# TODO: Handle the corner case of a "Reset values" modal visible. 
-			# Need to zero out the current action, not as simple as just hide.
-			# Maack's does a lot of this for you. GGT is a little more loose,
-			# but it is much lighter weight, which I like - AD.
-			settings_menu.hide()
-		elif visible:
+		
+		
+		if visible:
 			resume()
 		else:
 			show()

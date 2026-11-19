@@ -31,7 +31,7 @@ func _on_lobby_joined() -> void:
 		var first_level_in_list = LevelHandler.LEVEL_DICT.keys()[0]
 		await level_handler.spawn_level(first_level_in_list)
 
-		#player_spawner.spawn_player(1)
+		player_spawner.spawn_player(1)
 		MultiplayerService.set_joinable(true) # Ready.
 
 func clear() -> void:

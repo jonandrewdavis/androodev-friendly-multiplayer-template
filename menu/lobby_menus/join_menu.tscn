@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://dnvawcgmhlkmt"]
+
+[ext_resource type="Script" uid="uid://bdblk5h0ca7wh" path="res://menu/lobby_menus/join_menu.gd" id="1_6tflt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6tflt"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.12484916, 0.16169402, 0.22309127, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.2901961, 0.34509805, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="JoinMenu" type="Control" unique_id=1674124668]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6tflt")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=822836043]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=1042182529]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=1853916556]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=434686311]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1648539592]
+layout_mode = 2
+
+[node name="JoinTitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=203417947]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 65
+text = "Join"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=718124439]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="PanelContainer2" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=709210612]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6tflt")
+
+[node name="PanelContainer" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer2" unique_id=1995132313]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 12
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer2/PanelContainer" unique_id=1869614237]
+custom_minimum_size = Vector2(750, 350)
+layout_mode = 2
+theme_override_constants/scrollbar_margin_left = 8
+theme_override_constants/scrollbar_margin_right = 8
+theme_override_constants/scrollbar_h_separation = 12
+theme_override_constants/scrollbar_v_separation = 8
+vertical_scroll_mode = 2
+
+[node name="LobbyListContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/PanelContainer2/PanelContainer/ScrollContainer" unique_id=1635018562]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=903144752]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1950445650]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2/HBoxContainer" unique_id=38301575]
+layout_mode = 2
+text = "Cancel"
+
+[node name="RefreshButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=727878170]
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+text = "Refresh"

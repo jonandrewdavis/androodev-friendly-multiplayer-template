@@ -8,6 +8,7 @@ extends Control
 @onready var exit_button: Button = %ExitButton
 @onready var multiplayer_option_button: OptionButton = %MultiplayerOptionButton
 @onready var settings_menu: PanelContainer = %SettingsMenu
+@onready var multiplayer_status_label: Label = %MultiplayerStatusLabel
 
 func _ready():
 	# NOTE: We prefer to set up signals in code, rather than side panel for
@@ -20,7 +21,9 @@ func _ready():
 	exit_button.pressed.connect(_on_exit_button_pressed)
 	
 	MultiplayerService.state_updated.connect(_on_multiplayer_state_updated)
-
+	MultiplayerService.creating_lobby.connect(func(): _update_status_with_reason(''))
+	MultiplayerService.joining_lobby.connect(func(): _update_status_with_reason(''))
+	MultiplayerService.join_lobby_failed.connect(_update_status_with_reason)
 	# needed for gamepads to work
 	host_button.grab_focus()
 	if OS.has_feature('web'):
@@ -34,24 +37,9 @@ func _ready():
 	_set_up_multiplayer_backend_options()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and not event.is_echo():
-		get_viewport().set_input_as_handled()
-		if GGT.is_changing_scene():
-			return
-		if settings_menu.visible:
-			settings_menu.hide()
-		elif visible:
-			pass
-		else:
-			show()
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			%ResumeButton.grab_focus()
-
-
 func _on_host_button_pressed() -> void:
 	var _opts = HostOptions.new()
-	_opts.max_players = 4
+	_opts.max_players = 2
 	MultiplayerService.host_game(_opts)
 
 
@@ -99,3 +87,6 @@ func _on_multiplayer_state_updated(new_state: MultiplayerService.State):
 	join_button.disabled = new_state == MultiplayerService.State.ERROR
 	host_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
 	join_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
+
+func _update_status_with_reason(reason: String):
+	multiplayer_status_label.text = reason

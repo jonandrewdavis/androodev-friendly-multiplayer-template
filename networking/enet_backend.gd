@@ -56,7 +56,7 @@ func host_game(options: HostOptions) -> void:
 		lobby_joined.emit()
 	else:
 		push_error("Failed to create game host: ", str(err))
-		join_lobby_failed.emit(str(err))
+		join_lobby_failed.emit("Failed to create game host")
 
 
 ## Joins a lobby hosted at IP address [param address].
@@ -70,7 +70,7 @@ func join_game(address: Variant) -> void:
 		lobby_joined.emit()
 	else:
 		push_error("Failed to join game.", str(err))
-		join_lobby_failed.emit(str(err))
+		join_lobby_failed.emit("Failed to join game.")
 
 
 func leave_game() -> void:

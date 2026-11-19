@@ -38,7 +38,7 @@ uv1_triplanar = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_5uvba"]
 material = SubResource("StandardMaterial3D_5uvba")
-size = Vector3(4, 30, 4)
+size = Vector3(4, 10, 4)
 
 [node name="Home" type="Node3D" unique_id=893317769]
 
@@ -46,7 +46,7 @@ size = Vector3(4, 30, 4)
 environment = SubResource("Environment_dbach")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1205813942]
-transform = Transform3D(0.73539597, -0.22779219, 0.6382033, 0, 0.9418062, 0.33615634, -0.67763764, -0.24720801, 0.6926005, 23.3656, 9.3923645, 36.541626)
+transform = Transform3D(0.7804309, -0.25031492, 0.5729485, 0, 0.9163628, 0.40034887, -0.625242, -0.31244463, 0.71515787, 0.7593889, 7.2094517, 22.037785)
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=604522232]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -69,5 +69,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -10, 22)
 mesh = SubResource("BoxMesh_5uvba")
 
 [node name="Pillar3" type="MeshInstance3D" parent="." unique_id=881241169]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -5, 13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0.68440056, 13)
 mesh = SubResource("BoxMesh_5uvba")

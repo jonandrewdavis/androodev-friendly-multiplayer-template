@@ -46,6 +46,7 @@ signal join_lobby_failed(reason: String)
 signal game_exited
 signal state_updated(state: State)
 
+
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	GGT_GameConfig.game_config_changed.connect(_on_game_config_changed)
@@ -62,16 +63,15 @@ func _init_backend(type: MultiplayerBackend.Type) -> void:
 		backend.name = MultiplayerBackend.Type.keys()[type] # Identifies the node better
 		add_child(backend, true)
 	else:
+		join_lobby_failed.emit("Backend not ready") # TODO: better signal?
+		push_error("Backend not ready")
 		state = State.ERROR
-				
-	
+
+
 func host_game(options: HostOptions) -> void:
 	assert(not multiplayer.has_multiplayer_peer() or multiplayer.get_multiplayer_peer() is OfflineMultiplayerPeer)
 	creating_lobby.emit()
-	if options.max_players == 1:
-		multiplayer.set_multiplayer_peer(OfflineMultiplayerPeer.new())
-	else:
-		backend.host_game(options)
+	backend.host_game(options)
 
 
 func join_game(address: Variant) -> void:
