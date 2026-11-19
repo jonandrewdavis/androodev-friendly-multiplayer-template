@@ -2,6 +2,22 @@
 
 [ext_resource type="Script" uid="uid://bdblk5h0ca7wh" path="res://menu/lobby_menus/join_menu.gd" id="1_6tflt"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gdoio"]
+content_margin_left = 14.0
+content_margin_top = 14.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.11764706, 0.14901961, 0.19607843, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.30588236, 0.3372549, 0.39215687, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6tflt"]
 content_margin_left = 24.0
 content_margin_top = 24.0
@@ -60,9 +76,25 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 65
 text = "Join"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=718124439]
+[node name="RoomCode" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=718124439]
 layout_mode = 2
 size_flags_vertical = 4
+
+[node name="RoomCodeLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/RoomCode" unique_id=724812949]
+layout_mode = 2
+text = "Room Code: "
+
+[node name="RoomCodeInput" type="LineEdit" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/RoomCode" unique_id=319092462]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_gdoio")
+max_length = 5
+
+[node name="RoomCodeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/RoomCode" unique_id=800483899]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Submit"
 
 [node name="PanelContainer2" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=709210612]
 layout_mode = 2

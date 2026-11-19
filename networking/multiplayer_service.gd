@@ -26,14 +26,13 @@ const BACKEND_LABELS := {
 const BACKEND_SCRIPTS := { 
 	MultiplayerBackend.Type.OFFLINE: "res://networking/offline_backend.gd",
 	MultiplayerBackend.Type.ENET: "res://networking/enet_backend.gd",
-	#MultiplayerBackend.Type.TUBE: "",
+	MultiplayerBackend.Type.TUBE: "res://networking/tube_backend.gd",
 	#MultiplayerBackend.Type.NODETUNNEL: "",
 	#MultiplayerBackend.Type.STEAM: "",
 	#MultiplayerBackend.Type.EOS: ""
 }
 
 var backend: MultiplayerBackend
-var max_players := 0
 var banlist: Array
 var kick_reason: String
 var state: State = State.IDLE : set = _set_state
@@ -48,10 +47,10 @@ signal state_updated(state: State)
 
 
 func _ready() -> void:
-	multiplayer.peer_connected.connect(_on_peer_connected)
+	multiplayer.peer_connected.connect(_on_peer_connected)	
+	# Handles the backend options drop down
 	GGT_GameConfig.game_config_changed.connect(_on_game_config_changed)
 	_init_backend.call_deferred(GGT_GameConfig.get_multiplayer_backend())
-
 
 ## Modify for each [enum BackendType] you want to support.
 func _init_backend(type: MultiplayerBackend.Type) -> void:
@@ -59,6 +58,7 @@ func _init_backend(type: MultiplayerBackend.Type) -> void:
 		backend = load(BACKEND_SCRIPTS[type]).new()
 		backend.lobby_found.connect(lobby_found.emit)
 		backend.lobby_joined.connect(lobby_joined.emit)
+		backend.lobby_joined.connect(_on_lobby_joined_state)
 		backend.join_lobby_failed.connect(join_lobby_failed.emit)
 		backend.name = MultiplayerBackend.Type.keys()[type] # Identifies the node better
 		add_child(backend, true)
@@ -69,13 +69,17 @@ func _init_backend(type: MultiplayerBackend.Type) -> void:
 
 
 func host_game(options: HostOptions) -> void:
-	assert(not multiplayer.has_multiplayer_peer() or multiplayer.get_multiplayer_peer() is OfflineMultiplayerPeer)
+	if state != State.IDLE:
+		return
+	state = State.CONNECTING
 	creating_lobby.emit()
 	backend.host_game(options)
 
 
 func join_game(address: Variant) -> void:
-	assert(not multiplayer.has_multiplayer_peer() or multiplayer.get_multiplayer_peer() is OfflineMultiplayerPeer)
+	if state != State.IDLE:
+		return
+	state = State.CONNECTING
 	joining_lobby.emit()
 	backend.join_game(address)
 
@@ -143,11 +147,18 @@ func _on_game_config_changed():
 	#if GGT_GameConfig.get_multiplayer_backend():
 	#	prints("DEBUG: Multiplayer backend changed", GGT_GameConfig.get_multiplayer_backend())
 
+func _on_lobby_joined_state():
+	if state == State.IDLE:
+		# Joining a game while your peer is IDLE should kick back to the menu.
+		# You may have missed a host() or join() if this happens.
+		push_warning("Tried to join a game without having a multiplayer connection")
+		backend.leave_game() 
+	state = State.IN_GAME
 
 func _is_backend_valid(type: MultiplayerBackend.Type):
 	if type >= BACKEND_SCRIPTS.size():
 		return false
-	
+
 	return true
 
 

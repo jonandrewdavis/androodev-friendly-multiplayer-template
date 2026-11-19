@@ -10,6 +10,14 @@ extends Control
 @onready var settings_menu: PanelContainer = %SettingsMenu
 @onready var multiplayer_status_label: Label = %MultiplayerStatusLabel
 
+const JOIN_MENU = preload("uid://dnvawcgmhlkmt")
+
+# TODO: We may be able to compress this into a single "Join" menu
+# which does the lobby list by default, with a "Host Game button"
+# nearby. Then, is there enough on this main menu?
+
+# TODO: join errors, host errors, etc... _update_status_with_reason is un-used.
+
 func _ready():
 	# NOTE: We prefer to set up signals in code, rather than side panel for
 	# better searchability. Signals at the top.
@@ -42,9 +50,10 @@ func _on_host_button_pressed() -> void:
 	_opts.max_players = 2
 	MultiplayerService.host_game(_opts)
 
-
+	
 func _on_join_button_pressed() -> void:
-	MultiplayerService.join_game('127.0.0.1')
+	get_tree().change_scene_to_file(JOIN_MENU.resource_path)
+	#MultiplayerService.join_game('127.0.0.1')
 
 
 func _on_exit_button_pressed() -> void:
