@@ -143,12 +143,14 @@ func _on_game_config_changed():
 	#if GGT_GameConfig.get_multiplayer_backend():
 	#	prints("DEBUG: Multiplayer backend changed", GGT_GameConfig.get_multiplayer_backend())
 
+
 func _is_backend_valid(type: MultiplayerBackend.Type):
 	if type >= BACKEND_SCRIPTS.size():
 		return false
 	
 	return true
-		
+
+
 func _set_state(new_state: State):
 	state = new_state
 	state_updated.emit(new_state)

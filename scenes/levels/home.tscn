@@ -46,7 +46,7 @@ size = Vector3(4, 10, 4)
 environment = SubResource("Environment_dbach")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1205813942]
-transform = Transform3D(0.7804309, -0.25031492, 0.5729485, 0, 0.9163628, 0.40034887, -0.625242, -0.31244463, 0.71515787, 0.7593889, 7.2094517, 22.037785)
+transform = Transform3D(0.7466389, -0.19560418, 0.6358218, 0, 0.9557931, 0.2940401, -0.66522956, -0.21954179, 0.7136323, 2.3433704, 3.5351472, 13.857349)
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=604522232]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -62,12 +62,13 @@ shape = SubResource("WorldBoundaryShape3D_ikf4c")
 transform = Transform3D(-0.8743519, -0.41742966, 0.2475099, 0.47815245, -0.82818425, 0.2923717, 0.08293916, 0.3739832, 0.92371947, 0, 0, 0)
 
 [node name="Pillar" type="MeshInstance3D" parent="." unique_id=112821532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.291683, -9.836418)
 mesh = SubResource("BoxMesh_5uvba")
 
 [node name="Pillar2" type="MeshInstance3D" parent="." unique_id=1066154720]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -10, 22)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -1.9874749, 12.163582)
 mesh = SubResource("BoxMesh_5uvba")
 
 [node name="Pillar3" type="MeshInstance3D" parent="." unique_id=881241169]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0.68440056, 13)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 4.9760838, 3.1635818)
 mesh = SubResource("BoxMesh_5uvba")

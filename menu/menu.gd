@@ -19,7 +19,7 @@ func _ready():
 	settings_menu.visibility_changed.connect(_on_settings_menu_visibility_changed)
 	settings_menu.confirm_button_clicked.connect(func(): settings_menu.hide())
 	exit_button.pressed.connect(_on_exit_button_pressed)
-	
+
 	MultiplayerService.state_updated.connect(_on_multiplayer_state_updated)
 	MultiplayerService.creating_lobby.connect(func(): _update_status_with_reason(''))
 	MultiplayerService.joining_lobby.connect(func(): _update_status_with_reason(''))

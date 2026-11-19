@@ -52,6 +52,8 @@ func host_game(options: HostOptions) -> void:
 	var peer := ENetMultiplayerPeer.new()
 	var err := peer.create_server(GAME_PORT, max_players - 1)
 	if err == OK:
+		# TODO: Laggy peer option:
+		# multiplayer.multiplayer_peer = LaggyMultiplayerPeer.create(peer, 0.1, 0.5, 0.5)
 		multiplayer.set_multiplayer_peer(peer)
 		lobby_joined.emit()
 	else:
@@ -66,6 +68,8 @@ func join_game(address: Variant) -> void:
 	var peer := ENetMultiplayerPeer.new()
 	var err := peer.create_client(addr, GAME_PORT)
 	if err == OK:
+		# TODO: Laggy peer option:
+		# multiplayer.multiplayer_peer = LaggyMultiplayerPeer.create(peer, 0.1, 0.5, 0.5)
 		multiplayer.set_multiplayer_peer(peer)
 		lobby_joined.emit()
 	else:
