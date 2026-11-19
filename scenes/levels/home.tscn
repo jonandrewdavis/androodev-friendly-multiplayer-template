@@ -4,14 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://fojrbf8wbbr2" path="res://assets/images/01_PrototypeCheckerBig_2048.png" id="1_ikf4c"]
 [ext_resource type="Texture2D" uid="uid://cwkicg4c7vdui" path="res://assets/images/01_PrototypeCheckerSmall_2048.png" id="3_2vl8h"]
 
-[sub_resource type="GDScript" id="GDScript_2vl8h"]
-script/source = "extends Node
-
-func _ready() -> void:
-	var scene_data = GGT.get_current_scene_data()
-	print(\"[GGT/Gameplay] scene params are \", scene_data.params)
-"
-
 [sub_resource type="Sky" id="Sky_2vl8h"]
 sky_material = ExtResource("1_2vl8h")
 radiance_size = 0
@@ -49,7 +41,6 @@ material = SubResource("StandardMaterial3D_5uvba")
 size = Vector3(4, 30, 4)
 
 [node name="Home" type="Node3D" unique_id=893317769]
-script = SubResource("GDScript_2vl8h")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=193892905]
 environment = SubResource("Environment_dbach")

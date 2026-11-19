@@ -61,6 +61,9 @@ func _init_backend(type: MultiplayerBackend.Type) -> void:
 		backend.join_lobby_failed.connect(join_lobby_failed.emit)
 		backend.name = MultiplayerBackend.Type.keys()[type] # Identifies the node better
 		add_child(backend, true)
+	else:
+		state = State.ERROR
+				
 	
 func host_game(options: HostOptions) -> void:
 	assert(not multiplayer.has_multiplayer_peer() or multiplayer.get_multiplayer_peer() is OfflineMultiplayerPeer)
@@ -115,6 +118,9 @@ func ban_player(peer_id: int) -> void:
 
 
 func _on_peer_connected(peer_id: int) -> void:
+	if not multiplayer.is_server():
+		return
+
 	if not backend.get_joinable() or banlist.has(backend.get_uid(peer_id)):
 		kick_player(peer_id)
 
@@ -128,19 +134,19 @@ func get_username(peer_id: int) -> String:
 func _on_game_config_changed():
 	var _index: int = GGT_GameConfig.get_multiplayer_backend()
 	var next_backend_name = MultiplayerBackend.Type.keys()[_index]
-	if backend.name != next_backend_name and _is_backend_valid(_index):
+	if not backend:
+		_init_backend(_index)
+	elif backend.name != next_backend_name:
 		backend.queue_free()
 		_init_backend(_index)
-		
+
 	#if GGT_GameConfig.get_multiplayer_backend():
 	#	prints("DEBUG: Multiplayer backend changed", GGT_GameConfig.get_multiplayer_backend())
 
 func _is_backend_valid(type: MultiplayerBackend.Type):
 	if type >= BACKEND_SCRIPTS.size():
-		push_error('Backend script not available')
-		state = State.ERROR
 		return false
-		
+	
 	return true
 		
 func _set_state(new_state: State):

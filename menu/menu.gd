@@ -1,7 +1,5 @@
 extends Control
 
-const IN_GAME_MENU = preload("uid://barl4q1kugrmm")
-
 @onready var main_container: Control = %MainContainer
 @onready var button_container: VBoxContainer = %ButtonVBoxContainer
 @onready var host_button: Button = %HostButton
@@ -15,6 +13,7 @@ func _ready():
 	# NOTE: We prefer to set up signals in code, rather than side panel for
 	# better searchability. Signals at the top.
 	host_button.pressed.connect(_on_host_button_pressed)
+	join_button.pressed.connect(_on_join_button_pressed)
 	settings_button.pressed.connect(func(): settings_menu.show())
 	settings_menu.visibility_changed.connect(_on_settings_menu_visibility_changed)
 	settings_menu.confirm_button_clicked.connect(func(): settings_menu.hide())
@@ -51,9 +50,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_host_button_pressed() -> void:
-	# TODO: Bug with GGT here? 4.8 maybe?
-	#GGT.change_scene("res://scenes/levels/home.tscn", {"show_progress_bar": false})
-	get_tree().change_scene_to_packed(IN_GAME_MENU)
+	var _opts = HostOptions.new()
+	_opts.max_players = 4
+	MultiplayerService.host_game(_opts)
+
+
+func _on_join_button_pressed() -> void:
+	MultiplayerService.join_game('127.0.0.1')
 
 
 func _on_exit_button_pressed() -> void:
@@ -84,13 +87,15 @@ func _set_up_multiplayer_backend_options():
 		# TODO: Should we just queue free this thing?
 		multiplayer_option_button.disabled = true
 
+
 func _on_multiplayer_option_changed(index: int):
 	GGT_GameConfig.set_multiplayer_backend(index)
 	GGT_GameConfig.persist()
 
-# TOOD: not sure about this
+
+# TODO: not sure about this. Seems to work for now.
 func _on_multiplayer_state_updated(new_state: MultiplayerService.State):
 	host_button.disabled = new_state == MultiplayerService.State.ERROR
 	join_button.disabled = new_state == MultiplayerService.State.ERROR
-	host_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if not MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
-	join_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if not MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
+	host_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
+	join_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND

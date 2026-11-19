@@ -88,7 +88,7 @@ func fetch_lobby_list() -> bool:
 
 
 func set_joinable(joinable: bool) -> void:
-	print_debug("Setting ENet Lobby Joinable=" + str(joinable))
+	#print_debug("Setting ENet Lobby Joinable=" + str(joinable))
 	if joinable:
 		search_server.listen(SEARCH_PORT) # for some reason setting the bind address to the broadcast address doesn't work here
 	else:

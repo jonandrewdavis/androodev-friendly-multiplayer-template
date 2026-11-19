@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://drsnfxec2q34b"]
+
+[ext_resource type="Script" uid="uid://byh2vjmf18ugr" path="res://globals/world.gd" id="1_ldosu"]
+[ext_resource type="Script" uid="uid://88nwnfuyul1m" path="res://globals/level_handler.gd" id="2_iaa3o"]
+[ext_resource type="Script" uid="uid://dx5k5hoayimil" path="res://globals/player_spawner.gd" id="3_c7ac0"]
+[ext_resource type="Script" uid="uid://2amh4wb4y0b0" path="res://globals/prop_spawner.gd" id="4_tpsyu"]
+
+[node name="World" type="Node" unique_id=1290159749]
+script = ExtResource("1_ldosu")
+
+[node name="LevelHandler" type="Node" parent="." unique_id=1348931977]
+unique_name_in_owner = true
+script = ExtResource("2_iaa3o")
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=973710451]
+unique_name_in_owner = true
+spawn_path = NodePath(".")
+script = ExtResource("3_c7ac0")
+
+[node name="PropSpawner" type="MultiplayerSpawner" parent="." unique_id=429014493]
+unique_name_in_owner = true
+spawn_path = NodePath(".")
+script = ExtResource("4_tpsyu")
