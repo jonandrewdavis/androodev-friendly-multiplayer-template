@@ -5,9 +5,6 @@ extends MultiplayerBackend
 
 var joinable := false
 
-func _ready():
-	MultiplayerService.state = MultiplayerService.State.READY
-
 
 func host_game(_options: HostOptions) -> void:
 	multiplayer.set_multiplayer_peer(OfflineMultiplayerPeer.new())

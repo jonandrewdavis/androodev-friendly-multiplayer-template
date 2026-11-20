@@ -28,7 +28,7 @@ func _ready():
 	settings_menu.confirm_button_clicked.connect(func(): settings_menu.hide())
 	exit_button.pressed.connect(_on_exit_button_pressed)
 
-	MultiplayerService.state_updated.connect(_on_multiplayer_state_updated)
+	#MultiplayerService.state_updated.connect(_on_multiplayer_state_updated)
 	MultiplayerService.creating_lobby.connect(func(): _update_status_with_reason(''))
 	MultiplayerService.joining_lobby.connect(func(): _update_status_with_reason(''))
 	MultiplayerService.join_lobby_failed.connect(_update_status_with_reason)
@@ -91,11 +91,11 @@ func _on_multiplayer_option_changed(index: int):
 
 
 # TODO: not sure about this. Seems to work for now.
-func _on_multiplayer_state_updated(new_state: MultiplayerService.State):
-	host_button.disabled = new_state == MultiplayerService.State.ERROR
-	join_button.disabled = new_state == MultiplayerService.State.ERROR
-	host_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
-	join_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
+#func _on_multiplayer_state_updated(new_state: MultiplayerService.State):
+#	host_button.disabled = new_state == MultiplayerService.State.ERROR
+#	join_button.disabled = new_state == MultiplayerService.State.ERROR
+#	host_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
+#	join_button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN if new_state == MultiplayerService.State.ERROR else Control.CURSOR_POINTING_HAND
 
 func _update_status_with_reason(reason: String):
 	multiplayer_status_label.text = reason

@@ -6,13 +6,13 @@ const REFUSE_REASON_FULL := "This lobby is full."
 const REFUSE_REASON_NOT_JOINABLE := "This lobby is not joinable."
 const KICK_GRACE_SECONDS := 1.0
 
-enum State {
-	ERROR,
-	IDLE,
-	READY,
-	CONNECTING,
-	IN_GAME,
-}
+#enum State {
+#	ERROR,
+#	IDLE,
+#	READY,
+#	CONNECTING,
+#	IN_GAME,
+#}
 
 const BACKEND_LABELS := { 
 	MultiplayerBackend.Type.OFFLINE: "Offline",
@@ -35,7 +35,7 @@ const BACKEND_SCRIPTS := {
 var backend: MultiplayerBackend
 var banlist: Array
 var kick_reason: String
-var state: State = State.IDLE : set = _set_state
+#var state: State = State.IDLE : set = _set_state
 
 signal lobby_found(address: Variant, cur_players: int, max_players: int)
 signal joining_lobby
@@ -43,7 +43,7 @@ signal lobby_joined
 signal creating_lobby
 signal join_lobby_failed(reason: String)
 signal game_exited
-signal state_updated(state: State)
+#signal state_updated(state: State)
 
 
 func _ready() -> void:
@@ -65,21 +65,21 @@ func _init_backend(type: MultiplayerBackend.Type) -> void:
 	else:
 		join_lobby_failed.emit("Backend not ready") # TODO: better signal?
 		push_error("Backend not ready")
-		state = State.ERROR
+		#state = State.ERROR
 
 
 func host_game(options: HostOptions) -> void:
-	if state != State.IDLE:
-		return
-	state = State.CONNECTING
+	#if state != State.IDLE:
+	#	return
+	#state = State.CONNECTING
 	creating_lobby.emit()
 	backend.host_game(options)
 
 
 func join_game(address: Variant) -> void:
-	if state != State.IDLE:
-		return
-	state = State.CONNECTING
+	#if state != State.IDLE:
+	#	return
+	#state = State.CONNECTING
 	joining_lobby.emit()
 	backend.join_game(address)
 
@@ -148,12 +148,14 @@ func _on_game_config_changed():
 	#	prints("DEBUG: Multiplayer backend changed", GGT_GameConfig.get_multiplayer_backend())
 
 func _on_lobby_joined_state():
-	if state == State.IDLE:
+	pass
+	#if state == State.IDLE:
 		# Joining a game while your peer is IDLE should kick back to the menu.
 		# You may have missed a host() or join() if this happens.
-		push_warning("Tried to join a game without having a multiplayer connection")
-		backend.leave_game() 
-	state = State.IN_GAME
+
+	#push_warning("Tried to join a game without having a multiplayer connection")
+	#backend.leave_game() 
+	#state = State.IN_GAME
 
 func _is_backend_valid(type: MultiplayerBackend.Type):
 	if type >= BACKEND_SCRIPTS.size():
@@ -162,6 +164,6 @@ func _is_backend_valid(type: MultiplayerBackend.Type):
 	return true
 
 
-func _set_state(new_state: State):
-	state = new_state
-	state_updated.emit(new_state)
+#func _set_state(new_state: State):
+#	state = new_state
+#	state_updated.emit(new_state)

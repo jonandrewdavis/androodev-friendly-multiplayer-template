@@ -3,15 +3,17 @@ extends Node
 ## The scene root has MultiplayerSpawners that must be present in the scene tree before
 ## joining a multipalyer session. Handles listening to signals to spawn entities.
 
-# TODO: Should we consider naming this "Global"? or is "World" good enough
+const MAIN_MENU = preload("uid://c2gocuhw2o7py")
+const IN_GAME_MENU = preload("uid://barl4q1kugrmm")
 
+var target_scene := ""
+var moving_to_target := false
 
 @onready var level_handler: LevelHandler = %LevelHandler
 @onready var player_spawner: PlayerSpawner = %PlayerSpawner
 @onready var prop_spawner: PropSpawner = %PropSpawner
 
-const MAIN_MENU = preload("uid://c2gocuhw2o7py")
-const IN_GAME_MENU = preload("uid://barl4q1kugrmm")
+
 
 func _ready() -> void:
 	MultiplayerService.lobby_joined.connect(_on_lobby_joined)
@@ -23,7 +25,7 @@ func _ready() -> void:
 func _on_lobby_joined() -> void:
 	# Always transition to the in game menu.
 	# The "MultiplayerService.game_exited" will send them back to the main menu if something fails.
-	get_tree().change_scene_to_file(IN_GAME_MENU.resource_path)
+	_go_to_scene(IN_GAME_MENU.resource_path)
 
 	# If we are the server, we must set up the World and indicate we're ready to be joined.
 	if multiplayer.is_server():
@@ -39,6 +41,18 @@ func clear() -> void:
 	player_spawner.clear_players()
 	prop_spawner.clear_props()
 
+func _go_to_scene(path: String) -> void:
+	target_scene = path
+	if moving_to_target:
+		return
+	moving_to_target = true
+	while GGT.is_changing_scene() or get_tree().current_scene.scene_file_path != target_scene:
+		if not GGT.is_changing_scene():
+			GGT.change_scene(target_scene, {"show_progress_bar": false})
+		await get_tree().process_frame
+	moving_to_target = false
+
+
 func _on_game_exited() -> void:
 	clear()
-	get_tree().change_scene_to_file(MAIN_MENU.resource_path)
+	_go_to_scene(MAIN_MENU.resource_path)

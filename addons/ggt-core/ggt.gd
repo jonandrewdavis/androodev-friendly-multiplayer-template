@@ -64,13 +64,16 @@ func is_changing_scene() -> bool:
 func _set_new_scene(resource: PackedScene):
 	get_tree().change_scene_to_packed(resource)
 	_transitions.fade_out()
+	print('GOT HERE')
 	await _transitions.anim.animation_finished
 	emit_signal("scene_transition_finished")
+	print('GOT DID NOT')
 	_loading_start_time = 0
 	_changing_scene = false
 
 
 func _transition_appear(params):
+	print('')
 	_transitions.fade_in(params)
 
 

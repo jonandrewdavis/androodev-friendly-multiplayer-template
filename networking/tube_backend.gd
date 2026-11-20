@@ -66,7 +66,9 @@ func get_username(peer_id: int) -> String:
 
 
 func _on_session_left() -> void:
-	if MultiplayerService.state == MultiplayerService.State.IN_GAME and not tube_client.is_server:
+	print(multiplayer.multiplayer_peer)
+	print(multiplayer.multiplayer_peer  is WebRTCMultiplayerPeer)
+	if multiplayer.multiplayer_peer is WebRTCMultiplayerPeer and not tube_client.is_server:
 		multiplayer.server_disconnected.emit()
 
 

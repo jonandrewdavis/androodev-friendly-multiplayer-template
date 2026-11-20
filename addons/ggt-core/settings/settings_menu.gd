@@ -59,11 +59,11 @@ func _ready() -> void:
 
 	visibility_changed.connect(on_visibility_changed)
 	
-	# Allow selecting a multiplayer backend when in editor AND we're idle
-	if OS.is_debug_build and MultiplayerService.state == MultiplayerService.State.IDLE:
+	# Allow selecting a multiplayer backend when in editor AND no one is connected...
+	if OS.is_debug_build and multiplayer.get_peers().size() > 0:
 		multiplayer_option_button.disabled = false
 	else:
-		# Any other case, it's disabled
+		# Any other case, it's disabled, should we queue free it?
 		multiplayer_option_button.disabled = true
 
 func _unhandled_input(event: InputEvent) -> void:
