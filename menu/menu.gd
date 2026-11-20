@@ -1,5 +1,10 @@
 extends Control
 
+# TODO: We may be able to compress main menu into a single "Join" menu
+# which does the lobby list by default, with a "Host Game button"
+# nearby. Then, is there enough on this main menu?
+const JOIN_MENU = "res://menu/lobby_menus/join_menu.tscn"
+
 @onready var main_container: Control = %MainContainer
 @onready var button_container: VBoxContainer = %ButtonVBoxContainer
 @onready var host_button: Button = %HostButton
@@ -10,14 +15,8 @@ extends Control
 @onready var settings_menu: PanelContainer = %SettingsMenu
 @onready var multiplayer_status_label: Label = %MultiplayerStatusLabel
 
-const JOIN_MENU = preload("uid://dnvawcgmhlkmt")
-
-# TODO: We may be able to compress this into a single "Join" menu
-# which does the lobby list by default, with a "Host Game button"
-# nearby. Then, is there enough on this main menu?
 
 # TODO: join errors, host errors, etc... _update_status_with_reason is un-used.
-
 func _ready():
 	# NOTE: We prefer to set up signals in code, rather than side panel for
 	# better searchability. Signals at the top.
@@ -29,9 +28,7 @@ func _ready():
 	exit_button.pressed.connect(_on_exit_button_pressed)
 
 	#MultiplayerService.state_updated.connect(_on_multiplayer_state_updated)
-	MultiplayerService.creating_lobby.connect(func(): _update_status_with_reason(''))
-	MultiplayerService.joining_lobby.connect(func(): _update_status_with_reason(''))
-	MultiplayerService.join_lobby_failed.connect(_update_status_with_reason)
+
 	# needed for gamepads to work
 	host_button.grab_focus()
 	if OS.has_feature('web'):
@@ -52,7 +49,8 @@ func _on_host_button_pressed() -> void:
 
 	
 func _on_join_button_pressed() -> void:
-	get_tree().change_scene_to_file(JOIN_MENU.resource_path)
+	GGT.change_scene(JOIN_MENU)
+	#get_tree().change_scene_to_file(JOIN_MENU.resource_path)
 	#MultiplayerService.join_game('127.0.0.1')
 
 

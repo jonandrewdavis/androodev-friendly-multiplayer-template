@@ -4,6 +4,9 @@ A co-op multiplayer template.
 
 ## TODO List:
 
+- Documentation (each Peer / connection method should have a guide)
+- 3D character controller
+- 
 - 
 - 
 
@@ -11,7 +14,6 @@ A co-op multiplayer template.
 
 - Add a 2D player and platformer?
 - Add the ability for 3D players to see the 2D players?
-
 
 
 ## Credits

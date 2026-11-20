@@ -37,7 +37,7 @@ var banlist: Array
 var kick_reason: String
 #var state: State = State.IDLE : set = _set_state
 
-signal lobby_found(address: Variant, cur_players: int, max_players: int)
+signal lobby_found(address: Variant, lobby_name: String, cur_players: int, max_players: int)
 signal joining_lobby
 signal lobby_joined
 signal creating_lobby

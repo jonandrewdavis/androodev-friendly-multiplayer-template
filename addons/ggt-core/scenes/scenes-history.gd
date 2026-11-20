@@ -17,3 +17,8 @@ func get_last_loaded_scene_data() -> GGT_SceneData:
 	if _history.size() == 0:
 		return null
 	return _history[0]
+
+func get_previous_loaded_scene_data() -> GGT_SceneData:
+	if _history.size() == 0 || _history.size() == 1:
+		return null
+	return _history[1]

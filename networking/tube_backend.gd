@@ -43,8 +43,11 @@ func join_game(address: Variant) -> void:
 	
 	
 func leave_game() -> void:
-	tube_client.leave_session()
-
+	joinable = false
+	if tube_client.state != TubeClient.State.IDLE:
+		tube_client.leave_session()
+	_close_peer()
+	
 # TODO: No lobbies for Tube yet
 func fetch_lobby_list() -> bool:
 	return true
@@ -66,10 +69,9 @@ func get_username(peer_id: int) -> String:
 
 
 func _on_session_left() -> void:
-	print(multiplayer.multiplayer_peer)
-	print(multiplayer.multiplayer_peer  is WebRTCMultiplayerPeer)
-	if multiplayer.multiplayer_peer is WebRTCMultiplayerPeer and not tube_client.is_server:
-		multiplayer.server_disconnected.emit()
+	#print(multiplayer.multiplayer_peer)
+	#print(multiplayer.multiplayer_peer  is WebRTCMultiplayerPeer)
+	multiplayer.server_disconnected.emit()
 
 
 func _on_error_raised(code: TubeClient.SessionError, message: String) -> void:

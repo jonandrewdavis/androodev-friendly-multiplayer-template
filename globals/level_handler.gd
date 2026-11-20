@@ -24,7 +24,7 @@ func _on_peer_connected(peer_id: int) -> void:
 
 
 ## Clear any existing geometry from the level.
-func clear_level() -> void:
+func clear() -> void:
 	for child: Node in get_children():
 		child.queue_free()
 
@@ -35,7 +35,7 @@ func spawn_level(key: String) -> void:
 	current_key = key
 	var uid := LEVEL_DICT[key]
 	ResourceLoader.load_threaded_request(uid, "PackedScene")
-	clear_level()
+	clear()
 	while ResourceLoader.load_threaded_get_status(uid) != ResourceLoader.THREAD_LOAD_LOADED:
 		await get_tree().create_timer(WAIT_INTERVAL).timeout
 	var level_packed: PackedScene = ResourceLoader.load_threaded_get(uid)
